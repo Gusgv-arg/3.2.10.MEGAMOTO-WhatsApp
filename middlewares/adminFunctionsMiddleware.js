@@ -10,6 +10,9 @@ import {
 import { getMediaWhatsappUrl } from "../utils/getMediaWhatsappUrl.js";
 import { downloadWhatsAppMedia } from "../utils/downloadWhatsAppMedia.js";
 import { processCampaignExcel } from "../functions/processCampaignExcel.js";
+import { changeCampaignStatus } from "../utils/changeCampaignStatus.js";
+import listCampaigns from "../utils/listCampaigns.js";
+import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -26,7 +29,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 		return;
 	}
 
-	// Check if its WhatsApp text message from Admin instructions
+	// Check if its WhatsApp text message from Admin phone
 	if (channel === "WhatsApp" && body?.entry[0]) {
 		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages[0]
 			?.type
@@ -59,7 +62,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await adminWhatsAppNotification(botSwitchOnNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
-			
 			} else if (message === "megabot no responder") {
 				//Change general switch to OFF
 				await changeMegaBotSwitch("OFF");
@@ -68,19 +70,13 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await adminWhatsAppNotification(botSwitchOffNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
-			
 			} else if (message === "megabot") {
 				await adminWhatsAppNotification(helpFunctionNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
-			
 			} else if (message.startsWith("campaña")) {
+				// Campaigns format: "campaña" "template name" "campaign name"
 				const parts = message.split(" ");
-				if (parts.length < 3) {
-					await adminWhatsAppNotification(templateError);
-					res.status(200).send("EVENT_RECEIVED");
-					return;
-				}
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
 
@@ -95,10 +91,37 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				//console.log("Document download:", documentBufferData);
 
 				// Call the new function to process the campaign
-				await processCampaignExcel(documentBufferData, templateName, campaignName);
+				await processCampaignExcel(
+					documentBufferData,
+					templateName,
+					campaignName
+				);
 
 				res.status(200).send("EVENT_RECEIVED");
-			
+			} else if (message.startsWith("inactivar")) {
+				const parts = message.split(" ");
+				const campaignName = parts.slice(1).join("_");
+
+				//Call the functions that inactivates Campaign
+				await changeCampaignStatus("inactiva", campaignName);
+
+				res.status(200).send("EVENT_RECEIVED");
+			} else if (message.startsWith("activar")) {
+				const parts = message.split(" ");
+				const campaignName = parts.slice(1).join("_");
+
+				//Call the functions that activates Campaign
+				await changeCampaignStatus("activa", campaignName);
+
+				res.status(200).send("EVENT_RECEIVED");
+			} else if (message === "megabot campañas") {
+				await listCampaigns();
+
+				res.status(200).send("EVENT_RECEIVED");
+			} else if (message==="megabot leads"){
+				const leads = await exportLeadsToExcel();
+				
+				res.status(200).send("EVENT_RECEIVED");
 			} else {
 				// Does next if its an admin message but is not an instruction
 				next();

@@ -89,6 +89,7 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 
 			// Create a Thread sending user message and greeting to GPT
 			const thread = await createGptThread(name, message);
+			console.log("thread_id", thread)
 
 			// Save thread in DB
 			lead.thread_id = thread;

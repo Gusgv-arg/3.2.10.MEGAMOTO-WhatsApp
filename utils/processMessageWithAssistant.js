@@ -49,30 +49,21 @@ export const processMessageWithAssistant = async (
 	// Pass in the user question into the existing thread
 	if (existingThread) {
 		// Determine if it's General or Campaign thread
-		let generalThreadDate = existingThread.createdAt;
 		let generalThreadId = existingThread.thread_id;
+		//console.log("General thread Id:", generalThreadId)
 
 		// Get the last campaign info
 		let campaigns = existingThread.campaigns || [];
 		let lastCampaign = campaigns[campaigns.length - 1];
-		let campaignThreadDate = lastCampaign
-			? new Date(lastCampaign.campaignDate)
-			: null;
 		let campaignThreadId = lastCampaign ? lastCampaign.campaignThreadId : null;
-
-		// Determine the most recent threadId && assistant to be used && flag campaign
-		if (generalThreadId && campaignThreadId) {
-			// Both threads exist, compare dates
-			threadId =
-				generalThreadDate > campaignThreadDate
-					? generalThreadId
-					: campaignThreadId;
-			assistantId =
-				generalThreadDate > campaignThreadDate
-					? process.env.OPENAI_ASSISTANT_ID
-					: process.env.OPENAI_CAMPAIGN_ID;
-			campaignFlag = generalThreadDate > campaignThreadDate
-			? false : true
+		let campaignStatus = lastCampaign ? lastCampaign.campaign_status : null;
+		//console.log("Last campaign thread Id:", campaignThreadId)
+		
+		// Both threads exist, use Campaign thread
+		if (generalThreadId && campaignThreadId && campaignStatus === "activa") {
+			threadId = campaignThreadId;
+			assistantId = process.env.OPENAI_CAMPAIGN_ID;
+			campaignFlag = true;
 
 		} else if (generalThreadId) {
 			// Only general thread exists
@@ -80,7 +71,7 @@ export const processMessageWithAssistant = async (
 			assistantId = process.env.OPENAI_ASSISTANT_ID
 			campaignFlag = false
 
-		} else if (campaignThreadId) {
+		} else if (campaignThreadId && campaignStatus === "activa") {
 			// Only campaign thread exists
 			threadId = campaignThreadId;
 			assistantId = process.env.OPENAI_CAMPAIGN_ID
@@ -90,6 +81,13 @@ export const processMessageWithAssistant = async (
 			// No valid threadId found
 			console.error("No valid threadId found for user:", senderId);
 		}
+		console.log("ThreadID utilizado:", threadId)
+		
+		//View messages in thread
+		/* const thread_messages = await openai.beta.threads.messages.list(threadId)
+		thread_messages.data.forEach(message => {
+			console.log("Content del mensaje:", message.content);
+		}); */
 
 		// If type is Document or Button return a specific message
 		if (type === "document") {

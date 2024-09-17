@@ -58,7 +58,7 @@ export const saveMessageInDb = async (
 				}
 
 				// Concatenate the campaign message with the previous ones
-				const newMessageContent = `${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}\n\n`;
+				const newMessageContent = `\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
 
 				// Replace the messages history with the new one  
 				currentCampaign.messages = currentCampaign.messages
@@ -66,7 +66,7 @@ export const saveMessageInDb = async (
 					: newMessageContent;
 
 				// Update Campaign status
-				currentCampaign.status = "respuesta";
+				currentCampaign.client_status = "respuesta";
 
 				// Clean error if it existed
 				if (currentCampaign.error) {

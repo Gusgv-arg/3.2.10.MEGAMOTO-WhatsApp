@@ -1,33 +1,67 @@
+import path from 'path'; 
+import { fileURLToPath } from 'url';
 import xlsx from "xlsx";
 import Leads from "../models/leads.js";
+import { sendLeadsByMail } from '../utils/sendLeadsByMail.js';
+
 
 export const exportLeadsToExcel = async () => {
+	
 	try {
 		// Obtén todos los leads de la base de datos
 		const leads = await Leads.find({});
-
+		
 		// Convierte los leads a un formato que xlsx pueda entender
-		const leadsForXlsx = leads.map((lead) => ({
-			name: lead.name,
-			channel: lead.channel,
-			content: lead.content,
-			id_user: lead.id_user,
-			createdAt: lead.createdAt,
-		}));
+		const leadsForXlsx = leads.map((lead) => {
+			const campaignData = lead.campaigns.map(campaign => ({
+				campaignName: campaign.campaignName,
+				campaignDate: campaign.campaignDate,
+				client_status: campaign.client_status,
+				campaign_status: campaign.campaign_status,
+				messages: campaign.messages,
+				error: campaign.error,
+			}));
 
-		// Crea un nuevo libro de trabajo
+			// Crea un objeto con los datos del lead y agrega las campañas como columnas
+			const leadData = {
+				name: lead.name,
+				channel: lead.channel,
+				content: lead.content,
+				id_user: lead.id_user,
+				createdAt: lead.createdAt,
+			};
+
+			// Agrega los datos de las campañas al objeto leadData
+			campaignData.forEach((campaign, index) => {
+				Object.keys(campaign).forEach(key => {
+					leadData[`${key}_${index + 1}`] = campaign[key]; // Agrega un sufijo para cada campaña
+				});
+			});
+
+			return leadData;
+		});
+		
 		const wb = xlsx.utils.book_new();
+        const ws = xlsx.utils.json_to_sheet(leadsForXlsx);
+        xlsx.utils.book_append_sheet(wb, ws, "Leads");
+        
+        // Define un nombre de archivo temporal para el archivo Excel
+        const tempFilePath = 'excel/Leads.xlsx';
+        xlsx.writeFile(wb, tempFilePath);
+        console.log("Leads DB exported to Leads.xlsx");
+        
+        // Obtiene la ruta completa del archivo temporal
+        const __dirname = path.dirname(fileURLToPath(import.meta.url));
+        const filePath = path.join(__dirname, '../', tempFilePath);
+        
+        // Envía el archivo por correo electrónico
+        await sendLeadsByMail(filePath);                
 
-		// Convierte los datos a hoja de trabajo
-		const ws = xlsx.utils.json_to_sheet(leadsForXlsx);
-
-		// Añade la hoja de trabajo al libro
-		xlsx.utils.book_append_sheet(wb, ws, "Leads");
-
-		// Escribe el libro en un archivo .xlsx
-		xlsx.writeFile(wb, "excel/Leads.xlsx");
 	} catch (error) {
-		console.error("An error occurred while exporting leads to Excel:", error);
+		console.error("Error in exportLeadsToExcel.js:", error.message);
 		throw error;
 	}
 };
+
+
+
