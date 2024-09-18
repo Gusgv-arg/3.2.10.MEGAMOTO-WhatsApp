@@ -39,12 +39,7 @@ export const processCampaignExcel = async (
 
 		// Check if the number of variables match
 		if (templateVariableCount !== excelVariableCount) {
-			await adminWhatsAppNotification(
-				`*NOTIFICACION de Error de Campaña:*\nLa plantilla tiene ${templateVariableCount} variables y el Excel tiene ${excelVariableCount} columnas.`
-			);
-			throw new Error(
-				`La cantidad de variables en el texto de la plantilla (${templateVariableCount}) no coincide con la cantidad de columnas en el Excel (${excelVariableCount}).`
-			);
+			throw new Error(`*NOTIFICACION de Error de Campaña:*\nLa plantilla de WhatsApp tiene ${templateVariableCount} variables y el Excel tiene ${excelVariableCount} columnas. Deben coincidir la cantidad de variables de la Plantilla de WhatsApp con la cantidad de columnas del Excel a partir de la columna B.`);
 		}
 
 		// URL where to post Campaign
@@ -225,8 +220,7 @@ export const processCampaignExcel = async (
 		await adminWhatsAppNotification(summaryMessage);
 	} catch (error) {
 		console.error("Error processing campaign Excel:", error.message);
-		await adminWhatsAppNotification(
-			`*NOTIFICACION de Error de Campaña:*\n${error.message} en processCampaignExcel.js`
-		);
+		// Receives the throw new error
+		await adminWhatsAppNotification(error.message);
 	}
 };
