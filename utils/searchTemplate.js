@@ -26,7 +26,7 @@ export const searchTemplate = async (templateName) => {
 		);
 
 		if (!desiredTemplate) {
-			throw new Error(`Template with name "${templateName}" not found`);
+			throw new Error(`No se encontró una Plantilla de WhatsApp de nombre "${templateName}". Puede verificar el mismo en el Administrador de WhatsApp en la sección de Plantillas.`);
 		}
 
 		const templateId = desiredTemplate.id;
@@ -50,7 +50,7 @@ export const searchTemplate = async (templateName) => {
 		);
 
 		if (!bodyComponent) {
-			throw new Error("Body component not found in the template");
+			throw new Error("La Plantilla de WhatsApp no tiene el componente Body. Revise el Administrador de WhatsApp en la sección de Plantillas.");
 		}
 
 		const templateContent = bodyComponent.text;
@@ -59,7 +59,7 @@ export const searchTemplate = async (templateName) => {
 	} catch (error) {
 		console.log("Error en searchTemplate.js", error.message);
 		await adminWhatsAppNotification(
-			`*NOTIFICACION de Error de Campaña:*\n${error.message} en searchTemplate.js`
+			`*NOTIFICACION de Error de Campaña:*\n${error.message}`
 		);
 	}
 };
