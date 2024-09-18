@@ -7,6 +7,7 @@ import { errorMessage1 } from "../utils/errorMessages.js";
 dotenv.config();
 
 const myPhone = process.env.MY_PHONE;
+const myPhone2 = process.env.MY_PHONE2;
 
 export const whatsAppGeneralBotSwitchMiddleware = async (req, res, next) => {
 	const data = req.body;
@@ -15,7 +16,7 @@ export const whatsAppGeneralBotSwitchMiddleware = async (req, res, next) => {
 	try {
 		let botSwitchInstance = await BotSwitch.findOne();
 		// Next() if general switch is ON or message is not from Admin
-		if (botSwitchInstance.generalSwitch === "ON" || userPhone === myPhone) {
+		if (botSwitchInstance.generalSwitch === "ON" || userPhone === myPhone || userPhone === myPhone2) {
 			next();
 		
         // General Bot Switch is off

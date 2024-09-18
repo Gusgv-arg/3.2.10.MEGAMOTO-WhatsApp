@@ -22,7 +22,6 @@ export const changeMegaBotSwitch = async (instruction) => {
         return
 	} catch (error) {
 		console.log("Error in megaBotSwitch", error.message);
-		newErrorWhatsAppNotification("whatsapp", error.message);
-		throw error;
+		newErrorWhatsAppNotification("whatsapp", error.message);		
 	}
 };

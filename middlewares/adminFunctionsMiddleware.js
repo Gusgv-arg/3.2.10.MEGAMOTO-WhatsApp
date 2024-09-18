@@ -15,6 +15,7 @@ import listCampaigns from "../utils/listCampaigns.js";
 import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
 
 const myPhone = process.env.MY_PHONE;
+const myPhone2 = process.env.MY_PHONE2;
 
 export const adminFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
@@ -40,7 +41,9 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 		// Admin INSTRUCTIONS: can be text or document format in case of Campaign!!!
 		if (
 			(typeOfWhatsappMessage === "text" && userPhone === myPhone) ||
-			(typeOfWhatsappMessage === "document" && userPhone === myPhone)
+			(typeOfWhatsappMessage === "document" && userPhone === myPhone) ||
+			(typeOfWhatsappMessage === "text" && userPhone === myPhone2) ||
+			(typeOfWhatsappMessage === "document" && userPhone === myPhone2)
 		) {
 			let message;
 			let documentId;
@@ -118,9 +121,9 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await listCampaigns();
 
 				res.status(200).send("EVENT_RECEIVED");
-			} else if (message==="megabot leads"){
+			} else if (message === "megabot leads") {
 				const leads = await exportLeadsToExcel();
-				
+
 				res.status(200).send("EVENT_RECEIVED");
 			} else {
 				// Does next if its an admin message but is not an instruction
