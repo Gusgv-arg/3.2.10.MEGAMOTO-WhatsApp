@@ -6,7 +6,7 @@ const whatsappBusinessId = process.env.WHATSAPP_BUSINESS_ID;
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 
 //Function that searches WhatsApp body Template
-export const searchTemplate = async (templateName) => {
+export const searchTemplate = async (templateName, userPhone) => {
 	try {
 		// Get WhatsApp Templates from Facebook
 		const urlTemplates = `https://graph.facebook.com/v20.0/${whatsappBusinessId}/message_templates?fields=name,status`;
@@ -58,8 +58,6 @@ export const searchTemplate = async (templateName) => {
 		return templateContent;
 	} catch (error) {
 		console.log("Error en searchTemplate.js", error.message);
-		await adminWhatsAppNotification(
-			`*NOTIFICACION de Error de Campaña:*\n${error.message}`
-		);
+		await adminWhatsAppNotification(userPhone,`*NOTIFICACION de Error de Campaña:*\n${error.message}`);
 	}
 };

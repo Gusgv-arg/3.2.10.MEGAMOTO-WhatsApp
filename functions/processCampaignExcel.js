@@ -17,11 +17,12 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export const processCampaignExcel = async (
 	excelBuffer,
 	templateName,
-	campaignName
+	campaignName,
+	userPhone
 ) => {
 	try {
 		// Look for the template text body
-		const templateText = await searchTemplate(templateName);
+		const templateText = await searchTemplate(templateName, userPhone);
 		console.log("Texto de la Plantilla:", templateText);
 
 		// Extract variables from template text
@@ -205,10 +206,7 @@ export const processCampaignExcel = async (
 				);
 
 				errorCount++;
-				await adminWhatsAppNotification(
-					`*NOTIFICACION de Error de Campaña para ${telefono}-${
-						row[headers[1]] || ""
-					}:*\n" + ${error.message}`
+				await adminWhatsAppNotification(userPhone,`*NOTIFICACION de Error de Campaña para ${telefono}-${row[headers[1]] || ""}:*\n" + ${error.message}`
 				);
 			}
 
@@ -217,10 +215,10 @@ export const processCampaignExcel = async (
 		}
 
 		const summaryMessage = `*NOTIFICACION de Campaña:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
-		await adminWhatsAppNotification(summaryMessage);
+		await adminWhatsAppNotification(userPhone, summaryMessage);
 	} catch (error) {
 		console.error("Error processing campaign Excel:", error.message);
 		// Receives the throw new error
-		await adminWhatsAppNotification(`*NOTIFICACION de Error de Campaña:*\n${error.message}`);
+		await adminWhatsAppNotification(userPhone, `*NOTIFICACION de Error de Campaña:*\n${error.message}`);
 	}
 };

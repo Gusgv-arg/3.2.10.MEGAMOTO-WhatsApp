@@ -2,7 +2,7 @@ import Leads from "../models/leads.js";
 import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
 
 
-async function listCampaigns() {
+async function listCampaigns(userPhone) {
     const leads = await Leads.find().populate('campaigns'); // Obtener todos los leads y sus campañas
     const summary = {};
 
@@ -35,7 +35,7 @@ async function listCampaigns() {
         result += `${data.campaignDate} - ${campaignName}: ${data.campaign_status}. Cant.: ${data.contacted}. Resp.: ${data.responded}.\n`;
     }
     console.log("Result-->",result)
-    await adminWhatsAppNotification(`*LISTADO DE CAMPAÑAS*\n${result}`)
+    await adminWhatsAppNotification(userPhone, `*LISTADO DE CAMPAÑAS*\n${result}`)
     
 }
 export default listCampaigns

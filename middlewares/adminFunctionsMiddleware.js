@@ -62,20 +62,22 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await changeMegaBotSwitch("ON");
 
 				// WhatsApp Admin notification
-				await adminWhatsAppNotification(botSwitchOnNotification);
-
+				await adminWhatsAppNotification(userPhone, botSwitchOnNotification);
+				
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message === "megabot no responder") {
 				//Change general switch to OFF
 				await changeMegaBotSwitch("OFF");
 
 				// WhatsApp Admin notification
-				await adminWhatsAppNotification(botSwitchOffNotification);
-
+				await adminWhatsAppNotification(userPhone, botSwitchOffNotification);
+								
 				res.status(200).send("EVENT_RECEIVED");
+				
 			} else if (message === "megabot") {
-				await adminWhatsAppNotification(helpFunctionNotification);
-
+				// WhatsApp Admin notification
+				await adminWhatsAppNotification(userPhone, helpFunctionNotification);
+				
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message.startsWith("campaña")) {
 				// Campaigns format: "campaña" "template name" "campaign name"
@@ -97,7 +99,8 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await processCampaignExcel(
 					documentBufferData,
 					templateName,
-					campaignName
+					campaignName,
+					userPhone
 				);
 
 				res.status(200).send("EVENT_RECEIVED");
@@ -106,7 +109,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const campaignName = parts.slice(1).join("_");
 
 				//Call the functions that inactivates Campaign
-				await changeCampaignStatus("inactiva", campaignName);
+				await changeCampaignStatus("inactiva", campaignName, userPhone);
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message.startsWith("activar")) {
@@ -114,15 +117,15 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const campaignName = parts.slice(1).join("_");
 
 				//Call the functions that activates Campaign
-				await changeCampaignStatus("activa", campaignName);
+				await changeCampaignStatus("activa", campaignName, userPhone);
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message === "megabot campañas") {
-				await listCampaigns();
+				await listCampaigns(userPhone);
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message === "megabot leads") {
-				const leads = await exportLeadsToExcel();
+				const leads = await exportLeadsToExcel(userPhone);
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else {

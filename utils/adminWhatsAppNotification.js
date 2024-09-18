@@ -5,9 +5,8 @@ dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
-const myPhone = process.env.MY_PHONE
 
-export const adminWhatsAppNotification = async (notification) => {
+export const adminWhatsAppNotification = async (phone, notification) => {
 	try {
 		
 		// Posts the message to Whatsapp
@@ -15,7 +14,7 @@ export const adminWhatsAppNotification = async (notification) => {
 		const data = {
 			messaging_product: "whatsapp",
 			recipient_type: "individual",
-			to: myPhone,
+			to: phone,
 			type: "text",
 			text: {
 				preview_url: true,

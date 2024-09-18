@@ -14,10 +14,10 @@ const transporter = nodemailer.createTransport({
 });
 
 // Función para enviar el archivo por correo electrónico
-export const sendLeadsByMail = async (filePath) => {
+export const sendLeadsByMail = async (filePath, mail, userPhone) => {
 	const mailOptions = {
 		from: process.env.SMTP_EMAIL,
-		to: process.env.MY_MAIL,
+		to: mail,
 		subject: "Excel con Leads de MegaBot",
 		text: "Adjunto el archivo Excel con las respuestas de MegaBot.",
 		attachments: [
@@ -32,8 +32,7 @@ export const sendLeadsByMail = async (filePath) => {
 		let info = await transporter.sendMail(mailOptions);
 		
 		// Notify the Admin by WhatsApp
-		await adminWhatsAppNotification(
-			`*NOTIFICACION envío Leads.xls por mail:*\nSe envió Leads.xls por mail a ${process.env.MY_MAIL}.`
+		await adminWhatsAppNotification(userPhone, `*NOTIFICACION envío Leads.xls por mail:*\nSe envió Leads.xls por mail a ${mail}.`
 		);
 		
 	} catch (error) {
