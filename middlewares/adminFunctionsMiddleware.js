@@ -84,6 +84,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const parts = message.split(" ");
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
+				console.log("Campaign Name:", campaignName)
 
 				// Get the Document URL from WhatsApp
 				const document = await getMediaWhatsappUrl(documentId);
@@ -96,7 +97,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				//console.log("Document download:", documentBufferData);
 
 				// Call the new function to process the campaign
-				if (campaignName === "pedido ya") {
+				if (campaignName === "pedido_ya" || campaignName === "pedidoya" ) {
 					await processPedidoYa(
 						documentBufferData,
 						templateName,
