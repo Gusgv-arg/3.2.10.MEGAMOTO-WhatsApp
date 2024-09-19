@@ -13,6 +13,7 @@ import { processCampaignExcel } from "../functions/processCampaignExcel.js";
 import { changeCampaignStatus } from "../utils/changeCampaignStatus.js";
 import listCampaigns from "../utils/listCampaigns.js";
 import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
+import { processPedidoYa } from "../functions/processPedidoYa.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
@@ -63,7 +64,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 				// WhatsApp Admin notification
 				await adminWhatsAppNotification(userPhone, botSwitchOnNotification);
-				
+
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message === "megabot no responder") {
 				//Change general switch to OFF
@@ -71,13 +72,12 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 				// WhatsApp Admin notification
 				await adminWhatsAppNotification(userPhone, botSwitchOffNotification);
-								
+
 				res.status(200).send("EVENT_RECEIVED");
-				
 			} else if (message === "megabot") {
 				// WhatsApp Admin notification
 				await adminWhatsAppNotification(userPhone, helpFunctionNotification);
-				
+
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message.startsWith("campaña")) {
 				// Campaigns format: "campaña" "template name" "campaign name"
@@ -96,12 +96,21 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				//console.log("Document download:", documentBufferData);
 
 				// Call the new function to process the campaign
-				await processCampaignExcel(
-					documentBufferData,
-					templateName,
-					campaignName,
-					userPhone
-				);
+				if (campaignName === "pedido ya") {
+					await processPedidoYa(
+						documentBufferData,
+						templateName,
+						campaignName,
+						userPhone
+					);
+				} else {
+					await processCampaignExcel(
+						documentBufferData,
+						templateName,
+						campaignName,
+						userPhone
+					);
+				}
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message.startsWith("inactivar")) {

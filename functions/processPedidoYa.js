@@ -14,7 +14,8 @@ const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const processCampaignExcel = async (
+// Function that process a specific Excel Format for Pedidos Ya Campaign for Megamoto
+export const processPedidoYa = async (
 	excelBuffer,
 	templateName,
 	campaignName,
@@ -36,11 +37,13 @@ export const processCampaignExcel = async (
 
 		// Get headers dynamically
 		const headers = Object.keys(data[0]);
-		const excelVariableCount = headers.length - 1; // Exclude the phone number column
+		const excelVariableCount = headers.length - 2; // Exclude client number && vendor phones columns
 
 		// Check if the number of variables match
 		if (templateVariableCount !== excelVariableCount) {
-			throw new Error(`La plantilla de WhatsApp tiene ${templateVariableCount} variables y el Excel tiene ${excelVariableCount} columnas. Deben coincidir la cantidad de variables de la Plantilla de WhatsApp con la cantidad de columnas del Excel a partir de la columna B.`);
+			throw new Error(
+				`La plantilla de WhatsApp tiene ${templateVariableCount} variables y el Excel tiene ${excelVariableCount} columnas. El Excel debe tener teléfono del cliente en columna A, el nombre en columna B, modelo de moto en la C y teléfono del vendedor en la D.`
+			);
 		}
 
 		// URL where to post Campaign
@@ -85,8 +88,8 @@ export const processCampaignExcel = async (
 			});
 			console.log("Mensaje individual:", personalizedMessage);
 
-			// From the array of headers, take off  the telephone and map the records that correspond to the variables of the Campaign Template
-			const parameters = headers.slice(1).map((header) => ({
+			// From the array of headers, take off the client && vendor telephones and map the records that correspond to the variables of the Campaign Template
+			const parameters = headers.slice(1, 3).map((header) => ({
 				type: "text",
 				text: row[header] ? row[header].toString() : "",
 			}));
@@ -135,7 +138,7 @@ export const processCampaignExcel = async (
 				// Create a thread for the Campaign with the initial messages
 				campaignThread = await createCampaignThread(personalizedMessage);
 				//console.log("campaignthreadID-->", campaignThread);
-				
+
 				// Prepare a Campaign detail object
 				const campaignDetail = {
 					campaignName: campaignName,
@@ -144,7 +147,7 @@ export const processCampaignExcel = async (
 					messages: `MegaBot: ${personalizedMessage}`,
 					client_status: "contactado",
 					campaign_status: "activa",
-					vendor_phone: "",
+					vendor_phone: row[headers[3]] || "", // Guardar el valor de la columna D,
 					error: "",
 				};
 
@@ -153,7 +156,7 @@ export const processCampaignExcel = async (
 
 				if (!lead) {
 					// Create a General Thread (just in case the campaign is stopped)
-					const generalThread = await createGeneralThread()
+					const generalThread = await createGeneralThread();
 
 					// Creates a new lead if it does not exist
 					lead = new Leads({
@@ -188,6 +191,7 @@ export const processCampaignExcel = async (
 					messages: `Error al contactar cliente por la Campaña ${campaignName}.`,
 					client_status: "error",
 					campaign_status: "activa",
+					vendor_phone: row[headers[3]] || "",
 					error: error.response?.data || error.message,
 				};
 
@@ -207,7 +211,11 @@ export const processCampaignExcel = async (
 				);
 
 				errorCount++;
-				await adminWhatsAppNotification(userPhone,`*NOTIFICACION de Error de Campaña para ${telefono}-${row[headers[1]] || ""}:*\n" + ${error.message}`
+				await adminWhatsAppNotification(
+					userPhone,
+					`*NOTIFICACION de Error de Campaña PedidoYa para ${telefono}-${
+						row[headers[1]] || ""
+					}:*\n" + ${error.message}`
 				);
 			}
 
@@ -215,11 +223,14 @@ export const processCampaignExcel = async (
 			await delay(3000);
 		}
 
-		const summaryMessage = `*NOTIFICACION de Campaña:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
+		const summaryMessage = `*NOTIFICACION de Campaña Pedido Ya:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
 		await adminWhatsAppNotification(userPhone, summaryMessage);
 	} catch (error) {
 		console.error("Error processing campaign Excel:", error.message);
 		// Receives the throw new error
-		await adminWhatsAppNotification(userPhone, `*NOTIFICACION de Error de Campaña:*\n${error.message}`);
+		await adminWhatsAppNotification(
+			userPhone,
+			`*NOTIFICACION de Error de Campaña PedidoYa:*\n${error.message}`
+		);
 	}
 };
