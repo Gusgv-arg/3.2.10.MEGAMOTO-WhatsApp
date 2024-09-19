@@ -84,8 +84,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const parts = message.split(" ");
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
-				console.log("Campaign Name:", campaignName)
-
+				
 				// Get the Document URL from WhatsApp
 				const document = await getMediaWhatsappUrl(documentId);
 				const documentUrl = document.data.url;
