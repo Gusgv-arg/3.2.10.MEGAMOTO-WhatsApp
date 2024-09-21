@@ -46,7 +46,9 @@ export const buttonActions = async (senderId, message, predefinedMessage, button
 
 			// Update Campaign status
 			if (button === "vendedor"){
-				currentCampaign.client_status = "contactar";
+				currentCampaign.client_status = "vendedor";
+			} else if (button === "dni") {
+				currentCampaign.client_status = "dni";
 			}
 
 			// Clean error if it existed

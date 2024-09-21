@@ -5,7 +5,7 @@ const campaignDetailSchema = new mongoose.Schema({
 	campaignDate: Date,
 	campaignThreadId: String,
 	messages: String,	
-	client_status: { type: String, enum: ["contactado", "respuesta", "error", "contactar"] },
+	client_status: { type: String, enum: ["contactado", "respuesta", "error", "vendedor", "dni"] },
 	campaign_status: { type: String, enum: ["activa", "inactiva"] },
 	vendor_phone: String,
 	error: String,
