@@ -95,14 +95,15 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const documentBufferData = documentBuffer.data;
 				//console.log("Document download:", documentBufferData);
 
-				// Call the new function to process the campaign
-				if (campaignName === "pedido_ya" || campaignName === "pedidoya" ) {
+				if (templateName === "pedido_ya_dni_no_calificados") {
+					// Call the new function to process the campaign "pedido ya"
 					await processPedidoYa(
 						documentBufferData,
 						templateName,
 						campaignName,
 						userPhone
-					);
+					); 
+
 				} else {
 					await processCampaignExcel(
 						documentBufferData,

@@ -23,7 +23,6 @@ export const handleWhatsappMessage = async (senderId, messageGpt) => {
 			text: {
 				preview_url: true,
 				body: messageGpt,
-				//body: "Hola desde https://www.gus-tech.com",
 			},
 		};
 
@@ -43,7 +42,7 @@ export const handleWhatsappMessage = async (senderId, messageGpt) => {
 				);
 			});
 	} catch (error) {
-		console.log("Error en handleWhatsappMessage", error.message);
+		console.log("Error en handleWhatsappMessage.js", error.message);
 		throw error;
 	}
 };
