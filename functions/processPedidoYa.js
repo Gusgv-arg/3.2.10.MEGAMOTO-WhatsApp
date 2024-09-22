@@ -7,8 +7,6 @@ import { createCampaignThread } from "../utils/createCampaignThread.js";
 import { searchTemplate } from "../utils/searchTemplate.js";
 import { createGeneralThread } from "../utils/createGeneralThread.js";
 
-dotenv.config();
-
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
@@ -24,7 +22,7 @@ export const processPedidoYa = async (
 	try {
 		// Look for the template text body
 		const templateText = await searchTemplate(templateName, userPhone);
-		console.log("Texto de la Plantilla:", templateText);
+		//console.log("Texto de la Plantilla:", templateText);
 
 		// Extract variables from template text
 		const templateVariables = templateText.match(/{{\d+}}/g) || [];

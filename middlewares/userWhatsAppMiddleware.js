@@ -24,8 +24,7 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 
 	// Return if I receive status update
 	if (status !== null) {
-		res.status(200).send("EVENT_RECEIVED");
-		return;
+		res.status(200).send("EVENT_RECEIVED");		
 	}
 
 	if (channel === "WhatsApp" && body?.entry[0]) {

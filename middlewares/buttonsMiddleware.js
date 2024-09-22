@@ -23,18 +23,24 @@ export const buttonsMiddleware = async (req, res, next) => {
 			button = "vendedor";
 			const predefinedMessage =
 				"¡Gracias! En breve un vendedor se va a estar contactando. ¡Que tengas un buen día!";
+			const templateName = "lead_pedido_ya";
 
 			try {
 				// Answer with a predefined response to the customer
 				await handleWhatsappMessage(senderId, predefinedMessage);
 
-				// Save in DB && in GPT thread && notifies vendor
-				await buttonActions(senderId, message, predefinedMessage, button);
+				// Save in DB && in GPT thread && notifies vendor.
+				await buttonActions(
+					senderId,
+					message,
+					predefinedMessage,
+					button,
+					templateName
+				);
 
 				res.status(200).send("EVENT_RECEIVED");
-				return;
 			} catch (error) {
-				console.log("Error in contactVendor.js", error.message);
+				console.log("Error in buttonMiddleware.js", error.message);
 				await adminWhatsAppNotification(
 					myPhone,
 					`*NOTIFICACION de Error contactando al Vendedor:*\n${error.message}`
@@ -45,15 +51,21 @@ export const buttonsMiddleware = async (req, res, next) => {
 			button = "dni";
 			const predefinedMessage =
 				"¡Perfecto! Envianos un DNI de un familiar o conocido que pienses pueda calificar para un crédito así lo verificamos y nos volvemos a comunicar con vos.";
+			const templateName = "lead_pedido_ya";
 
 			// Answer with a predefined response to the customer
 			await handleWhatsappMessage(senderId, predefinedMessage);
 
 			// Save in DB && in GPT thread && notifies vendor
-			await buttonActions(senderId, message, predefinedMessage, button);
+			await buttonActions(
+				senderId,
+				message,
+				predefinedMessage,
+				button,
+				templateName
+			);
 
 			res.status(200).send("EVENT_RECEIVED");
-			return;
 		} else {
 			next();
 		}

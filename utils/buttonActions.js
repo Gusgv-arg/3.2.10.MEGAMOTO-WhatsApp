@@ -2,9 +2,16 @@ import Leads from "../models/leads.js";
 import { addMessagesToThread } from "./addMessagesToThread.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { logError } from "./logError.js";
+import { templateWhatsAppNotification } from "./templateWhatsAppNotification.js";
 
 // Save the predefined button message in DB && in GPT Thread && notifiy vendor
-export const buttonActions = async (senderId, message, predefinedMessage, button) => {
+export const buttonActions = async (
+	senderId,
+	message,
+	predefinedMessage,
+	button,
+	templateName
+) => {
 	try {
 		// --------------- SAVE IN DB -----------------------//
 		// Find the lead
@@ -45,7 +52,7 @@ export const buttonActions = async (senderId, message, predefinedMessage, button
 				: newMessageContent;
 
 			// Update Campaign status
-			if (button === "vendedor"){
+			if (button === "vendedor") {
 				currentCampaign.client_status = "vendedor";
 			} else if (button === "dni") {
 				currentCampaign.client_status = "dni";
@@ -69,21 +76,64 @@ export const buttonActions = async (senderId, message, predefinedMessage, button
 
 			// --------------- NOTIFY VENDOR -----------------------//
 			// Diferentiate wich button was pressed
-			if (button === "vendedor"){
-				const leadDetails = `*NOTIFICACION DE LEAD*\n*Campaña:* ${currentCampaign.campaignName}\n*Fecha Campaña:* ${new Date(currentCampaign.campaignDate).toLocaleDateString("es-AR")}\n*Cliente:* ${lead.name}\n*Teléfono:* ${lead.id_user}\n*Estado Cliente:* ${currentCampaign.client_status}\n*Conversación:* ${currentCampaign.messages}`;
-				await handleWhatsappMessage(currentCampaign.vendor_phone, leadDetails)
-				
-			} else if (button === "dni") {
-				const dniNotification = `*NOTIFICACION DE DNI*\n*Campaña:* ${currentCampaign.campaignName}\n*Fecha Campaña:* ${new Date(currentCampaign.campaignDate).toLocaleDateString("es-AR")}\n*Cliente:* ${lead.name}\n*Teléfono:* ${lead.id_user}\n*Estado Cliente:* ${currentCampaign.client_status}\n*Conversación:* ${currentCampaign.messages}`
-				console.log("definir si hacemos algo cuando apreta boton de dni")
-				
-				//await handleWhatsappMessage(currentCampaign.vendor_phone, dniNotification)
-			}
+			if (button === "vendedor") {
+				const campaignDate = new Date(
+					currentCampaign.campaignDate
+				).toLocaleDateString("es-AR");
 
-			return;
+				// Clean the messages to remove new lines and excessive spaces
+				const cleanMessages = currentCampaign.messages
+					.replace(/[\n\t]+/g, " ")
+					.replace(/ {2,}/g, " ");
+
+				// Array with 6 Template variables in the format expected from WhatsApp
+				const parameters = [
+					{ type: "text", text: currentCampaign.campaignName },
+					{ type: "text", text: campaignDate },
+					{ type: "text", text: lead.name },
+					{ type: "text", text: lead.id_user },
+					{ type: "text", text: currentCampaign.client_status },
+					{ type: "text", text: cleanMessages },
+				];
+
+				const vendor_phone = currentCampaign.vendor_phone;
+
+				await templateWhatsAppNotification(
+					templateName,
+					vendor_phone,
+					parameters
+				);
+			} else if (button === "dni") {
+				const campaignDate = new Date(
+					currentCampaign.campaignDate
+				).toLocaleDateString("es-AR");
+
+				// Clean the messages to remove new lines and excessive spaces
+				const cleanMessages = currentCampaign.messages
+					.replace(/[\n\t]+/g, " ")
+					.replace(/ {2,}/g, " ");
+
+				// Array with 6 Template variables in the format expected from WhatsApp.
+				const parameters = [
+					{ type: "text", text: currentCampaign.campaignName },
+					{ type: "text", text: campaignDate },
+					{ type: "text", text: lead.name },
+					{ type: "text", text: lead.id_user },
+					{ type: "text", text: currentCampaign.client_status },
+					{ type: "text", text: cleanMessages },
+				];
+
+				const vendor_phone = currentCampaign.vendor_phone;
+
+				await templateWhatsAppNotification(
+					templateName,
+					vendor_phone,
+					parameters
+				);
+			}
 		}
 	} catch (error) {
 		console.log("An error occured in buttonActions.js", error.message);
-		throw new Error(error.message);
+		throw error;
 	}
 };
