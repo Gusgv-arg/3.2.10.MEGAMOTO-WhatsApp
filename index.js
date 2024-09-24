@@ -5,7 +5,6 @@ import cors from "cors";
 import morgan from "morgan";
 import { errorHandler } from "./utils/errorHandler.js";
 import testingRouter from "./routers/testingRouter.js";
-import messengerRouter from "./routers/messengerRouter.js"
 import whatsappRouter from "./routers/whatsappRouter.js";
 import BotSwitch from "./models/botSwitch.js"
 import createBotSwitchInstance from "./utils/createBotSwitchInstance.js";
@@ -53,7 +52,6 @@ try {
     await createBotSwitchInstance();
 }
 
-app.use("/webhook_messenger", messengerRouter);
 app.use("/webhook", whatsappRouter);
 app.use("/testing", testingRouter);
 

@@ -37,7 +37,7 @@ export const handleWhatsappMessage = async (senderId, messageGpt) => {
 			})
 			.catch((error) => {
 				console.error(
-					"Error enviando a Facebook------------>",
+					"Error enviando a Facebook en handleWhatsappMessage.js--->",
 					error.response ? error.response.data : error.message
 				);
 			});

@@ -1,13 +1,15 @@
+import Leads from "../models/leads.js";
 import audioToText from "./audioToText.js";
 import { convertBufferImageToUrl } from "./convertBufferImageToUrl.js";
 import { downloadWhatsAppMedia } from "./downloadWhatsAppMedia.js";
 import { errorMessage1 } from "./errorMessages.js";
 import { getMediaWhatsappUrl } from "./getMediaWhatsappUrl.js";
-import { handleMessengerMessage } from "./handleMessengerMessage.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { newErrorWhatsAppNotification } from "./newErrorWhatsAppNotification.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
+import { lead_pedido_yaTemplateWabNotification } from "./lead_pedido_ya_TemplateWabNotification.js";
+import { addMessagesToThread } from "./addMessagesToThread.js";
 
 // Class definition for the Queue
 export class MessageQueue {
@@ -59,21 +61,7 @@ export class MessageQueue {
 
 						// Replace message with transcription
 						newMessage.message = audioTranscription;
-
-						// --- Messenger Audio --- //
-					} else if (newMessage.channel === "messenger") {
-						// Call whisper GPT to transcribe audio to text
-						const audioTranscription = await audioToText(
-							newMessage.url,
-							newMessage.channel
-						);
-
-						console.log("Audio transcription:", audioTranscription);
-
-						// Replace message with transcription
-						newMessage.message = audioTranscription;
 					}
-
 					// ---------- IMAGE -------------------------------------------------//
 				} else if (newMessage.type === "image") {
 					// --- WhatsApp Image --- //
@@ -131,46 +119,67 @@ export class MessageQueue {
 					newMessage.type
 				);
 
-				if (newMessage.channel === "messenger") {
-					// Send the response back to the user by Messenger
-					handleMessengerMessage(
-						senderId,
-						response?.messageGpt ? response.messageGpt : response.errorMessage
-					);
+				if (newMessage.channel === "whatsapp") {
+					// Response to user by Whatsapp (can be gpt, error message, notification or buttons predefined answers)
+					const responseToUser = response?.messageGpt
+						? response.messageGpt
+						: response.errorMessage
+						? response.errorMessage
+						: response.notification
+						? response.notification
+						: response.dniNotification
+						? response.dniNotification
+						: response.noGracias
+						? response.noGracias
+						: response.pagoContadoOTarjeta
+						? response.pagoContadoOTarjeta
+						: response.pagoConPrestamo
+						? response.pagoConPrestamo
+						: response.tengoConsultas;
+
+					// Send the answer to the user
+					await handleWhatsappMessage(senderId, responseToUser);
 
 					// Save the message in the database
 					await saveMessageInDb(
 						senderId,
-						response?.messageGpt ? response.messageGpt : response.errorMessage,
-						response?.threadId ? response.threadId : null,
-						newMessage
-					);
-				} else if (newMessage.channel === "whatsapp") {
-					// Send response to user by Whatsapp (can be gpt, error message, notification)
-					await handleWhatsappMessage(
-						senderId,
-						response?.messageGpt
-							? response.messageGpt
-							: response.errorMessage
-							? response.errorMessage
-							: response.notification
-					);
-
-					// Save the message in the database
-					await saveMessageInDb(
-						senderId,
-						response?.messageGpt
-							? response.messageGpt
-							: response.errorMessage
-							? response.errorMessage
-							: response.notification,
+						responseToUser,
 						response?.threadId ? response.threadId : null,
 						newMessage,
 						response?.campaignFlag
 					);
+
+					// Save notifications in GPT thread
+					if (
+						response.noGracias ||
+						response.dniNotification ||
+						response.pagoConPrestamo ||
+						response.pagoContadoOTarjeta ||
+						response.tengoConsultas
+					) {
+						const campaignThreadId = response.threadId
+
+						await addMessagesToThread(
+							campaignThreadId,
+							newMessage.message,
+							responseToUser
+						);
+					}
+
+					// Notify the vendor if dniNotification or pagoContadoOTarjeta
+					if (
+						response.dniNotification ||
+						response.pagoContadoOTarjeta ||
+						response.tengoConsultas
+					) {
+						const templateName = "lead_pedido_ya";
+
+						// Function that notifies lead to the vendor
+						await lead_pedido_yaTemplateWabNotification(templateName, senderId);
+					}
 				}
 			} catch (error) {
-				console.error(`14. Error processing message: ${error.message}`);
+				console.error(`14. Error in messageQueue.js: ${error.message}`);
 				// Send error message to the user
 				const errorMessage = errorMessage1;
 
@@ -178,20 +187,12 @@ export class MessageQueue {
 				queue.processing = false;
 
 				// Error handlers
-				if (newMessage.channel === "web" && queue.responseCallback) {
-					queue.responseCallback(error, null);
-				} else if (newMessage.channel === "whatsapp") {
+				if (newMessage.channel === "whatsapp") {
 					// Send error message to customer
-					handleWhatsappMessage(senderId, errorMessage);
+					//handleWhatsappMessage(senderId, errorMessage);
 
 					// Send WhatsApp error message to Admin
 					newErrorWhatsAppNotification("WhatsApp", error.message);
-				} else if (newMessage.channel === "messenger") {
-					// Send error message to customer
-					handleMessengerMessage(senderId, errorMessage);
-
-					// Send WhatsApp error message to Admin
-					newErrorWhatsAppNotification("Messenger", error.message);
 				}
 
 				// Return to webhookController that has res.

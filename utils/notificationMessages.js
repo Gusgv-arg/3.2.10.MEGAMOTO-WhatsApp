@@ -8,3 +8,13 @@ export const noPromotions = "*NOTIFICACION:* Tomamos conocimiento de que *NO* de
 
 export const templateError = `*NOTIFICACION de Error:*\nPara generar una Campaña debe enviar en la descripción del Excel que adjunta la palabra 'campaña' seguido del nombre de la plantilla de WhatsApp seguido del nombre que le quiera dar a la Campaña. (Ejemplo: "campaña plantilla1 campaña1").`
 
+export const pagoContadoOTarjeta = "¡Perfecto! Un vendedor se contactará contigo a la brevedad. ¡Hasta pronto!";
+
+export const pagoConPrestamo = "¡Perfecto! Verificamos con tu DNI que nos pasaron en el Acuerdo, y no te otorgan suficiente para la moto, por lo cual necesitamos el DNI de algún conocido tuyo que salga de garante. Si estás de acuerdo, por favor pasámelo para verificar y te avisamos.";
+
+export const noGracias = "Ok gracias por tu tiempo, cualquier consulta podés volver a este chat cuando quieras. ¡Saludos!";
+
+export const tengoConsultas = "¡Perfecto! Un vendedor se contactará contigo a la brevedad. ¡Hasta pronto!"
+
+export const dniNotification =
+				"¡Gracias por enviarnos tu DNI! Un vendedor se va a encargar de verificar si calificas para un préstamo y te estará contactando. ¡Que tengas un buen día!";

@@ -34,12 +34,12 @@ export const handleWhatsappGreeting = async (name, userPhone) => {
 			})
 			.catch((error) => {
 				console.error(
-					"Error enviando a Facebook------------>",
+					"Error enviando a Facebook en handleWhatsappGreeting.js----->",
 					error.response ? error.response.data : error.message
 				);
 			});
 	} catch (error) {
-		console.log("Error en handleWhatsappGreeting", error.message);
+		console.log("Error en handleWhatsappGreeting.js--->", error.message);
 		throw error;
 	}
 };

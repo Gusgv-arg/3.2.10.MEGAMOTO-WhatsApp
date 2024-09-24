@@ -19,20 +19,8 @@ try {
                 role: "assistant",
                 content: predefinedMessage,
             },       
-    );
+    );    
     
-    /* {
-        messages: [
-            {
-                role: "user",
-                content: message,
-            },
-            {
-                role: "assistant",
-                content: predefinedMessage,
-            },
-        ],
-    } */
 } catch (error) {
     console.log("Error in addMessagesToThread.js", error.message)
     throw error

@@ -46,7 +46,7 @@ export const postWhatsAppCampaign = async (req, res) => {
 			})
 			.catch((error) => {
 				console.error(
-					"Error enviando a Facebook------------>",
+					"Error en postWhatsAppCapaign.js------->",
 					error.response ? error.response.data : error.message
 				);
 			});

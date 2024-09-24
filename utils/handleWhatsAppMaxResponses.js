@@ -35,12 +35,12 @@ export const handleWhatsAppMaxResponses = async (name, userPhone) => {
 			})
 			.catch((error) => {
 				console.error(
-					"Error enviando a Facebook------------>",
+					"Error enviando a Facebook en handleWhatsappMaxResponses.js-->",
 					error.response ? error.response.data : error.message
 				);
 			});
 	} catch (error) {
-		console.log("Error en handleWhatsappMaxResponses", error.message);
+		console.log("Error en handleWhatsappMaxResponses.js", error.message);
 		throw error;
 	}
 };

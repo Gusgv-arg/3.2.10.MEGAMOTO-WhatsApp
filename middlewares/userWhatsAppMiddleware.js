@@ -101,8 +101,8 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 
 			res.status(200).send("EVENT_RECEIVED");
 		
+		//Block user from doing more requests
 		} else if (lead.responses + 1 > maxResponses && userPhone !== myPhone && userPhone !== myPhone2) {
-			//Block user from doing more requests
 			console.log("User reached max allowed responses");
 			await handleWhatsAppMaxResponses(name, userPhone);
 			res.status(200).send("EVENT_RECEIVED");

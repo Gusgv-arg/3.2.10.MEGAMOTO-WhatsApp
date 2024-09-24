@@ -9,7 +9,15 @@ import {
 	errorMessage5,
 } from "./errorMessages.js";
 import { cleanThread } from "./cleanThread.js";
-import { noPromotions } from "./notificationMessages.js";
+import {
+	dniNotification,
+	noGracias,
+	noPromotions,
+	pagoConPrestamo,
+	pagoContadoOTarjeta,
+	tengoConsultas,
+} from "./notificationMessages.js";
+import dniDetector from "./dniDetector.js";
 
 dotenv.config();
 
@@ -58,47 +66,61 @@ export const processMessageWithAssistant = async (
 		let campaignThreadId = lastCampaign ? lastCampaign.campaignThreadId : null;
 		let campaignStatus = lastCampaign ? lastCampaign.campaign_status : null;
 		//console.log("Last campaign thread Id:", campaignThreadId)
-		
+
 		// Both threads exist, use Campaign thread
 		if (generalThreadId && campaignThreadId && campaignStatus === "activa") {
 			threadId = campaignThreadId;
 			assistantId = process.env.OPENAI_CAMPAIGN_ID;
 			campaignFlag = true;
-
 		} else if (generalThreadId) {
 			// Only general thread exists
 			threadId = generalThreadId;
-			assistantId = process.env.OPENAI_ASSISTANT_ID
-			campaignFlag = false
-
+			assistantId = process.env.OPENAI_ASSISTANT_ID;
+			campaignFlag = false;
 		} else if (campaignThreadId && campaignStatus === "activa") {
 			// Only campaign thread exists
 			threadId = campaignThreadId;
-			assistantId = process.env.OPENAI_CAMPAIGN_ID
-			campaignFlag = true
-
+			assistantId = process.env.OPENAI_CAMPAIGN_ID;
+			campaignFlag = true;
 		} else {
 			// No valid threadId found
 			console.error("No valid threadId found for user:", senderId);
 		}
-		console.log("ThreadID utilizado:", threadId)
-		
+		console.log("ThreadID utilizado:", threadId);
+
 		//View messages in thread
 		/* const thread_messages = await openai.beta.threads.messages.list(threadId)
 		thread_messages.data.forEach(message => {
 			console.log("Content del mensaje:", message.content);
-		}); */
+		}); */		
 
 		// If type is Document or Button return a specific message
 		if (type === "document") {
 			const errorMessage = errorMessage5;
 			return { errorMessage, threadId, campaignFlag };
+		
 		} else if (
 			type === "button" &&
-			userMessage.toLowerCase() === "detener promociones"
+			userMessage.toLowerCase() === "no gracias"
 		) {
-			const notification = noPromotions;
-			return { notification, threadId, campaignFlag };
+			return { noGracias, threadId, campaignFlag };
+		
+		} else if (
+			userMessage.toLowerCase() === "sí, pago de contado" ||
+			userMessage.toLowerCase() === "sí, pago con tarjeta"
+		) {
+			return { pagoContadoOTarjeta, threadId, campaignFlag };
+		
+		} else if (userMessage.toLowerCase() === "sí, pago con préstamo") {
+			return { pagoConPrestamo, threadId, campaignFlag };
+		} else if (userMessage.toLowerCase() === "sí, pero tengo consultas"){
+			return { tengoConsultas, threadId, campaignFlag };
+		}
+
+		// Check if the message contains numbers that could be a DNI
+		const dni = dniDetector(userMessage);
+		if (dni === true) {
+			return { dniNotification, threadId, campaignFlag };
 		}
 
 		if (imageURL) {
@@ -109,7 +131,7 @@ export const processMessageWithAssistant = async (
 						type: "text",
 						text: userMessage
 							? userMessage
-							: "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
+							: "Dime que ves en esta imágen",
 					},
 					{
 						type: "image_url",
@@ -127,6 +149,8 @@ export const processMessageWithAssistant = async (
 			});
 		}
 	} else {
+		// ----- IN THEORY THIS SHOULD NEVER HAPPEN BECAUSE THE RECORD IS CREATED WITH A THREAD ---- //
+		// ----- IN THEORY THIS SHOULD NEVER HAPPEN BECAUSE THE RECORD IS CREATED WITH A THREAD ---- //
 		// ----- IN THEORY THIS SHOULD NEVER HAPPEN BECAUSE THE RECORD IS CREATED WITH A THREAD ---- //
 		// Create a new thread
 		const thread = await openai.beta.threads.create();

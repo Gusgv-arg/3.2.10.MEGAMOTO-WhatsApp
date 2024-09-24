@@ -33,7 +33,7 @@ export const userWhatsAppNotification = async (userPhone, notification) => {
 			})
 			.catch((error) => {
 				console.error(
-					"Error enviando a Facebook------------>",
+					"Error enviando a Facebook en userWhatsAppNotification.js-->",
 					error.response ? error.response.data : error.message
 				);
 			});

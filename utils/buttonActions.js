@@ -52,10 +52,14 @@ export const buttonActions = async (
 				: newMessageContent;
 
 			// Update Campaign status
-			if (button === "vendedor") {
-				currentCampaign.client_status = "vendedor";
-			} else if (button === "dni") {
-				currentCampaign.client_status = "dni";
+			if (button === "préstamo") {
+				currentCampaign.client_status = "préstamo";
+			} else if (button === "contado") {
+				currentCampaign.client_status = "contado";
+			} else if (button === "tarjeta") {
+				currentCampaign.client_status = "tarjeta";
+			} else if (button === "no interesado") {
+				currentCampaign.client_status = "no interesado";
 			}
 
 			// Clean error if it existed
@@ -76,7 +80,7 @@ export const buttonActions = async (
 
 			// --------------- NOTIFY VENDOR -----------------------//
 			// Diferentiate wich button was pressed
-			if (button === "vendedor") {
+			if (button === "contado" || button === "tarjeta") {
 				const campaignDate = new Date(
 					currentCampaign.campaignDate
 				).toLocaleDateString("es-AR");
@@ -108,28 +112,7 @@ export const buttonActions = async (
 					currentCampaign.campaignDate
 				).toLocaleDateString("es-AR");
 
-				// Clean the messages to remove new lines and excessive spaces
-				const cleanMessages = currentCampaign.messages
-					.replace(/[\n\t]+/g, " ")
-					.replace(/ {2,}/g, " ");
-
-				// Array with 6 Template variables in the format expected from WhatsApp.
-				const parameters = [
-					{ type: "text", text: currentCampaign.campaignName },
-					{ type: "text", text: campaignDate },
-					{ type: "text", text: lead.name },
-					{ type: "text", text: lead.id_user },
-					{ type: "text", text: currentCampaign.client_status },
-					{ type: "text", text: cleanMessages },
-				];
-
-				const vendor_phone = currentCampaign.vendor_phone;
-
-				await templateWhatsAppNotification(
-					templateName,
-					vendor_phone,
-					parameters
-				);
+				
 			}
 		}
 	} catch (error) {

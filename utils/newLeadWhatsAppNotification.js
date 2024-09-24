@@ -49,7 +49,7 @@ export const newLeadWhatsAppNotification = async (channel, name) => {
 			})
 			.catch((error) => {
 				console.error(
-					"Error enviando a Facebook------------>",
+					"Error enviando a Facebook en newLeadWhatsAppNotification.js--->",
 					error.response ? error.response.data : error.message
 				);
 			});

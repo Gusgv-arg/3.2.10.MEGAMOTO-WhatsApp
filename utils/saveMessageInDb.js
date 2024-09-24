@@ -1,5 +1,6 @@
 import Leads from "../models/leads.js";
 import { logError } from "./logError.js";
+import { pagoConPrestamo } from "./notificationMessages.js";
 
 export const saveMessageInDb = async (
 	senderId,
@@ -60,13 +61,24 @@ export const saveMessageInDb = async (
 				// Concatenate the campaign message with the previous ones
 				const newMessageContent = `\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
 
-				// Replace the messages history with the new one  
+				// Replace the messages history with the new one
 				currentCampaign.messages = currentCampaign.messages
 					? currentCampaign.messages + newMessageContent
 					: newMessageContent;
 
 				// Update Campaign status
-				currentCampaign.client_status = "respuesta";
+				if (newMessage.message.toLowerCase() === "no gracias") {
+					currentCampaign.client_status = "no interesado";
+				} else if (
+					newMessage.message.toLowerCase() === "sí, pago de contado" ||
+					newMessage.message.toLowerCase() === "sí, pago con tarjeta" ||
+					newMessage.message.toLowerCase() === "sí, pero tengo consultas" ||
+					messageGpt === pagoConPrestamo
+				) {
+					currentCampaign.client_status = "vendedor";
+				} else {
+					currentCampaign.client_status = "respuesta";
+				}
 
 				// Clean error if it existed
 				if (currentCampaign.error) {
@@ -77,7 +89,6 @@ export const saveMessageInDb = async (
 				await lead.save();
 				console.log("Lead updated with campaign message in Leads DB");
 				return;
-				
 			} else {
 				console.log("there is no campaign flag so nothing was stored in DB!!");
 				return;
