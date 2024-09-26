@@ -21,7 +21,7 @@ async function listCampaigns(userPhone) {
             }
             if (client_status === "contactado") {
                 summary[campaignName].contacted++;
-            } else if (client_status === "respuesta") {
+            } else if (client_status === "respuesta_cliente") {
                 summary[campaignName].responded++;
                 summary[campaignName].contacted++;
             }

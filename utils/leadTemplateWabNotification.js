@@ -1,18 +1,20 @@
 import axios from "axios";
 import Leads from "../models/leads.js";
+import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
+const myPhone = process.env.MY_PHONE;
 
-export const lead_pedido_yaTemplateWabNotification = async (
-	templateName,
-	senderId
-) => {
-	console.log("Template Name--->", templateName)
-	
+export const leadTemplateWabNotification = async (templateName, senderId) => {
+	console.log("Template Name--->", templateName);
+	let lead;
+	let currentCampaign;
+	let campaignDate
+
 	try {
 		// Look for lead in DB
-		const lead = await Leads.findOne({
+		lead = await Leads.findOne({
 			id_user: senderId,
 			$or: [
 				{ thread_id: { $exists: true, $ne: "", $ne: null } },
@@ -21,10 +23,10 @@ export const lead_pedido_yaTemplateWabNotification = async (
 		});
 
 		// Take last current Campaign - always the last one
-		const currentCampaign = lead.campaigns[lead.campaigns.length - 1];
+		currentCampaign = lead.campaigns[lead.campaigns.length - 1];
 
 		// Prepare Template variables
-		const campaignDate = new Date(
+		campaignDate = new Date(
 			currentCampaign.campaignDate
 		).toLocaleDateString("es-AR");
 		const vendor_phone = currentCampaign.vendor_phone;
@@ -72,12 +74,20 @@ export const lead_pedido_yaTemplateWabNotification = async (
 			headers: { "Content-Type": "application/json" },
 		});
 
-		console.log("Notification sent to the vendor!!");
+		if (response.data) {
+			console.log("Notification sent to the vendor!!");
+		} else {
+		}
 	} catch (error) {
-		console.log(
-			"Error in lead_pedido_yaTemplateWabNotification.js:",
-			error.message
-		);
-		throw error;
+		console.log("Error in leadTemplateWabNotification.js:", error.message);
+
+		// Change status of client
+		currentCampaign.client_status = "vendedor no notificado";
+		await lead.save();
+
+		// Notify the Admin so he can resend the message to the vendor
+		const leadNotification = `*LEAD NO INFORMADO AL VENDEDOR - Reenviar al ${currentCampaign.vendor_phone}:*\n*Nombre de la Campaña:* ${currentCampaign.campaignName}\n*Fecha de la Campaña:* ${campaignDate}\n*Cliente:* ${lead.name}\n*Teléfono:* ${lead.id_user}\n*Método de Pago:* ${currentCampaign.payment}\n*Conversación:* ${currentCampaign.messages}`;
+
+		await adminWhatsAppNotification(myPhone, leadNotification);
 	}
 };

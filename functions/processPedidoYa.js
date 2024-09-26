@@ -55,6 +55,7 @@ export const processPedidoYa = async (
 		// Loop for each record
 		for (const row of data) {
 			// Ensure the row has a phone number in the first column
+			let messageSentToCustomer = false;
 			const telefono = row[headers[0]];
 			if (!telefono) {
 				console.error(
@@ -125,9 +126,13 @@ export const processPedidoYa = async (
 				const response = await axios.post(url, messageData, {
 					headers: { "Content-Type": "application/json" },
 				});
-				console.log(
-					`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`
-				);
+
+				if (response.data) {
+					messageSentToCustomer = true;
+					console.log(
+						`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`
+					);
+				}
 
 				// Increment counter
 				successCount++;
@@ -144,7 +149,7 @@ export const processPedidoYa = async (
 					messages: `MegaBot: ${personalizedMessage}`,
 					client_status: "contactado",
 					campaign_status: "activa",
-					payment: "",
+					payment: "sin información",
 					vendor_phone: row[headers[3]] || "", // Guardar el valor de la columna D,
 					error: "",
 				};
@@ -173,8 +178,7 @@ export const processPedidoYa = async (
 					// Update existing lead with Campaign
 					lead.campaigns.push(campaignDetail);
 					await lead.save();
-				}				
-
+				}
 			} catch (error) {
 				console.error(
 					`Error enviando mensaje a ${telefono}:`,
@@ -187,9 +191,11 @@ export const processPedidoYa = async (
 					campaignName: campaignName,
 					campaignDate: new Date(),
 					campaignThreadId: campaignThread,
-					messages: `Error al contactar cliente por la Campaña ${campaignName}.`,
-					client_status: "error",
-					payment: "",
+					messages: messageSentToCustomer 
+					? `MegaBot: ${personalizedMessage}` 
+					: `Error al contactar cliente por la Campaña ${campaignName}.`,
+					client_status: messageSentToCustomer ? "contactado" : "error",
+					payment: "sin información",
 					campaign_status: "activa",
 					vendor_phone: row[headers[3]] || "",
 					error: error.response?.data || error.message,

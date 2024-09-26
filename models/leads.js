@@ -13,10 +13,11 @@ const campaignDetailSchema = new mongoose.Schema({
 			"vendedor",
 			"dni",
 			"no interesado",
+			"vendedor no notificado",
 			"error"
 		],
 	},
-	payment: { type: String, enum: ["contado", "tarjeta", "préstamo"] },
+	payment: { type: String, enum: ["sin información", "contado", "tarjeta", "préstamo"] },
 	campaign_status: { type: String, enum: ["activa", "inactiva"] },
 	vendor_phone: String,
 	error: String,

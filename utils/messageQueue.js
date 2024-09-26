@@ -7,7 +7,7 @@ import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { newErrorWhatsAppNotification } from "./newErrorWhatsAppNotification.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
-import { lead_pedido_yaTemplateWabNotification } from "./lead_pedido_ya_TemplateWabNotification.js";
+import { leadTemplateWabNotification } from "./leadTemplateWabNotification.js";
 import { addMessagesToThread } from "./addMessagesToThread.js";
 import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
 
@@ -177,7 +177,7 @@ export class MessageQueue {
 						const templateName = "lead_megamoto";
 
 						// Function that notifies lead to the vendor
-						await lead_pedido_yaTemplateWabNotification(templateName, senderId);
+						await leadTemplateWabNotification(templateName, senderId);
 					}
 				}
 			} catch (error) {
@@ -194,7 +194,8 @@ export class MessageQueue {
 					//handleWhatsappMessage(senderId, errorMessage);
 
 					// Send WhatsApp error message to Admin
-					await adminWhatsAppNotification(myPhone, error.message);
+					const errorMessage = `*NOTIFICACION DE ERROR:*\n${error.message}`
+					await adminWhatsAppNotification(myPhone, errorMessage);
 				}
 			}
 		}
