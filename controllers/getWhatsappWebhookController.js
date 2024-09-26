@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-
-dotenv.config();
 
 // With a GET Facebook verifies my Whatsapp webhook
 export const getWhatsappWebhookController = (req, res) => {

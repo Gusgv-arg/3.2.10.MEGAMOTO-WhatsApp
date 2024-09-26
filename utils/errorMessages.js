@@ -1,5 +1,3 @@
-import dotenv from "dotenv"
-
 const myPhone = process.env.MY_PHONE
 
 export const errorMessage1 = `Te pido disculpas 🙏, en este momento no puedo procesar tu solicitud porque estamos haciendo mejoras en nuestro servicio. Por favor intentá mas tarde o comunicate al ${myPhone}.\n¡Saludos de MegaBot! 🙂`

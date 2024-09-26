@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import axios from "axios";
 import xlsx from "xlsx";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
@@ -6,8 +5,6 @@ import Leads from "../models/leads.js";
 import { createCampaignThread } from "../utils/createCampaignThread.js";
 import { searchTemplate } from "../utils/searchTemplate.js";
 import { createGeneralThread } from "../utils/createGeneralThread.js";
-
-dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
@@ -144,6 +141,7 @@ export const processCampaignExcel = async (
 					messages: `MegaBot: ${personalizedMessage}`,
 					client_status: "contactado",
 					campaign_status: "activa",
+					payment: "",
 					vendor_phone: "",
 					error: "",
 				};
@@ -188,6 +186,7 @@ export const processCampaignExcel = async (
 					messages: `Error al contactar cliente por la Campaña ${campaignName}.`,
 					client_status: "error",
 					campaign_status: "activa",
+					payment: "",
 					error: error.response?.data || error.message,
 				};
 

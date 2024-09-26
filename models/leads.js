@@ -4,8 +4,19 @@ const campaignDetailSchema = new mongoose.Schema({
 	campaignName: String,
 	campaignDate: Date,
 	campaignThreadId: String,
-	messages: String,	
-	client_status: { type: String, enum: ["contactado", "respuesta", "error", "vendedor", "contado", "préstamo", "tarjeta", "no interesado"] }, //cambiar respuesta a respuesta_cliente
+	messages: String,
+	client_status: {
+		type: String,
+		enum: [
+			"contactado",
+			"respuesta_cliente",
+			"vendedor",
+			"dni",
+			"no interesado",
+			"error"
+		],
+	},
+	payment: { type: String, enum: ["contado", "tarjeta", "préstamo"] },
 	campaign_status: { type: String, enum: ["activa", "inactiva"] },
 	vendor_phone: String,
 	error: String,

@@ -1,9 +1,6 @@
-import dotenv from "dotenv";
 import axios from "axios";
 import { greeting } from "../utils/greeting.js";
 import {errorMessage4} from "../utils/errorMessages.js"
-
-dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;

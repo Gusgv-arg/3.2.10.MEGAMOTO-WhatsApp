@@ -1,8 +1,5 @@
-import dotenv from "dotenv";
 import axios from "axios";
 import { saveMessageInDb } from "./saveMessageInDb.js";
-
-dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;

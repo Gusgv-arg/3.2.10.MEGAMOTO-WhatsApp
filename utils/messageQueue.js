@@ -1,4 +1,3 @@
-import Leads from "../models/leads.js";
 import audioToText from "./audioToText.js";
 import { convertBufferImageToUrl } from "./convertBufferImageToUrl.js";
 import { downloadWhatsAppMedia } from "./downloadWhatsAppMedia.js";
@@ -10,6 +9,9 @@ import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
 import { lead_pedido_yaTemplateWabNotification } from "./lead_pedido_ya_TemplateWabNotification.js";
 import { addMessagesToThread } from "./addMessagesToThread.js";
+import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
+
+const myPhone = process.env.MY_PHONE;
 
 // Class definition for the Queue
 export class MessageQueue {
@@ -157,7 +159,7 @@ export class MessageQueue {
 						response.pagoContadoOTarjeta ||
 						response.tengoConsultas
 					) {
-						const campaignThreadId = response.threadId
+						const campaignThreadId = response.threadId;
 
 						await addMessagesToThread(
 							campaignThreadId,
@@ -166,13 +168,13 @@ export class MessageQueue {
 						);
 					}
 
-					// Notify the vendor if dniNotification or pagoContadoOTarjeta
+					// Notify the vendor if dniNotification or pagoContadoOTarjeta or tengoConsultas
 					if (
 						response.dniNotification ||
 						response.pagoContadoOTarjeta ||
 						response.tengoConsultas
 					) {
-						const templateName = "lead_pedido_ya";
+						const templateName = "lead_megamoto";
 
 						// Function that notifies lead to the vendor
 						await lead_pedido_yaTemplateWabNotification(templateName, senderId);
@@ -192,11 +194,8 @@ export class MessageQueue {
 					//handleWhatsappMessage(senderId, errorMessage);
 
 					// Send WhatsApp error message to Admin
-					newErrorWhatsAppNotification("WhatsApp", error.message);
+					await adminWhatsAppNotification(myPhone, error.message);
 				}
-
-				// Return to webhookController that has res.
-				return errorMessage;
 			}
 		}
 		// Change flag to allow next message processing

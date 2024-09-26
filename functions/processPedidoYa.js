@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import axios from "axios";
 import xlsx from "xlsx";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
@@ -12,7 +11,7 @@ const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Function that process a specific Excel Format for Pedidos Ya Campaign for Megamoto
+// Function for a specific Excel Format for Pedidos Ya Campaign for Megamoto
 export const processPedidoYa = async (
 	excelBuffer,
 	templateName,
@@ -145,6 +144,7 @@ export const processPedidoYa = async (
 					messages: `MegaBot: ${personalizedMessage}`,
 					client_status: "contactado",
 					campaign_status: "activa",
+					payment: "",
 					vendor_phone: row[headers[3]] || "", // Guardar el valor de la columna D,
 					error: "",
 				};
@@ -189,6 +189,7 @@ export const processPedidoYa = async (
 					campaignThreadId: campaignThread,
 					messages: `Error al contactar cliente por la Campaña ${campaignName}.`,
 					client_status: "error",
+					payment: "",
 					campaign_status: "activa",
 					vendor_phone: row[headers[3]] || "",
 					error: error.response?.data || error.message,
@@ -225,7 +226,7 @@ export const processPedidoYa = async (
 		const summaryMessage = `*NOTIFICACION de Campaña Pedido Ya:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
 		await adminWhatsAppNotification(userPhone, summaryMessage);
 	} catch (error) {
-		console.error("Error processing campaign Excel:", error.message);
+		console.error("Error processing PedidoYa Campaign Excel:", error.message);
 		// Receives the throw new error
 		await adminWhatsAppNotification(
 			userPhone,

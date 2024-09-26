@@ -1,13 +1,11 @@
-import dotenv from "dotenv";
 import axios from "axios";
 import { saveMessageInDb } from "../utils/saveMessageInDb.js";
-
-dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 const myPhone = process.env.MY_PHONE
 
+//-----FUNCION DE PRUEBA!!!!!!!!!-------------------------------//
 export const postWhatsAppCampaign = async (req, res) => {
 	try {
 		// Posts the message to Whatsapp

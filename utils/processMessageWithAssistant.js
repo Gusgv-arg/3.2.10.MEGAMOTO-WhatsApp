@@ -1,5 +1,4 @@
 import OpenAI from "openai";
-import dotenv from "dotenv";
 import Leads from "../models/leads.js";
 import { getStockPrice } from "../functions/getStockPrice.js";
 import {
@@ -18,8 +17,6 @@ import {
 	tengoConsultas,
 } from "./notificationMessages.js";
 import dniDetector from "./dniDetector.js";
-
-dotenv.config();
 
 const API_KEY = process.env.OPENAI_API_KEY;
 

@@ -1,9 +1,5 @@
 import OpenAI from "openai";
-import dotenv from "dotenv";
 import { greeting, messengerGreeting } from "../utils/greeting.js";
-
-
-dotenv.config();
 
 const API_KEY = process.env.OPENAI_API_KEY;
 

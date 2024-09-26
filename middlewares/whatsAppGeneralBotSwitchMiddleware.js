@@ -1,10 +1,7 @@
 import axios from "axios";
 import BotSwitch from "../models/botSwitch.js";
-import dotenv from "dotenv";
 import { userWhatsAppNotification } from "../utils/userWhatsAppNotification.js";
 import { errorMessage1 } from "../utils/errorMessages.js";
-
-dotenv.config();
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;

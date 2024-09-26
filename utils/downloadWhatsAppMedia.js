@@ -1,7 +1,4 @@
 import axios from "axios";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;

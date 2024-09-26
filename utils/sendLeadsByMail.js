@@ -1,6 +1,5 @@
 import axios from "axios";
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
 import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
 
 const transporter = nodemailer.createTransport({

@@ -2,11 +2,8 @@ import Leads from "../models/leads.js";
 import { greeting } from "../utils/greeting.js";
 import { createGptThread } from "../utils/createGptThread.js";
 import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
-import dotenv from "dotenv";
 import { handleWhatsAppMaxResponses } from "../utils/handleWhatsAppMaxResponses.js";
 import { newLeadWhatsAppNotification } from "../utils/newLeadWhatsAppNotification.js";
-
-dotenv.config();
 
 const maxResponses = process.env.MAX_RESPONSES;
 const myPhone = process.env.MY_PHONE

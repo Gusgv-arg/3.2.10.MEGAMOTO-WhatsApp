@@ -2,6 +2,8 @@ import { newErrorWhatsAppNotification } from "../utils/newErrorWhatsAppNotificat
 import BotSwitch from "../models/botSwitch.js";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 
+const myPhone = process.env.MY_PHONE;
+
 export const changeMegaBotSwitch = async (instruction) => {
 	try {
 		let botSwitch = await BotSwitch.findOne();
@@ -22,6 +24,6 @@ export const changeMegaBotSwitch = async (instruction) => {
         return
 	} catch (error) {
 		console.log("Error in megaBotSwitch", error.message);
-		newErrorWhatsAppNotification("whatsapp", error.message);		
+		await adminWhatsAppNotification(myPhone, error.message)		
 	}
 };

@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import axios from "axios";
 import Leads from "../models/leads.js";
 
@@ -9,6 +8,7 @@ export const lead_pedido_yaTemplateWabNotification = async (
 	templateName,
 	senderId
 ) => {
+	console.log("Template Name--->", templateName)
 	
 	try {
 		// Look for lead in DB
@@ -41,6 +41,7 @@ export const lead_pedido_yaTemplateWabNotification = async (
 			{ type: "text", text: lead.name },
 			{ type: "text", text: lead.id_user },
 			{ type: "text", text: currentCampaign.client_status },
+			{ type: "text", text: currentCampaign.payment },
 			{ type: "text", text: cleanMessages },
 		];
 

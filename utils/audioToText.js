@@ -1,8 +1,6 @@
 import OpenAI from "openai";
-import dotenv from "dotenv";
 import axios from "axios"
 import fs from "fs";
-dotenv.config();
 
 const API_KEY = process.env.API_KEY_CHATGPT;
 

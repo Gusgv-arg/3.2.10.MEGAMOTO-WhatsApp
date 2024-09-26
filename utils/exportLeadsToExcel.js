@@ -3,7 +3,6 @@ import { fileURLToPath } from "url";
 import xlsx from "xlsx";
 import Leads from "../models/leads.js";
 import { sendLeadsByMail } from "../utils/sendLeadsByMail.js";
-import dotenv from "dotenv";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;

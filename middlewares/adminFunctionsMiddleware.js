@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import { changeMegaBotSwitch } from "../functions/changeMegaBotSwitch.js";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 import {
