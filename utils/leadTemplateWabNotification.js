@@ -68,18 +68,20 @@ export const leadTemplateWabNotification = async (templateName, senderId) => {
 				],
 			},
 		};
-
+		console.log("MessageData--->", messageData)
+		
 		// Post the Notification to the vendor
 		const response = await axios.post(url, messageData, {
 			headers: { "Content-Type": "application/json" },
 		});
 
 		if (response.data) {
-			console.log("Notification sent to the vendor!!");
+			console.log(`Notification for client ${lead.name} sent to the vendor!!`);
 		} else {
+			console.log(`ERROR sending vendor Notification for client ${lead.name}!!`);
 		}
 	} catch (error) {
-		console.log("Error in leadTemplateWabNotification.js:", error.message);
+		console.log("Error in leadTemplateWabNotification.js:", error.message, "wile sending notification from:", lead.name);
 
 		// Change status of client
 		currentCampaign.client_status = "vendedor no notificado";

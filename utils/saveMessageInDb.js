@@ -59,7 +59,7 @@ export const saveMessageInDb = async (
 				}
 
 				// Concatenate the campaign message with the previous ones
-				const newMessageContent = `\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
+				const newMessageContent = `\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMEGABOT: ${messageGpt}`;
 
 				// Replace the messages history with the new one
 				currentCampaign.messages = currentCampaign.messages
@@ -111,7 +111,7 @@ export const saveMessageInDb = async (
 
 				// Update lead
 				await lead.save();
-				console.log("Lead updated with campaign message in Leads DB");
+				console.log("Lead changes where saved!");
 				return;
 			} else {
 				console.log("there is no campaign flag so nothing was stored in DB!!");

@@ -4,7 +4,6 @@ import { downloadWhatsAppMedia } from "./downloadWhatsAppMedia.js";
 import { errorMessage1 } from "./errorMessages.js";
 import { getMediaWhatsappUrl } from "./getMediaWhatsappUrl.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
-import { newErrorWhatsAppNotification } from "./newErrorWhatsAppNotification.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
 import { leadTemplateWabNotification } from "./leadTemplateWabNotification.js";
