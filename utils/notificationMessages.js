@@ -10,11 +10,11 @@ export const templateError = `*NOTIFICACION de Error:*\nPara generar una Campañ
 
 export const pagoContadoOTarjeta = "¡Perfecto! Un vendedor se contactará contigo a la brevedad. ¡Hasta pronto!";
 
-export const pagoConPrestamo = "¡Perfecto! Verificamos con tu DNI que nos pasaron en el Acuerdo, y no te otorgan suficiente para la moto, por lo cual necesitamos el DNI de algún conocido tuyo que salga de garante. Si estás de acuerdo, por favor pasámelo para verificar y te avisamos.";
+export const pagoConPrestamo = "¡Perfecto! Verificamos con el DNI que nos pasaron en el Acuerdo, y no te otorgan crédito suficiente para el total de la moto, por lo cual vamos a necesitar el DNI de algún conocido tuyo que no tenga deudas y que salga de garante. Si estás de acuerdo, por favor pasámelo por este medio para verificar y ya te avisamos.";
 
 export const noGracias = "Ok gracias por tu tiempo, cualquier consulta podés volver a este chat cuando quieras. ¡Saludos!";
 
 export const tengoConsultas = "¡Perfecto! Un vendedor se contactará contigo a la brevedad. ¡Hasta pronto!"
 
 export const dniNotification =
-				"¡Gracias por enviarnos tu DNI! Un vendedor se va a encargar de verificar si calificas para un préstamo y te estará contactando. ¡Que tengas un buen día!";
+				"¡Gracias por enviarnos el DNI del garante! Un vendedor se va a encargar de verificarlo y te informa a la brevedad. ¡Que tengas un buen día!";
