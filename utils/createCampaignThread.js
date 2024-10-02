@@ -6,7 +6,7 @@ const openai = new OpenAI({
 	apiKey: API_KEY,
 });
 
-export const createCampaignThread = async (campaignName, name) => {
+export const createCampaignThread = async (personalizedMessage) => {
 	try {
 
 		// Create a new thread
@@ -22,7 +22,7 @@ export const createCampaignThread = async (campaignName, name) => {
 			},
 			{
 				role: "assistant",
-				content: `¡Hola ${name}! Te contactamos de Megamoto por la Campaña ${campaignName}.`,
+				content: personalizedMessage,
 			}
 		);
 		return threadId;

@@ -122,42 +122,27 @@ export const processPedidoYa = async (
 			};
 
 			try {
-				// Post the Campaign to the customer
-				const response = await axios.post(url, messageData, {
-					headers: { "Content-Type": "application/json" },
-				});
-
-				if (response.data) {
-					messageSentToCustomer = true;
-					console.log(
-						`Mensaje enviado a ${telefono}: ${personalizedMessage}`
-					);
-				}
-
-				// Increment counter
-				successCount++;
-
-				// Create a thread for the Campaign with the initial messages
-				campaignThread = await createCampaignThread(personalizedMessage);
-				//console.log("campaignthreadID-->", campaignThread);
-
-				// Prepare a Campaign detail object
-				const campaignDetail = {
-					campaignName: campaignName,
-					campaignDate: new Date(),
-					campaignThreadId: campaignThread,
-					messages: `MegaBot: ${personalizedMessage}`,
-					client_status: "contactado",
-					campaign_status: "activa",
-					payment: "sin información",
-					vendor_phone: row[headers[3]] || "", // Guardar el valor de la columna D,
-					error: "",
-				};
-
 				// Looks existent lead or creates a new one
 				let lead = await Leads.findOne({ id_user: telefono.toString() });
 
 				if (!lead) {
+					// Create a thread for the Campaign with the initial messages
+					campaignThread = await createCampaignThread(personalizedMessage);
+					//console.log("campaignthreadID-->", campaignThread);
+
+					// Prepare a Campaign detail object
+					const campaignDetail = {
+						campaignName: campaignName,
+						campaignDate: new Date(),
+						campaignThreadId: campaignThread,
+						messages: `MegaBot: ${personalizedMessage}`,
+						client_status: "contactado",
+						campaign_status: "activa",
+						payment: "sin información",
+						vendor_phone: row[headers[3]] || "", // Guardar el teléfono del vendedor en la columna D,
+						error: "",
+					};
+
 					// Create a General Thread (just in case the campaign is stopped)
 					const generalThread = await createGeneralThread();
 
@@ -174,10 +159,64 @@ export const processPedidoYa = async (
 					});
 					await lead.save();
 					newLeadsCount++;
-				} else {
-					// Update existing lead with Campaign
-					lead.campaigns.push(campaignDetail);
-					await lead.save();
+
+					// Post the Campaign to the customer
+					const response = await axios.post(url, messageData, {
+						headers: { "Content-Type": "application/json" },
+					});
+
+					if (response.data) {
+						messageSentToCustomer = true;
+						console.log(
+							`Mensaje enviado a ${lead.name} - ${telefono}: ${personalizedMessage}`
+						);
+					}
+
+					// Increment counter
+					successCount++;
+			
+			// Lead already exists!!
+			} else {
+					// Check if the campaign name is different
+					const existingCampaign = lead.campaigns.find(
+						(c) => c.campaignName === campaignName
+					);
+
+					if (!existingCampaign) {
+						// Create a thread for the Campaign with the initial messages
+						campaignThread = await createCampaignThread(personalizedMessage);
+						//console.log("campaignthreadID-->", campaignThread);
+
+						// Prepare a Campaign detail object
+						const campaignDetail = {
+							campaignName: campaignName,
+							campaignDate: new Date(),
+							campaignThreadId: campaignThread,
+							messages: `MegaBot: ${personalizedMessage}`,
+							client_status: "contactado",
+							campaign_status: "activa",
+							payment: "sin información",
+							vendor_phone: row[headers[3]] || "", // Guardar el valor de la columna D,
+							error: "",
+						};
+
+						// Update existing lead with new campaign
+						lead.campaigns.push(campaignDetail);
+						await lead.save();
+
+						// Send the message
+						const response = await axios.post(url, messageData, {
+							headers: { "Content-Type": "application/json" },
+						});
+						console.log(
+							`Mensaje enviado a ${lead.name} - ${telefono}: ${personalizedMessage}`
+						);
+						successCount++;
+					} else {
+						console.warn(
+							`El cliente ${lead.name} - ${telefono} ya ha sido contactado en la campaña ${campaignName}.`
+						);
+					}
 				}
 			} catch (error) {
 				console.error(
@@ -191,9 +230,9 @@ export const processPedidoYa = async (
 					campaignName: campaignName,
 					campaignDate: new Date(),
 					campaignThreadId: campaignThread,
-					messages: messageSentToCustomer 
-					? `MegaBot: ${personalizedMessage}` 
-					: `Error al contactar cliente por la Campaña ${campaignName}.`,
+					messages: messageSentToCustomer
+						? `MegaBot: ${personalizedMessage}`
+						: `Error al contactar cliente por la Campaña ${campaignName}.`,
 					client_status: messageSentToCustomer ? "contactado" : "error",
 					payment: "sin información",
 					campaign_status: "activa",
