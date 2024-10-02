@@ -4,6 +4,7 @@ import {
 	botSwitchOffNotification,
 	botSwitchOnNotification,
 	helpFunctionNotification,
+	inexistingTemplate,
 	templateError,
 } from "../utils/notificationMessages.js";
 import { getMediaWhatsappUrl } from "../utils/getMediaWhatsappUrl.js";
@@ -83,7 +84,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const parts = message.split(" ");
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
-				
+
 				// Get the Document URL from WhatsApp
 				const document = await getMediaWhatsappUrl(documentId);
 				const documentUrl = document.data.url;
@@ -94,6 +95,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const documentBufferData = documentBuffer.data;
 				//console.log("Document download:", documentBufferData);
 
+				// Check Template && excecute specific function
 				if (templateName === "pedido_ya_dni_no_calificados") {
 					// Call the new function to process the campaign "pedido ya"
 					await processPedidoYa(
@@ -101,15 +103,11 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 						templateName,
 						campaignName,
 						userPhone
-					); 
-
-				} else {
-					await processCampaignExcel(
-						documentBufferData,
-						templateName,
-						campaignName,
-						userPhone
 					);
+				} else {
+					// WhatsApp Admin notification of non existing Template
+					const notification = `${inexistingTemplate} ${templateName}.`;
+					await adminWhatsAppNotification(userPhone, notification);
 				}
 
 				res.status(200).send("EVENT_RECEIVED");
