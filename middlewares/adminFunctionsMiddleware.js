@@ -83,7 +83,8 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const parts = message.split(" ");
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
-
+				let documentBufferData;
+				
 				if (typeOfWhatsappMessage === "document"){
 					// Get the Document URL from WhatsApp
 					const document = await getMediaWhatsappUrl(documentId);
@@ -92,7 +93,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 	
 					// Download Document from WhatsApp
 					const documentBuffer = await downloadWhatsAppMedia(documentUrl);
-					const documentBufferData = documentBuffer.data;
+					documentBufferData = documentBuffer.data;
 					//console.log("Document download:", documentBufferData);
 				}
 
