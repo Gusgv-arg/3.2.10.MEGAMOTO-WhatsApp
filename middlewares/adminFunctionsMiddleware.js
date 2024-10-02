@@ -79,7 +79,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await adminWhatsAppNotification(userPhone, helpFunctionNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
-			} else if (message.startsWith("campaña")) {
+			} else if (message.startsWith("campaña") && typeOfWhatsappMessage === "document") {
 				// Campaigns format: "campaña" "template name" "campaign name"
 				const parts = message.split(" ");
 				const templateName = parts[1];
