@@ -26,10 +26,7 @@ export const handleWhatsAppMaxResponses = async (name, userPhone) => {
 				headers: {
 					"Content-Type": "application/json",
 				},
-			})
-			.then((response) => {
-				console.log("Response from Facebook:", response.data);
-			})
+			})			
 			.catch((error) => {
 				console.error(
 					"Error enviando a Facebook en handleWhatsappMaxResponses.js-->",

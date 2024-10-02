@@ -25,9 +25,6 @@ export const userWhatsAppNotification = async (userPhone, notification) => {
 					"Content-Type": "application/json",
 				},
 			})
-			.then((response) => {
-				console.log("Response from Facebook:", response.data);
-			})
 			.catch((error) => {
 				console.error(
 					"Error enviando a Facebook en userWhatsAppNotification.js-->",

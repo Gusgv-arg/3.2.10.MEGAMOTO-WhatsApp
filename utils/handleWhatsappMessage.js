@@ -29,9 +29,6 @@ export const handleWhatsappMessage = async (senderId, messageGpt) => {
 					"Content-Type": "application/json",
 				},
 			})
-			.then((response) => {
-				console.log("Response from Facebook:", response.data);
-			})
 			.catch((error) => {
 				console.error(
 					"Error enviando a Facebook en handleWhatsappMessage.js--->",

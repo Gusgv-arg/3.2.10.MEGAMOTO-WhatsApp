@@ -38,10 +38,7 @@ export const postWhatsAppCampaign = async (req, res) => {
 				headers: {
 					"Content-Type": "application/json",
 				},
-			})
-			.then((response) => {
-				console.log("Response from Facebook:", response.data);
-			})
+			})			
 			.catch((error) => {
 				console.error(
 					"Error en postWhatsAppCapaign.js------->",
