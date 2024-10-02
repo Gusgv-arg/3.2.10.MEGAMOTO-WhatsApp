@@ -84,7 +84,7 @@ export const processPedidoYa = async (
 				const beforeReplace = personalizedMessage;
 				personalizedMessage = personalizedMessage.replace(variableRegex, value);
 			});
-			console.log("Mensaje individual:", personalizedMessage);
+			//console.log("Mensaje individual:", personalizedMessage);
 
 			// From the array of headers, take off the client && vendor telephones and map the records that correspond to the variables of the Campaign Template
 			const parameters = headers.slice(1, 3).map((header) => ({
@@ -130,7 +130,7 @@ export const processPedidoYa = async (
 				if (response.data) {
 					messageSentToCustomer = true;
 					console.log(
-						`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`
+						`Mensaje enviado a ${telefono}: ${personalizedMessage}`
 					);
 				}
 

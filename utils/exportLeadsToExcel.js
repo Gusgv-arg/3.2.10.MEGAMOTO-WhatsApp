@@ -26,21 +26,19 @@ export const exportLeadsToExcel = async (userPhone) => {
 		// Convierte los leads a un formato que xlsx pueda entender
 		const leadsForXlsx = leads.map((lead) => {
 			const campaignData = lead.campaigns.map((campaign) => ({
-				campaignName: campaign.campaignName,
-				campaignDate: campaign.campaignDate,
-				client_status: campaign.client_status,
-				campaign_status: campaign.campaign_status,
-				messages: campaign.messages,
-				error: campaign.error,
+				Campaña: campaign.campaignName,
+				Fecha_Campaña: campaign.campaignDate,
+				Status_Campaña: campaign.campaign_status,
+				Status_Cliente: campaign.client_status,
+				Método_Pago: campaign.payment,
+				Mensajes: campaign.messages,
+				Error_Campaña: campaign.error,
 			}));
 
 			// Crea un objeto con los datos del lead y agrega las campañas como columnas
 			const leadData = {
-				name: lead.name,
-				channel: lead.channel,
-				content: lead.content,
-				id_user: lead.id_user,
-				createdAt: lead.createdAt,
+				Nombre: lead.name,
+				Teléfono: lead.id_user,								
 			};
 
 			// Agrega los datos de las campañas al objeto leadData
