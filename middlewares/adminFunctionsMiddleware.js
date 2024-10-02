@@ -79,21 +79,23 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await adminWhatsAppNotification(userPhone, helpFunctionNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
-			} else if (message.startsWith("campaña") && typeOfWhatsappMessage === "document") {
+			} else if (message.startsWith("campaña") ) {
 				// Campaigns format: "campaña" "template name" "campaign name"
 				const parts = message.split(" ");
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
 
-				// Get the Document URL from WhatsApp
-				const document = await getMediaWhatsappUrl(documentId);
-				const documentUrl = document.data.url;
-				//console.log("Document URL:", documentUrl);
-
-				// Download Document from WhatsApp
-				const documentBuffer = await downloadWhatsAppMedia(documentUrl);
-				const documentBufferData = documentBuffer.data;
-				//console.log("Document download:", documentBufferData);
+				if (typeOfWhatsappMessage === "document"){
+					// Get the Document URL from WhatsApp
+					const document = await getMediaWhatsappUrl(documentId);
+					const documentUrl = document.data.url;
+					//console.log("Document URL:", documentUrl);
+	
+					// Download Document from WhatsApp
+					const documentBuffer = await downloadWhatsAppMedia(documentUrl);
+					const documentBufferData = documentBuffer.data;
+					//console.log("Document download:", documentBufferData);
+				}
 
 				// Check Template && excecute specific function
 				if (templateName === "pedido_ya_dni_no_calificados") {
