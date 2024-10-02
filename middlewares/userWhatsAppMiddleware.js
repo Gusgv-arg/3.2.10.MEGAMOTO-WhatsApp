@@ -12,18 +12,10 @@ const myPhone2 = process.env.MY_PHONE2
 // Middleware that creates the user in DB if it doesn't exist || next()
 export const userWhatsAppMiddleware = async (req, res, next) => {
 	const body = req.body;
-	console.log("Lo que recibo de la API de Whatsapp -->", body);
+	//console.log("Lo que recibo de la API de Whatsapp -->", body);
 	let channel = body.entry[0].changes ? "WhatsApp" : "Other";
-	console.log("Channel:", channel);
-	let status = body?.entry?.[0].changes?.[0].value?.statuses?.[0]
-		? "status"
-		: null;
-
-	// Return if I receive status update
-	if (status !== null) {
-		res.status(200).send("EVENT_RECEIVED");		
-	}
-
+	//console.log("Channel:", channel);
+	
 	if (channel === "WhatsApp" && body?.entry[0]) {
 		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages[0]
 			?.type

@@ -21,11 +21,12 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
 	let channel = body.entry[0].changes ? "WhatsApp" : "Other";
 	let status = body?.entry?.[0].changes?.[0].value?.statuses?.[0]
-		? "status"
+		? body.entry[0].changes[0].value.statuses[0]
 		: null;
 
 	// Return if I receive status update
 	if (status !== null) {
+		console.log("Status-->", status)
 		res.status(200).send("EVENT_RECEIVED");
 		return;
 	}
@@ -84,7 +85,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
 				let documentBufferData;
-				
+
 				if (typeOfWhatsappMessage === "document"){
 					// Get the Document URL from WhatsApp
 					const document = await getMediaWhatsappUrl(documentId);
