@@ -29,6 +29,7 @@ export const statusMiddleware = async (req, res, next) => {
 			// Look in leads for the last Campaign && check if its the id of the sent message
 			let lead = await Leads.findOne({ id_user: recipient_id });
 			const lastCampaignRecord = lead.campaigns[lead.campaigns.length -1];
+            //console.log(lead)
 
 			if (lastCampaignRecord.wab_id === wab_id) {
 				lastCampaignRecord.client_status = newStatus;

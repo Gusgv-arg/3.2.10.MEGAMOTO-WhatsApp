@@ -171,21 +171,24 @@ export const processPedidoYa = async (
 						console.log(
 							`Mensaje enviado a ${lead.name} - ${telefono}: ${personalizedMessage}`
 						);
-						console.log("Response.data", response.data)
+						//console.log("Response.data", response.data)
 
 						//Save whatsApp Id to track message status
-						const whatsAppMessageId = response.data.messages[0].id
-						const whatsAppMessageStatus = response.data.messages[0].message_status === "accepted" ? "aceptado" : response.data.messages[0].message_status 
-						campaignDetail.wab_id=whatsAppMessageId
-						campaignDetail.client_status=whatsAppMessageStatus
+						const whatsAppMessageId = response.data.messages[0].id;
+						const whatsAppMessageStatus =
+							response.data.messages[0].message_status === "accepted"
+								? "aceptado"
+								: response.data.messages[0].message_status;
+						campaignDetail.wab_id = whatsAppMessageId;
+						campaignDetail.client_status = whatsAppMessageStatus;
 						await lead.save();
 					}
 
 					// Increment counter
 					successCount++;
-			
-			// Lead already exists!!
-			} else {
+
+					// Lead already exists!!
+				} else {
 					// Check if the campaign name is different
 					const existingCampaign = lead.campaigns.find(
 						(c) => c.campaignName === campaignName
@@ -202,7 +205,8 @@ export const processPedidoYa = async (
 							campaignDate: new Date(),
 							campaignThreadId: campaignThread,
 							messages: `MegaBot: ${personalizedMessage}`,
-							client_status: "contactado",
+							wab_id: "",
+							client_status: "a enviar",
 							campaign_status: "activa",
 							payment: "sin información",
 							vendor_phone: row[headers[3]] || "", // Guardar el valor de la columna D,
@@ -217,10 +221,21 @@ export const processPedidoYa = async (
 						const response = await axios.post(url, messageData, {
 							headers: { "Content-Type": "application/json" },
 						});
-						console.log(
-							`Mensaje enviado a ${lead.name} - ${telefono}: ${personalizedMessage}`
-						);
-						successCount++;
+						if (response.data) {
+							console.log(
+								`Mensaje enviado a ${lead.name} - ${telefono}: ${personalizedMessage}`
+							);
+							successCount++;
+							//Save whatsApp Id to track message status
+							const whatsAppMessageId = response.data.messages[0].id;
+							const whatsAppMessageStatus =
+								response.data.messages[0].message_status === "accepted"
+									? "aceptado"
+									: response.data.messages[0].message_status;
+							campaignDetail.wab_id = whatsAppMessageId;
+							campaignDetail.client_status = whatsAppMessageStatus;
+							await lead.save();
+						}
 					} else {
 						console.warn(
 							`El cliente ${lead.name} - ${telefono} ya ha sido contactado en la campaña ${campaignName}.`

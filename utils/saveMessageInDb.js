@@ -99,7 +99,7 @@ export const saveMessageInDb = async (
 					console.log(
 						`Payment updated to "préstamo" && Client status to "vendedor"`
 					);
-				} else if (currentCampaign.client_status === "contactado") {
+				} else if (currentCampaign.client_status === "leído") {
 					currentCampaign.client_status = "respuesta_cliente";
 					console.log(`Client status updated to "respuesta_cliente"`);
 				}

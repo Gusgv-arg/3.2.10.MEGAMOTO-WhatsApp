@@ -19,7 +19,7 @@ async function listCampaigns(userPhone) {
                     responded: 0,
                 };
             }
-            if (client_status === "contactado") {
+            if (client_status === "entregado" || client_status === "leído" ) {
                 summary[campaignName].contacted++;
             } else if (client_status === "respuesta_cliente") {
                 summary[campaignName].responded++;
