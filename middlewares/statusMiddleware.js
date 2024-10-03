@@ -33,7 +33,9 @@ export const statusMiddleware = async (req, res, next) => {
 			if (lastCampaignRecord.wab_id === wab_id) {
 				lastCampaignRecord.client_status = newStatus;
 				await lead.save();
-			}
+			} else {
+                console.log(`Encontró el lead ${lead.name} pero actualiza status de otro msje.`)
+            }
 
 			res.status(200).send("EVENT_RECEIVED");
 			return;
