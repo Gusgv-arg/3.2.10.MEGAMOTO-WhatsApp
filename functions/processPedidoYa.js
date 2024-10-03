@@ -170,6 +170,7 @@ export const processPedidoYa = async (
 						console.log(
 							`Mensaje enviado a ${lead.name} - ${telefono}: ${personalizedMessage}`
 						);
+						console.log("Response.data", response.data)
 					}
 
 					// Increment counter
