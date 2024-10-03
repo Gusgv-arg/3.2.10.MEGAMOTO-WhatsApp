@@ -23,11 +23,12 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 	
 	// Check if its WhatsApp text message from Admin phone
 	if (channel === "WhatsApp" && body?.entry[0]) {
-		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages[0]
+		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages?.[0]
 			?.type
 			? body.entry[0].changes[0].value.messages[0].type
-			: "other type";
+			: body.entry[0].changes[0];
 		const userPhone = body.entry[0].changes[0].value.messages[0].from;
+		console.log("Type of whatsapp message", typeOfWhatsappMessage)
 
 		// Admin INSTRUCTIONS: can be text or document format in case of Campaign!!!
 		if (
