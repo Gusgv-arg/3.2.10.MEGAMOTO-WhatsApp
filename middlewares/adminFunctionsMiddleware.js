@@ -20,17 +20,7 @@ const myPhone2 = process.env.MY_PHONE2;
 export const adminFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
 	let channel = body.entry[0].changes ? "WhatsApp" : "Other";
-	let status = body?.entry?.[0].changes?.[0].value?.statuses?.[0]
-		? body.entry[0].changes[0].value.statuses[0]
-		: null;
-
-	// Return if I receive status update
-	if (status !== null) {
-		console.log("Status-->", status)
-		res.status(200).send("EVENT_RECEIVED");
-		return;
-	}
-
+	
 	// Check if its WhatsApp text message from Admin phone
 	if (channel === "WhatsApp" && body?.entry[0]) {
 		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages[0]

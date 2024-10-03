@@ -5,10 +5,16 @@ const campaignDetailSchema = new mongoose.Schema({
 	campaignDate: Date,
 	campaignThreadId: String,
 	messages: String,
+	wab_id: String,
 	client_status: {
 		type: String,
 		enum: [
-			"contactado",
+			"a enviar",
+			"aceptado",
+			"rejected",
+			"enviado",
+			"entregado",			
+			"leído",
 			"respuesta_cliente",
 			"vendedor",
 			"dni",

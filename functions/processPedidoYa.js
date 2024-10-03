@@ -131,12 +131,13 @@ export const processPedidoYa = async (
 					//console.log("campaignthreadID-->", campaignThread);
 
 					// Prepare a Campaign detail object
-					const campaignDetail = {
+					let campaignDetail = {
 						campaignName: campaignName,
 						campaignDate: new Date(),
 						campaignThreadId: campaignThread,
 						messages: `MegaBot: ${personalizedMessage}`,
-						client_status: "contactado",
+						wab_id: "",
+						client_status: "a enviar",
 						campaign_status: "activa",
 						payment: "sin información",
 						vendor_phone: row[headers[3]] || "", // Guardar el teléfono del vendedor en la columna D,
@@ -171,6 +172,13 @@ export const processPedidoYa = async (
 							`Mensaje enviado a ${lead.name} - ${telefono}: ${personalizedMessage}`
 						);
 						console.log("Response.data", response.data)
+
+						//Save whatsApp Id to track message status
+						const whatsAppMessageId = response.data.messages[0].id
+						const whatsAppMessageStatus = response.data.messages[0].message_status === "accepted" ? "aceptado" : response.data.messages[0].message_status 
+						campaignDetail.wab_id=whatsAppMessageId
+						campaignDetail.client_status=whatsAppMessageStatus
+						await lead.save();
 					}
 
 					// Increment counter
