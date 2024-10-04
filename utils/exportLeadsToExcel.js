@@ -38,7 +38,8 @@ export const exportLeadsToExcel = async (userPhone) => {
 			// Crea un objeto con los datos del lead y agrega las campañas como columnas
 			const leadData = {
 				Nombre: lead.name,
-				Teléfono: lead.id_user,								
+				Teléfono: lead.id_user,
+				Mensajes_fuera_de_Campaña: lead.content 								
 			};
 
 			// Agrega los datos de las campañas al objeto leadData
