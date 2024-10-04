@@ -11,7 +11,7 @@ const campaignDetailSchema = new mongoose.Schema({
 		enum: [
 			"a enviar",
 			"aceptado",
-			"rejected",
+			"failed",
 			"enviado",
 			"entregado",			
 			"leído",
