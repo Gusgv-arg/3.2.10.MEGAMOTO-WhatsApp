@@ -11,7 +11,7 @@ export const statusMiddleware = async (req, res, next) => {
 
 	// Check status update && save in DB
 	if (status !== null) {
-		console.log("Status-->", status);
+		//console.log("Status-->", status);
 		const recipient_id =
 			body.entry[0].changes[0].value.statuses[0].recipient_id;
 		const wab_id = body.entry[0].changes[0].value.statuses[0].id;
@@ -31,11 +31,12 @@ export const statusMiddleware = async (req, res, next) => {
 			const lastCampaignRecord = lead.campaigns[lead.campaigns.length -1];
             //console.log(lead)
 
-			if (lastCampaignRecord.wab_id === wab_id) {
+			if (lastCampaignRecord.wamId === wab_id) {
 				lastCampaignRecord.client_status = newStatus;
+				console.log(`Actualizó el status de mensaje de "${lead.name}" a "${newStatus}"`)
 				await lead.save();
 			} else {
-                console.log(`Encontró el lead ${lead.name} pero actualiza status de otro msje.`)
+                console.log(`Encontró el lead "${lead.name}" pero actualiza status de otro msje.`)
             }
 
 			res.status(200).send("EVENT_RECEIVED");

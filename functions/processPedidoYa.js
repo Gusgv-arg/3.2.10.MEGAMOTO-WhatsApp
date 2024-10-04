@@ -136,7 +136,7 @@ export const processPedidoYa = async (
 						campaignDate: new Date(),
 						campaignThreadId: campaignThread,
 						messages: `MegaBot: ${personalizedMessage}`,
-						wab_id: "",
+						wamId: "",
 						client_status: "a enviar",
 						campaign_status: "activa",
 						payment: "sin información",
@@ -158,7 +158,6 @@ export const processPedidoYa = async (
 						responses: 0,
 						campaigns: [campaignDetail],
 					});
-					await lead.save();
 					newLeadsCount++;
 
 					// Post the Campaign to the customer
@@ -172,17 +171,20 @@ export const processPedidoYa = async (
 							`Mensaje enviado a ${lead.name} - ${telefono}: ${personalizedMessage}`
 						);
 						//console.log("Response.data", response.data)
-
+						
 						//Save whatsApp Id to track message status
 						const whatsAppMessageId = response.data.messages[0].id;
+						//console.log("wamid:", whatsAppMessageId)
+						
 						const whatsAppMessageStatus =
 							response.data.messages[0].message_status === "accepted"
 								? "aceptado"
 								: response.data.messages[0].message_status;
-						campaignDetail.wab_id = whatsAppMessageId;
-						campaignDetail.client_status = whatsAppMessageStatus;
-						await lead.save();
+						lead.campaigns[0].wamId = whatsAppMessageId;
+						lead.campaigns[0].client_status = whatsAppMessageStatus;
 					}
+					// Save lead
+					await lead.save();
 
 					// Increment counter
 					successCount++;
@@ -205,38 +207,45 @@ export const processPedidoYa = async (
 							campaignDate: new Date(),
 							campaignThreadId: campaignThread,
 							messages: `MegaBot: ${personalizedMessage}`,
-							wab_id: "",
+							wamId: "",
 							client_status: "a enviar",
 							campaign_status: "activa",
 							payment: "sin información",
 							vendor_phone: row[headers[3]] || "", // Guardar el valor de la columna D,
 							error: "",
 						};
-
-						// Update existing lead with new campaign
-						lead.campaigns.push(campaignDetail);
-						await lead.save();
-
+						
 						// Send the message
 						const response = await axios.post(url, messageData, {
 							headers: { "Content-Type": "application/json" },
 						});
+						
+						// If post is ok, save wamId in DB
 						if (response.data) {
+							messageSentToCustomer = true;
 							console.log(
 								`Mensaje enviado a ${lead.name} - ${telefono}: ${personalizedMessage}`
 							);
 							successCount++;
+
 							//Save whatsApp Id to track message status
 							const whatsAppMessageId = response.data.messages[0].id;
 							const whatsAppMessageStatus =
-								response.data.messages[0].message_status === "accepted"
-									? "aceptado"
-									: response.data.messages[0].message_status;
-							campaignDetail.wab_id = whatsAppMessageId;
+							response.data.messages[0].message_status === "accepted"
+							? "aceptado"
+							: response.data.messages[0].message_status;
+							campaignDetail.wamId = whatsAppMessageId;
 							campaignDetail.client_status = whatsAppMessageStatus;
-							await lead.save();
 						}
+						
+						// Update existing lead with new campaign
+						lead.campaigns.push(campaignDetail);
+						
+						// Save lead
+						await lead.save();
+
 					} else {
+						// Message was already sent in this campaignName
 						console.warn(
 							`El cliente ${lead.name} - ${telefono} ya ha sido contactado en la campaña ${campaignName}.`
 						);
@@ -257,7 +266,8 @@ export const processPedidoYa = async (
 					messages: messageSentToCustomer
 						? `MegaBot: ${personalizedMessage}`
 						: `Error al contactar cliente por la Campaña ${campaignName}.`,
-					client_status: messageSentToCustomer ? "contactado" : "error",
+					wamId: "",
+					client_status: messageSentToCustomer ? "aceptado" : "error",
 					payment: "sin información",
 					campaign_status: "activa",
 					vendor_phone: row[headers[3]] || "",
@@ -278,8 +288,7 @@ export const processPedidoYa = async (
 					},
 					{ upsert: true, new: true }
 				);
-
-				errorCount++;
+				
 				await adminWhatsAppNotification(
 					userPhone,
 					`*NOTIFICACION de Error de Campaña PedidoYa para ${telefono}-${
@@ -292,8 +301,11 @@ export const processPedidoYa = async (
 			await delay(3000);
 		}
 
-		const summaryMessage = `*NOTIFICACION de Campaña Pedido Ya:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
-		await adminWhatsAppNotification(userPhone, summaryMessage);
+		// Only send admin notification if sent or error
+		if (successCount > 0 || errorCount > 0) {
+			const summaryMessage = `*NOTIFICACION de Campaña Pedido Ya:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
+			await adminWhatsAppNotification(userPhone, summaryMessage);
+		}
 	} catch (error) {
 		console.error("Error processing PedidoYa Campaign Excel:", error.message);
 		// Receives the throw new error

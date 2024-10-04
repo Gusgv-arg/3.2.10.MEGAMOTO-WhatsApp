@@ -68,8 +68,8 @@ export const leadTemplateWabNotification = async (templateName, senderId) => {
 				],
 			},
 		};
-		console.log("MessageData--->", messageData)
-		console.log("Parameters:", parameters)
+		//console.log("MessageData--->", messageData)
+		//console.log("Parameters:", parameters)
 		
 		// Post the Notification to the vendor
 		const response = await axios.post(url, messageData, {
