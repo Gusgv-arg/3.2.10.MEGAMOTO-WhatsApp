@@ -3,7 +3,6 @@ import { greeting } from "../utils/greeting.js";
 import { createGptThread } from "../utils/createGptThread.js";
 import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
 import { handleWhatsAppMaxResponses } from "../utils/handleWhatsAppMaxResponses.js";
-import { newLeadWhatsAppNotification } from "../utils/newLeadWhatsAppNotification.js";
 
 const maxResponses = process.env.MAX_RESPONSES;
 const myPhone = process.env.MY_PHONE
@@ -86,7 +85,7 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 			console.log("Lead updated with threadId");
 
 			// Send Notification of new lead to Admin
-			newLeadWhatsAppNotification(channel, name)
+			//no por ahora
 
 			res.status(200).send("EVENT_RECEIVED");
 		

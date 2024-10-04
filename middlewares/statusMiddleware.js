@@ -28,19 +28,41 @@ export const statusMiddleware = async (req, res, next) => {
 		try {
 			// Look in leads for the last Campaign && check if its the id of the sent message
 			let lead = await Leads.findOne({ id_user: recipient_id });
-			const lastCampaignRecord = lead.campaigns[lead.campaigns.length -1];
-            //console.log(lead)
 
-			if (lastCampaignRecord.wamId === wab_id) {
-				lastCampaignRecord.client_status = newStatus;
-				console.log(`Actualizó el status de mensaje de "${lead.name}" a "${newStatus}"`)
-				await lead.save();
+			// Return if there is no lead in DB
+			if (!lead) {
+				console.log(`No se encontró lead con id_user: ${recipient_id}`);
+				res.status(200).send("EVENT_RECEIVED");
+				return;
+			}
+
+			// Return if there are no Campaigns
+			if (!lead.campaigns || lead.campaigns.length === 0) {
+				console.log(
+					`Exiting process of status updating for "${lead.name}" that has no Campaigns registrated.`
+				);
+				res.status(200).send("EVENT_RECEIVED");
+				return;
 			} else {
-                console.log(`Encontró el lead "${lead.name}" pero actualiza status de otro msje.`)
-            }
+				// Process if there are Campaigns
+				const lastCampaignRecord = lead.campaigns[lead.campaigns.length - 1];
+				//console.log(lead)
 
-			res.status(200).send("EVENT_RECEIVED");
-			return;
+				if (lastCampaignRecord.wamId === wab_id) {
+					lastCampaignRecord.client_status = newStatus;
+					console.log(
+						`Actualizó el status de mensaje de "${lead.name}" a "${newStatus}"`
+					);
+					await lead.save();
+				} else {
+					console.log(
+						`Encontró el lead "${lead.name}" y hay Campaña pero actualiza status de otro msje.`
+					);
+				}
+
+				res.status(200).send("EVENT_RECEIVED");
+				return;
+			}
 		} catch (error) {
 			console.log("Error in statusMiddleware.js", error.message);
 			await adminWhatsAppNotification(myPhone, error.message);
