@@ -5,8 +5,8 @@ import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
 import { handleWhatsAppMaxResponses } from "../utils/handleWhatsAppMaxResponses.js";
 
 const maxResponses = process.env.MAX_RESPONSES;
-const myPhone = process.env.MY_PHONE
-const myPhone2 = process.env.MY_PHONE2
+const myPhone = process.env.MY_PHONE;
+const myPhone2 = process.env.MY_PHONE2;
 
 // Middleware that creates the user in DB if it doesn't exist || next()
 export const userWhatsAppMiddleware = async (req, res, next) => {
@@ -14,7 +14,7 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 	//console.log("Lo que recibo de la API de Whatsapp -->", body);
 	let channel = body.entry[0].changes ? "WhatsApp" : "Other";
 	//console.log("Channel:", channel);
-	
+
 	if (channel === "WhatsApp" && body?.entry[0]) {
 		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages[0]
 			?.type
@@ -77,7 +77,7 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 
 			// Create a Thread sending user message and greeting to GPT
 			const thread = await createGptThread(name, message);
-			console.log("thread_id", thread)
+			console.log("thread_id", thread);
 
 			// Save thread in DB
 			lead.thread_id = thread;
@@ -88,14 +88,21 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 			//no por ahora
 
 			res.status(200).send("EVENT_RECEIVED");
-		
-		//Block user from doing more requests
-		} else if (lead.responses + 1 > maxResponses && userPhone !== myPhone && userPhone !== myPhone2) {
+
+			//Block user from doing more requests
+		} else if (
+			lead.responses + 1 > maxResponses &&
+			userPhone !== myPhone &&
+			userPhone !== myPhone2
+		) {
 			console.log("User reached max allowed responses");
 			await handleWhatsAppMaxResponses(name, userPhone);
 			res.status(200).send("EVENT_RECEIVED");
 			return;
-		
+		} else if (lead.botSwitch === "OFF") {
+			// Block user if individual swith is in OFF
+			res.status(200).send("EVENT_RECEIVED");
+			return;
 		} else {
 			next();
 		}
