@@ -133,6 +133,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			} else if (message === "megabot precios") {
 				const precios = await scrapperMercadoLibre2()
 				console.log("Precios:", precios)
+				res.status(200).send("EVENT_RECEIVED");
 
 			} else {
 				// Does next if its an admin message but is not an instruction
