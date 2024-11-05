@@ -13,7 +13,7 @@ import { changeCampaignStatus } from "../utils/changeCampaignStatus.js";
 import listCampaigns from "../utils/listCampaigns.js";
 import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
 import { processPedidoYa } from "../functions/processPedidoYa.js";
-import { scrapperMercadoLibre2 } from "../functions/scrapperMercadoLibre2.js";
+import { scrapperMercadoLibre } from "../functions/scrapperMercadoLibre.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
@@ -131,7 +131,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message === "megabot precios") {
-				const precios = await scrapperMercadoLibre2()
+				const precios = await scrapperMercadoLibre()
 				console.log("Precios:", precios)
 				res.status(200).send("EVENT_RECEIVED");
 

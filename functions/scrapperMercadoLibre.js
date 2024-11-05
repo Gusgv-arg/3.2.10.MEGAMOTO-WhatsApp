@@ -3,7 +3,7 @@ import XLSX from "xlsx";
 
 export const scrapperMercadoLibre = async () => {
 	// Inicializa el navegador
-	const browser = await puppeteer.launch({ headless: false }); 
+	const browser = await puppeteer.launch({ headless: true }); 
 	const page = await browser.newPage();
 
 	const urls = [
