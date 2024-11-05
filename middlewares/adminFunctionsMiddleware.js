@@ -13,6 +13,7 @@ import { changeCampaignStatus } from "../utils/changeCampaignStatus.js";
 import listCampaigns from "../utils/listCampaigns.js";
 import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
 import { processPedidoYa } from "../functions/processPedidoYa.js";
+import { scrapperMercadoLibre } from "../functions/scrapperMercadoLibre.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
@@ -20,7 +21,7 @@ const myPhone2 = process.env.MY_PHONE2;
 export const adminFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
 	let channel = body.entry[0].changes ? "WhatsApp" : "Other";
-	
+
 	// Check if its WhatsApp text message from Admin phone
 	if (channel === "WhatsApp" && body?.entry[0]) {
 		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages?.[0]
@@ -28,7 +29,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			? body.entry[0].changes[0].value.messages[0].type
 			: body.entry[0].changes[0];
 		const userPhone = body.entry[0].changes[0].value.messages[0].from;
-		console.log("Type of whatsapp message", typeOfWhatsappMessage)
+		console.log("Type of whatsapp message", typeOfWhatsappMessage);
 
 		// Admin INSTRUCTIONS: can be text or document format in case of Campaign!!!
 		if (
@@ -70,19 +71,19 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await adminWhatsAppNotification(userPhone, helpFunctionNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
-			} else if (message.startsWith("campaña") ) {
+			} else if (message.startsWith("campaña")) {
 				// Campaigns format: "campaña" "template name" "campaign name"
 				const parts = message.split(" ");
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
 				let documentBufferData;
 
-				if (typeOfWhatsappMessage === "document"){
+				if (typeOfWhatsappMessage === "document") {
 					// Get the Document URL from WhatsApp
 					const document = await getMediaWhatsappUrl(documentId);
 					const documentUrl = document.data.url;
 					//console.log("Document URL:", documentUrl);
-	
+
 					// Download Document from WhatsApp
 					const documentBuffer = await downloadWhatsAppMedia(documentUrl);
 					documentBufferData = documentBuffer.data;
@@ -129,6 +130,10 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const leads = await exportLeadsToExcel(userPhone);
 
 				res.status(200).send("EVENT_RECEIVED");
+			} else if (message === "megabot precios") {
+				const precios = await scrapperMercadoLibre()
+				console.log("Precios:", precios)
+
 			} else {
 				// Does next if its an admin message but is not an instruction
 				next();
