@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import XLSX from "xlsx";
 import fs from "fs";
 import path from "path";
@@ -13,8 +13,9 @@ export const scrapperMercadoLibre = async () => {
             '--single-process',
             '--disable-gpu'
         ],
-        executablePath: process.env.CHROME_BIN || null });
-        
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome'  // Ruta específica de Chrome en Render });
+    });
+    
 		const page = await browser.newPage();
 		/* const urls = [
             "https://motos.mercadolibre.com.ar/scooters/motomel/blitz-110/blitz110_KILOMETERS_0km-0km_NoIndex_True#applied_filter_id%3DKILOMETERS%26applied_filter_name%3DKil%C3%B3metros%26applied_filter_order%3D8%26applied_value_id%3D%5B0km-0km%5D%26applied_value_name%3D0+km%26applied_value_order%3D2%26applied_value_results%3D94%26is_custom%3Dfalse",

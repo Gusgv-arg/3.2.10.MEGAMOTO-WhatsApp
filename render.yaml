@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: megamoto-campana  # Cambia esto al nombre de tu servicio en Render
+    env: node
+    buildCommand: npm install
+    startCommand: npm start  # O el comando que uses para iniciar tu aplicación
+    buildpacks:
+      - url: heroku/nodejs
+      - url: https://github.com/heroku/heroku-buildpack-google-chrome
