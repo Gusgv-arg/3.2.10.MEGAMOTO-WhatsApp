@@ -6,7 +6,7 @@ import path from "path";
 export const scrapperMercadoLibre = async () => {
 	// Inicializa el navegador
 	try {
-		const cachePath = "/opt/render/.cache/puppeteer";
+		const cachePath = "/tmp/puppeteer_cache";
 
 		if (!fs.existsSync(cachePath)) {
 			fs.mkdirSync(cachePath, { recursive: true });
@@ -20,6 +20,7 @@ export const scrapperMercadoLibre = async () => {
 				"--disable-dev-shm-usage",
 				"--disable-gpu",
 			],
+            userDataDir: cachePath,
 		});
 
 		const page = await browser.newPage();
@@ -193,4 +194,4 @@ export const scrapperMercadoLibre = async () => {
 		console.error("Error al iniciar Puppeteer:", error);
 	}
 };
-scrapperMercadoLibre();
+//scrapperMercadoLibre();
