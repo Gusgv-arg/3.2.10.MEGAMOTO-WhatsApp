@@ -4,7 +4,7 @@
 		"start": "nodemon index.js"
 	},
 	"dependencies": {
-		"@sparticuz/chromium": "^130.0.0",
+		"@sparticuz/chromium": "^118.0.0",
 		"axios": "^1.6.2",
 		"cors": "^2.8.5",
 		"dotenv": "^16.3.1",

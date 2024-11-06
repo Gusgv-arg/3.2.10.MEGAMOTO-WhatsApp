@@ -7,16 +7,22 @@ import path from "path";
 export const scrapperMercadoLibre = async () => {
 	// Inicializa el navegador
 	try {
-        // Configuración del navegador
-        const executablePath = await chromium.executablePath;
-
-		const browser = await puppeteer.launch({
-            args: chromium.args,
+        const browser = await puppeteer.launch({
+            args: [
+                ...chromium.args,
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--disable-software-rasterizer',
+                '--hide-scrollbars',
+                '--disable-extensions'
+            ],
             defaultViewport: chromium.defaultViewport,
-            executablePath: executablePath,
-            headless: chromium.headless,
+            executablePath: await chromium.executablePath,
+            headless: "new", // Usar el nuevo modo headless
             ignoreHTTPSErrors: true,
-        });
+        });		
 
 		const page = await browser.newPage();
 		/* const urls = [
