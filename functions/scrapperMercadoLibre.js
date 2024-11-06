@@ -6,14 +6,33 @@ import path from "path";
 export const scrapperMercadoLibre = async () => {
 	// Inicializa el navegador
 	try {
-		const cachePath = "/tmp/puppeteer_cache";
+		const cachePath = "/opt/render/.cache/puppeteer";
 
 		if (!fs.existsSync(cachePath)) {
-			fs.mkdirSync(cachePath, { recursive: true });
+			try {
+				// Intenta crear el directorio
+				fs.mkdirSync(cachePath, { recursive: true });
+				console.log(`Directorio de caché creado en: ${cachePath}`);
+			} catch (error) {
+				console.error(`Error al crear el directorio de caché: ${error.message}`);
+			}
+		} else {
+			console.log(`El directorio de caché ya existe en: ${cachePath}`);
+		}
+
+		const testFilePath = `${cachePath}/test.txt`;
+
+		try {
+			fs.writeFileSync(testFilePath, 'Prueba de escritura');
+			console.log('Permisos de escritura verificados con éxito.');
+			// Elimina el archivo de prueba después de verificar
+			fs.unlinkSync(testFilePath);
+		} catch (error) {
+			console.error(`Error al escribir en el directorio de caché: ${error.message}`);
 		}
 
 		const browser = await puppeteer.launch({
-			headless: "new", // Asegúrate de que esté en modo headless
+			headless: "new", 
 			args: [
 				"--no-sandbox",
 				"--disable-setuid-sandbox",
