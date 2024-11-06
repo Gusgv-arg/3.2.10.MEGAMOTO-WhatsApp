@@ -7,7 +7,7 @@ export const scrapperMercadoLibre = async () => {
 	// Inicializa el navegador
 	try {
 		const browser = await puppeteer.launch({
-			headless: true, // Asegúrate de que esté en modo headless
+			headless: "new", // Asegúrate de que esté en modo headless
 			args: [
 				'--no-sandbox',
 				'--disable-setuid-sandbox',
