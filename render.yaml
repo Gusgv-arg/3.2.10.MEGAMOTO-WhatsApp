@@ -4,6 +4,3 @@ services:
     env: node
     buildCommand: npm install
     startCommand: npm start
-    buildpacks:
-      - url: heroku/nodejs
-      - url: https://github.com/browserless/chrome.git

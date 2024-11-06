@@ -1,3 +1,4 @@
+import chromium from '@sparticuz/chromium';
 import puppeteer from "puppeteer-core";
 import XLSX from "xlsx";
 import fs from "fs";
@@ -6,15 +7,16 @@ import path from "path";
 export const scrapperMercadoLibre = async () => {
 	// Inicializa el navegador
 	try {
-		const browser = await puppeteer.launch({ headless: true, args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--single-process',
-            '--disable-gpu'
-        ],
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser'  // Ruta específica de Chrome en Render });
-    });
+        // Configuración del navegador
+        const executablePath = await chromium.executablePath;
+
+		const browser = await puppeteer.launch({
+            args: chromium.args,
+            defaultViewport: chromium.defaultViewport,
+            executablePath: executablePath,
+            headless: chromium.headless,
+            ignoreHTTPSErrors: true,
+        });
 
 		const page = await browser.newPage();
 		/* const urls = [
