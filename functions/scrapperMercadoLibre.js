@@ -1,5 +1,4 @@
-import chromium from "@sparticuz/chromium";
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 import XLSX from "xlsx";
 import fs from "fs";
 import path from "path";
@@ -8,20 +7,13 @@ export const scrapperMercadoLibre = async () => {
 	// Inicializa el navegador
 	try {
 		const browser = await puppeteer.launch({
+			headless: true, // Asegúrate de que esté en modo headless
 			args: [
-				...chromium.args,
-				"--no-sandbox",
-				"--disable-setuid-sandbox",
-				"--disable-dev-shm-usage",
-				"--disable-gpu",
-				"--disable-software-rasterizer",
-				"--hide-scrollbars",
-				"--disable-extensions",
+				'--no-sandbox',
+				'--disable-setuid-sandbox',
+				'--disable-dev-shm-usage',
+				'--disable-gpu',
 			],
-			defaultViewport: chromium.defaultViewport,
-			executablePath: chromium.executablePath,
-			headless: "new", // Usar el nuevo modo headless
-			ignoreHTTPSErrors: true,
 		});
 		
 		const page = await browser.newPage();
