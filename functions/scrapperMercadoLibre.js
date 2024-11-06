@@ -6,7 +6,15 @@ import path from "path";
 export const scrapperMercadoLibre = async () => {
 	// Inicializa el navegador
 	try {
-		const browser = await puppeteer.launch({ headless: true });
+		const browser = await puppeteer.launch({ headless: true, args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--single-process',
+            '--disable-gpu'
+        ],
+        executablePath: process.env.CHROME_BIN || null });
+        
 		const page = await browser.newPage();
 		/* const urls = [
             "https://motos.mercadolibre.com.ar/scooters/motomel/blitz-110/blitz110_KILOMETERS_0km-0km_NoIndex_True#applied_filter_id%3DKILOMETERS%26applied_filter_name%3DKil%C3%B3metros%26applied_filter_order%3D8%26applied_value_id%3D%5B0km-0km%5D%26applied_value_name%3D0+km%26applied_value_order%3D2%26applied_value_results%3D94%26is_custom%3Dfalse",
