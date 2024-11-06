@@ -2,10 +2,8 @@ services:
   - type: web
     name: megamoto-campana
     env: node
-    buildCommand: |
-      apt-get update -y && 
-      apt-get install -y chromium-browser && 
-      npm install
+    buildCommand: npm install
     startCommand: npm start
     buildpacks:
       - url: heroku/nodejs
+      - url: https://github.com/browserless/chrome.git
