@@ -1,7 +1,7 @@
 {
 	"type": "module",
 	"scripts": {
-		"postinstall": "npx puppeteer browsers install",
+		"postinstall": "npx puppeteer browsers chrome",
 		"start": "nodemon index.js"
 	},
 	"dependencies": {
