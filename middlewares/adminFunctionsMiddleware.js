@@ -14,6 +14,7 @@ import listCampaigns from "../utils/listCampaigns.js";
 import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
 import { processPedidoYa } from "../functions/processPedidoYa.js";
 import axios from "axios";
+import { callScrapper } from "../functions/callScrapper.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
@@ -131,14 +132,8 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message === "megabot precios") {
-				try {
-					const precios = await axios.get(
-						"https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre"
-					);
-					console.log("Precios:", precios.data);
-				} catch (error) {
-					console.log("Error en scrapping:", error);
-				}
+				const precios = await callScrapper() 
+				
 				res.status(200).send("EVENT_RECEIVED");
 			} else {
 				// Does next if its an admin message but is not an instruction
