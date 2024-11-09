@@ -16,8 +16,9 @@ export const sendExcelByWhatsApp = async (userPhone, filePath) => {
 				link: filePath,
 			},
 		};
+        console.log("Filepath:", filePath)
 
-		const response = await axios
+		/* const response = await axios
 			.post(url, data, {
 				headers: {
 					"Content-Type": "application/json",
@@ -29,9 +30,10 @@ export const sendExcelByWhatsApp = async (userPhone, filePath) => {
 					error.response ? error.response.data : error.message
 				);
 			});
-		if (response.data) {
+		
+        if (response.data) {
 			console.log("Excel enviado por whatsApp al Admin!");
-		}
+		} */
 	} catch (error) {
 		console.log("Error in sendExcelByWhatsApp.js:", error.message);
 		throw error;
