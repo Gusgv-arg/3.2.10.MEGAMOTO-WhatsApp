@@ -13,7 +13,7 @@ export const sendExcelByWhatsApp = async (userPhone, filePath) => {
 			to: userPhone,
 			type: "document",
 			document: {
-				url: filePath,
+				link: filePath,
 			},
 		};
 
@@ -29,9 +29,9 @@ export const sendExcelByWhatsApp = async (userPhone, filePath) => {
 					error.response ? error.response.data : error.message
 				);
 			});
-        if (response.data){
-            console.log("Excel enviado por whatsApp al Admin!")
-        }
+		if (response.data) {
+			console.log("Excel enviado por whatsApp al Admin!");
+		}
 	} catch (error) {
 		console.log("Error in sendExcelByWhatsApp.js:", error.message);
 		throw error;
