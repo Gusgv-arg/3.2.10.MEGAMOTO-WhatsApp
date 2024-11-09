@@ -132,7 +132,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message === "megabot precios") {
-				const precios = await callScrapper() 
+				const precios = await callScrapper(userPhone) 
 				
 				res.status(200).send("EVENT_RECEIVED");
 			} else {

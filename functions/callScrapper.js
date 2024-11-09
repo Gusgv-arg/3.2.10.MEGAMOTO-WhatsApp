@@ -1,7 +1,10 @@
 import axios from "axios"
 import XLSX from "xlsx"; 
+import path from "path";
+import { fileURLToPath } from "url";
+import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
 
-export const callScrapper = async()=>{
+export const callScrapper = async(userPhone)=>{
 
     try {
         const precios = await axios.get(
@@ -13,9 +16,17 @@ export const callScrapper = async()=>{
         const ws = XLSX.utils.json_to_sheet(allProducts); 
         const wb = XLSX.utils.book_new(); 
         XLSX.utils.book_append_sheet(wb, ws, "Productos"); 
-        XLSX.writeFile(wb, "excel/productos.xlsx");
         
-        return allProducts
+        // Define a temporal file for the excel 
+        const tempFilePath = "excel/productos.xlsx"
+        XLSX.writeFile(wb, tempFilePath);
+
+        // Obtain completa route for the temporal file
+		const __dirname = path.dirname(fileURLToPath(import.meta.url));
+		const filePath = path.join(__dirname, "../", tempFilePath);
+
+        sendExcelByWhatsApp(userPhone, filePath)      
+
     } catch (error) {
         console.log("Error en callScrapper:", error)
     }
