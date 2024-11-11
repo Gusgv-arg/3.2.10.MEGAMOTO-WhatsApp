@@ -10,7 +10,7 @@ export const callScrapper = async(userPhone)=>{
         const precios = await axios.get(
             "https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre"
         );
-        console.log("Precios:", precios.data)
+        //console.log("Precios:", precios.data)
         
         const allProducts = precios.data
         const ws = XLSX.utils.json_to_sheet(allProducts); 
