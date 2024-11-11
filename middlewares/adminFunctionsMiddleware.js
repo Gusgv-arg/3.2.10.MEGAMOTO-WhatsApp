@@ -19,9 +19,10 @@ import { callScrapper } from "../functions/callScrapper.js";
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
 
-let isScrapperCalled = false; // Variable de control
 
 export const adminFunctionsMiddleware = async (req, res, next) => {
+	let isScrapperCalled = false; // Variable de 
+	
 	const body = req.body;
 	let channel = body.entry[0].changes ? "WhatsApp" : "Other";
 
