@@ -27,7 +27,7 @@ export const callScrapper = async(userPhone)=>{
         console.log("tempFilePath", tempFilePath)
 
         // Obtain complet route for the temporal file
-		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/productos.xlsx`
+		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com${tempFilePath}`
         console.log("FileUrl:", fileUrl)
         sendExcelByWhatsApp(userPhone, fileUrl)      
 
