@@ -14,6 +14,7 @@ export const sendExcelByWhatsApp = async (userPhone, fileUrl) => {
 			type: "document",
 			document: {
 				link: fileUrl,
+				filename: "Productos de Mercado Libre.xlsx",
 			},
 		};
         
