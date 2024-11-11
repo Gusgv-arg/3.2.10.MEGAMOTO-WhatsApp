@@ -20,14 +20,6 @@ export const callScrapper = async(userPhone)=>{
             ubicacion: 'Iriondo - Santa Fe',
             vendedor: 'Vendedor no disponible',
             atributos: '2024, 0 Km'
-          },
-          {
-            titulo: 'Benelli Leoncino 500',
-            precio: '15.212.960',
-            link: 'https://moto.mercadolibre.com.ar/MLA-1444082205-benelli-leoncino-500-_JM#polycard_client=search-nordic&position=48&search_layout=grid&type=item&tracking_id=7edc41f5-7ad8-4eca-843e-5181596935db',
-            ubicacion: 'Escalante - Chubut',
-            vendedor: 'Vendedor no disponible',
-            atributos: '2024, 0 Km'
           }
         ] */
         const allProducts = precios.data

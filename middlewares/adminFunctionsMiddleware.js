@@ -137,8 +137,8 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			} else if (message === "megabot precios") {
 				if (isScrapperCalled === false) {
 					isScrapperCalled = true;
-					const precios = await callScrapper(userPhone);
 					res.status(200).send("EVENT_RECEIVED");
+					const precios = await callScrapper(userPhone);
 				} else {
 					console.log("isScrapperCelles esta en:",isScrapperCalled)
 					res.status(200).send("EVENT_RECEIVED");
