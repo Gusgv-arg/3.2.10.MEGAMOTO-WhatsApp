@@ -4,6 +4,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export const callScrapper = async(userPhone)=>{
 
     try {
@@ -19,13 +22,11 @@ export const callScrapper = async(userPhone)=>{
         XLSX.utils.book_append_sheet(wb, ws, "Productos"); 
         
         // Define a temporal file for the excel 
-		const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        const tempFilePath = path.join(__dirname, "../public/productos.xlsx")
+		const tempFilePath = path.join(__dirname, "../public/productos.xlsx")
         XLSX.writeFile(wb, tempFilePath);
 
         // Obtain complet route for the temporal file
-		const filePath = path.join(__dirname, "../", tempFilePath);
-        const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com${filePath}`
+		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/productos.xlsx`
         console.log("FileUrl:", fileUrl)
         sendExcelByWhatsApp(userPhone, fileUrl)      
 
@@ -33,4 +34,4 @@ export const callScrapper = async(userPhone)=>{
         console.log("Error en callScrapper:", error.message)
     }
 }
-callScrapper("5491161405589")
+//callScrapper("5491161405589")
