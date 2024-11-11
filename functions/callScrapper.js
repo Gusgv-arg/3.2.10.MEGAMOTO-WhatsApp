@@ -24,6 +24,7 @@ export const callScrapper = async(userPhone)=>{
         // Define a temporal file for the excel 
 		const tempFilePath = path.join(__dirname, "../public/productos.xlsx")
         XLSX.writeFile(wb, tempFilePath);
+        console.log("tempFilePath", tempFilePath)
 
         // Obtain complet route for the temporal file
 		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/productos.xlsx`
