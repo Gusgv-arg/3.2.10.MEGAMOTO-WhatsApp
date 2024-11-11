@@ -30,7 +30,7 @@ app.use(
 );
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(express.static('excel'));
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
 // Looking for General Bot Switch
