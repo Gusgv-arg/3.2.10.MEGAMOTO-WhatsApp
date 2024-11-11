@@ -133,11 +133,15 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const leads = await exportLeadsToExcel(userPhone);
 
 				res.status(200).send("EVENT_RECEIVED");
-			} else if (message === "megabot precios" && isScrapperCalled === false) {
-				isScrapperCalled = true;
-				const precios = await callScrapper(userPhone);
-
-				res.status(200).send("EVENT_RECEIVED");
+			} else if (message === "megabot precios") {
+				if (isScrapperCalled === false) {
+					isScrapperCalled = true;
+					const precios = await callScrapper(userPhone);
+					res.status(200).send("EVENT_RECEIVED");
+				} else {
+					res.status(200).send("EVENT_RECEIVED");
+				}
+				
 			} else {
 				// Does next if its an admin message but is not an instruction
 				next();
