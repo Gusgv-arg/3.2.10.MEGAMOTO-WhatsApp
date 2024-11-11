@@ -22,11 +22,12 @@ export const callScrapper = async(userPhone)=>{
         const tempFilePath = "excel/productos.xlsx"
         XLSX.writeFile(wb, tempFilePath);
 
-        // Obtain completa route for the temporal file
+        // Obtain complet route for the temporal file
 		const __dirname = path.dirname(fileURLToPath(import.meta.url));
 		const filePath = path.join(__dirname, "../", tempFilePath);
+        const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com${filePath}`
 
-        sendExcelByWhatsApp(userPhone, filePath)      
+        sendExcelByWhatsApp(userPhone, fileUrl)      
 
     } catch (error) {
         console.log("Error en callScrapper:", error.message)
