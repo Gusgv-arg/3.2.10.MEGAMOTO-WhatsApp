@@ -19,6 +19,8 @@ import { callScrapper } from "../functions/callScrapper.js";
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
 
+let isScrapperCalled = false; // Variable de control
+
 export const adminFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
 	let channel = body.entry[0].changes ? "WhatsApp" : "Other";
@@ -131,9 +133,10 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const leads = await exportLeadsToExcel(userPhone);
 
 				res.status(200).send("EVENT_RECEIVED");
-			} else if (message === "megabot precios") {
-				const precios = await callScrapper(userPhone) 
-				
+			} else if (message === "megabot precios" && !isScrapperCalled) {
+				isScrapperCalled = true;
+				const precios = await callScrapper(userPhone);
+
 				res.status(200).send("EVENT_RECEIVED");
 			} else {
 				// Does next if its an admin message but is not an instruction

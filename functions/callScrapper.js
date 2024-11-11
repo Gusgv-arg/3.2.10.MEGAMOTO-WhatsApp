@@ -7,6 +7,7 @@ import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
 export const callScrapper = async(userPhone)=>{
 
     try {
+        // Uses other API as a microservice for scrapping
         const precios = await axios.get(
             "https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre"
         );
@@ -28,6 +29,6 @@ export const callScrapper = async(userPhone)=>{
         sendExcelByWhatsApp(userPhone, filePath)      
 
     } catch (error) {
-        console.log("Error en callScrapper:", error)
+        console.log("Error en callScrapper:", error.message)
     }
 }

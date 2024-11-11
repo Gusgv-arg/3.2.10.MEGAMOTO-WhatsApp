@@ -36,6 +36,5 @@ export const sendExcelByWhatsApp = async (userPhone, filePath) => {
 		} */
 	} catch (error) {
 		console.log("Error in sendExcelByWhatsApp.js:", error.message);
-		throw error;
 	}
 };
