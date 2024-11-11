@@ -139,6 +139,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 					const precios = await callScrapper(userPhone);
 					res.status(200).send("EVENT_RECEIVED");
 				} else {
+					console.log("isScrapperCelles esta en:",isScrapperCalled)
 					res.status(200).send("EVENT_RECEIVED");
 				}
 				
