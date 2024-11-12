@@ -34,7 +34,7 @@ export const callScrapper = async(userPhone)=>{
         // Obtain complet route for the temporal file
 		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/productos.xlsx`;
         console.log("FileUrl:", fileUrl)
-        sendExcelByWhatsApp(userPhone, fileUrl)      
+        await sendExcelByWhatsApp(userPhone, fileUrl)      
 
     } catch (error) {
         console.log("Error en callScrapper:", error.message)
