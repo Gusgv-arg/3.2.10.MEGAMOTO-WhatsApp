@@ -3,6 +3,8 @@ import XLSX from "xlsx";
 import path from "path";
 import { fileURLToPath } from "url";
 import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
+import { convertArrayToText } from "../utils/convertArrayToText.js";
+import { marketAnalisisWithAssistant } from "../utils/marketAnalisisWithAssistant.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,29 +15,37 @@ export const callScrapper = async(userPhone)=>{
         // Uses other API as a microservice for scrapping
         const precios = await axios.get("https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre");
         //console.log("Precios:", precios.data)
-        /* const allProducts = [{
-            titulo: 'Benelli Leoncino Trail 500 Consulte Precio Cdo',
-            precio: '13.000.000',
-            link: 'https://moto.mercadolibre.com.ar/MLA-1438313489-benelli-leoncino-trail-500-consulte-precio-cdo-_JM#polycard_client=search-nordic&position=47&search_layout=grid&type=item&tracking_id=7edc41f5-7ad8-4eca-843e-5181596935db',
-            ubicacion: 'Iriondo - Santa Fe',
-            vendedor: 'Vendedor no disponible',
-            atributos: '2024, 0 Km'
-          }
-        ] */
+        
         const allProducts = precios.data
+        
+        // Transform the array in a txt file 
+        const txtData = convertArrayToText(allProducts)
+        console.log("TxtData:", txtData)
+
+        // Send the txt file to the Assistant specialized GPT
+        const gptAnalisis = marketAnalisisWithAssistant(txtData) 
+        
+        // Add gptAnalisis to excel file
+        const gptDataArray = gptAnalisis.split('\n').map(line => ({ Analysis: line })); // Convertir a array de objetos
+        const gptWs = XLSX.utils.json_to_sheet(gptDataArray); // Crear hoja de trabajo para GPT Analisis
+        
+        // Create an excel file with 2 sheets
         const ws = XLSX.utils.json_to_sheet(allProducts); 
         const wb = XLSX.utils.book_new(); 
         XLSX.utils.book_append_sheet(wb, ws, "Productos"); 
+        XLSX.utils.book_append_sheet(wb, gptWs, "GPT Analisis", 0); // Agregar la hoja al principio
         
         // Define a temporal file for the excel 
 		const tempFilePath = path.join(__dirname, "../public/productos.xlsx")
         XLSX.writeFile(wb, tempFilePath);
         
-        // Obtain complet route for the temporal file
+        // Obtain complete route for the temporal file
 		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/productos.xlsx`;
         console.log("FileUrl:", fileUrl)
-        await sendExcelByWhatsApp(userPhone, fileUrl)      
 
+        // Send the excel to the admin
+        await sendExcelByWhatsApp(userPhone, fileUrl)
+        
     } catch (error) {
         console.log("Error en callScrapper:", error.message)
     }
