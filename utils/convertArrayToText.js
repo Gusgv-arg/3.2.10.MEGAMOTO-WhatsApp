@@ -8,7 +8,7 @@ export const convertArrayToText = (array) => {
 		.join("\n");
 
     // Limpiar caracteres "*", "|" y "-"
-	const cleanedContent = content.replace(/[\*\|\-]/g, "");
-
+	const cleanedContent = content.replace(/[\*]/g, ''); // Asegúrate de que la expresión regular esté bien formada
+    
 	return cleanedContent;
 };
