@@ -28,7 +28,7 @@ export const callScrapper = async(userPhone)=>{
         console.log("gptAnalisis:", gptAnalisis)
         
         // Add gptAnalisis to excel file
-        const gptDataArray = gptAnalisis.split('\n').map(line => ({ Analysis: line })); // Convertir a array de objetos
+        const gptDataArray = gptAnalisis.messageGpt.split('\n').map(line => ({ Analysis: line })); // Convertir a array de objetos
         const gptWs = XLSX.utils.json_to_sheet(gptDataArray); // Crear hoja de trabajo para GPT Analisis
         
         // Create an excel file with 2 sheets
