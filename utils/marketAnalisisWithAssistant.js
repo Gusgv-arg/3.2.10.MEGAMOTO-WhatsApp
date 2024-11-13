@@ -105,7 +105,6 @@ export const marketAnalisisWithAssistant = async (txtData) => {
 		// Save the received message from the user and send the assistants response
 		if (lastMessageForRun) {
 			let messageGpt = lastMessageForRun.content[0].text.value;
-			console.log("MessagGpt-->", messageGpt);
 			return { messageGpt };
 		}
 	} catch (error) {

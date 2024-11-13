@@ -25,6 +25,7 @@ export const callScrapper = async(userPhone)=>{
 
         // Send the txt file to the Assistant specialized GPT
         const gptAnalisis = await marketAnalisisWithAssistant(txtData) 
+        console.log("gptAnalisis:", gptAnalisis)
         
         // Add gptAnalisis to excel file
         const gptDataArray = gptAnalisis.split('\n').map(line => ({ Analysis: line })); // Convertir a array de objetos
