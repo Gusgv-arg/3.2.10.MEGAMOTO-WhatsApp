@@ -34,8 +34,8 @@ export const callScrapper = async(userPhone)=>{
         // Create an excel file with 2 sheets
         const ws = XLSX.utils.json_to_sheet(allProducts); 
         const wb = XLSX.utils.book_new(); 
+        XLSX.utils.book_append_sheet(wb, gptWs, "GPT Análisis"); 
         XLSX.utils.book_append_sheet(wb, ws, "Productos"); 
-        XLSX.utils.book_append_sheet(wb, gptWs, "GPT Analisis", 0); // Agregar la hoja al principio
         
         // Define a temporal file for the excel 
 		const tempFilePath = path.join(__dirname, "../public/productos.xlsx")
