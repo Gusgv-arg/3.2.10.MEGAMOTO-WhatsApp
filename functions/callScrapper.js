@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
 import { convertArrayToText } from "../utils/convertArrayToText.js";
 import { marketAnalisisWithAssistant } from "../utils/marketAnalisisWithAssistant.js";
+import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,7 +24,7 @@ export const callScrapper = async(userPhone)=>{
         console.log("TxtData:", txtData)
 
         // Send the txt file to the Assistant specialized GPT
-        const gptAnalisis = marketAnalisisWithAssistant(txtData) 
+        const gptAnalisis = await marketAnalisisWithAssistant(txtData) 
         
         // Add gptAnalisis to excel file
         const gptDataArray = gptAnalisis.split('\n').map(line => ({ Analysis: line })); // Convertir a array de objetos
@@ -48,6 +49,8 @@ export const callScrapper = async(userPhone)=>{
         
     } catch (error) {
         console.log("Error en callScrapper:", error.message)
+        const errorMessage = `*NOTIFICACION DE ERROR:*\nEn el proceso de scrapping hubo un error: ${error.message}`
+        adminWhatsAppNotification(userPhone, errorMessage)
     }
 }
 //callScrapper("5491161405589")
