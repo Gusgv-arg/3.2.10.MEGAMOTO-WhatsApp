@@ -10,7 +10,7 @@ import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const callScrapper = async(userPhone)=>{
+export const scrapeMercadoLibre = async(userPhone)=>{
 
     try {
         // Uses other API as a microservice for scrapping

@@ -13,15 +13,14 @@ import { changeCampaignStatus } from "../utils/changeCampaignStatus.js";
 import listCampaigns from "../utils/listCampaigns.js";
 import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
 import { processPedidoYa } from "../functions/processPedidoYa.js";
-import axios from "axios";
-import { callScrapper } from "../functions/callScrapper.js";
+import { scrapeMercadoLibre } from "../functions/scrapeMercadoLibre.js";
+import { scrapeFacebook } from "../functions/scrapeFacebook.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
 
-
 export const adminFunctionsMiddleware = async (req, res, next) => {
-	let isScrapperCalled = false; // Variable de 
+	let isScrapperCalled = false;  
 	
 	const body = req.body;
 	let channel = body.entry[0].changes ? "WhatsApp" : "Other";
@@ -138,13 +137,16 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				if (isScrapperCalled === false) {
 					isScrapperCalled = true;
 					res.status(200).send("EVENT_RECEIVED");
-					const precios = await callScrapper(userPhone);
+					const precios = await scrapeMercadoLibre(userPhone);
 				} else {
 					console.log("isScrapperCelles esta en:",isScrapperCalled)
 					res.status(200).send("EVENT_RECEIVED");
 				}
 				
-			} else {
+			} else if(message==="megabot facebook"){
+				res.status(200).send("EVENT_RECEIVED");
+				await scrapeFacebook(userPhone)
+			}else {
 				// Does next if its an admin message but is not an instruction
 				next();
 			}
