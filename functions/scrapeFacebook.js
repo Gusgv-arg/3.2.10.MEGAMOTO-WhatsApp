@@ -3,6 +3,7 @@ import ExcelJS from "exceljs";
 import { ads } from "../excel/ads.js";
 import { fileURLToPath } from "url";
 import path from "path";
+import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -109,7 +110,10 @@ export const scrapeFacebook = async (userPhone) => {
 		await workbook.xlsx.writeFile(tempFilePath);
         console.log("tempFilePath:", tempFilePath)
 		console.log(`Archivo de Excel creado en: ${fileUrl}`);
-		//return facebookAds
+		
+        // Send the excel to the admin
+        await sendExcelByWhatsApp(userPhone, fileUrl)
+        
 	} catch (error) {
 		console.log("Error in scrapeFacebook.js:", error.message);
 	}
