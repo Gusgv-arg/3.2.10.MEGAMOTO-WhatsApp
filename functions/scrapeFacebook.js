@@ -1,6 +1,5 @@
 import axios from "axios";
 import ExcelJS from "exceljs";
-import { ads } from "../excel/ads.js";
 import { fileURLToPath } from "url";
 import path from "path";
 import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
@@ -11,11 +10,11 @@ const __dirname = path.dirname(__filename);
 export const scrapeFacebook = async (userPhone) => {
 	try {
 		// Uses other API as a microservice for scrapping
-		//const ads = await axios.get("https://three-2-13-web-scrapping.onrender.com/scrape/facebook");
-		//console.log("Precios:", ads.data)
+		const ads = await axios.get("https://three-2-13-web-scrapping.onrender.com/scrape/facebook");
+		console.log("Avisos:", ads.data)
 
-		//const results = ads.data
-		const results = ads;
+		const results = ads.data
+		
 		// Crear un nuevo libro de Excel
 		const workbook = new ExcelJS.Workbook();
 
@@ -24,7 +23,7 @@ export const scrapeFacebook = async (userPhone) => {
 
 		// Iterar sobre los nombres agrupados
 		for (const ad of results) {
-			const name = ad.name; // Obtener el nombre del anuncio
+			const name = ad.name; 
 			const group = [ad]; // Agrupar el anuncio en un array
 
 			// Crear una nueva hoja con el nombre del anunciante
@@ -117,6 +116,9 @@ export const scrapeFacebook = async (userPhone) => {
         
 	} catch (error) {
 		console.log("Error in scrapeFacebook.js:", error.message);
+		const errorMessage = `*NOTIFICACION DE ERROR:*\nEn el proceso de scrapping de Facebook hubo un error: ${error.message}`
+        adminWhatsAppNotification(userPhone, errorMessage)
+    
 	}
 };
 

@@ -51,8 +51,7 @@ export const scrapeMercadoLibre = async(userPhone)=>{
         
     } catch (error) {
         console.log("Error en callScrapper:", error.message)
-        const errorMessage = `*NOTIFICACION DE ERROR:*\nEn el proceso de scrapping hubo un error: ${error.message}`
+        const errorMessage = `*NOTIFICACION DE ERROR:*\nEn el proceso de scrapping de Mercado Libre hubo un error: ${error.message}`
         adminWhatsAppNotification(userPhone, errorMessage)
     }
 }
-//callScrapper("5491161405589")
