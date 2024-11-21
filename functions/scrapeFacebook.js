@@ -99,11 +99,16 @@ export const scrapeFacebook = async (userPhone) => {
 		}
 
 		// Define a temporal file for the excel
-		const tempFilePath = path.join(__dirname, "../public/Avisos Facebook.xlsx");
+		const tempFilePath = path.join(__dirname, "../public/Avisos_Facebook.xlsx");
 		
+        // Obtain complete route for the temporal file
+		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/Avisos_Facebook.xlsx`;
+        console.log("FileUrl:", fileUrl)
+
 		// Guardar el archivo de Excel
 		await workbook.xlsx.writeFile(tempFilePath);
-		console.log(`Archivo de Excel creado en: ${tempFilePath}`);
+        console.log("tempFilePath:", tempFilePath)
+		console.log(`Archivo de Excel creado en: ${fileUrl}`);
 		//return facebookAds
 	} catch (error) {
 		console.log("Error in scrapeFacebook.js:", error.message);
