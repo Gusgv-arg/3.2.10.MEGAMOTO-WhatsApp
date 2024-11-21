@@ -46,7 +46,8 @@ export const scrapeMercadoLibre = async(userPhone)=>{
         console.log("FileUrl:", fileUrl)
 
         // Send the excel to the admin
-        await sendExcelByWhatsApp(userPhone, fileUrl)
+        const fileName="Precios_Mercado_Libre"
+        await sendExcelByWhatsApp(userPhone, fileUrl, fileName)
         
     } catch (error) {
         console.log("Error en callScrapper:", error.message)

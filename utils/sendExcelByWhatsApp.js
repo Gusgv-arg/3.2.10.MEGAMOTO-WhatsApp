@@ -3,7 +3,7 @@ import axios from "axios";
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
-export const sendExcelByWhatsApp = async (userPhone, fileUrl) => {
+export const sendExcelByWhatsApp = async (userPhone, fileUrl, fileName) => {
 	try {
 		// Posts the message to Whatsapp
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
@@ -14,7 +14,7 @@ export const sendExcelByWhatsApp = async (userPhone, fileUrl) => {
 			type: "document",
 			document: {
 				link: fileUrl,
-				filename: "Productos de Mercado Libre.xlsx",
+				filename: fileName,
 			},
 		};
         

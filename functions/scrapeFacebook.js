@@ -112,7 +112,8 @@ export const scrapeFacebook = async (userPhone) => {
 		console.log(`Archivo de Excel creado en: ${fileUrl}`);
 		
         // Send the excel to the admin
-        await sendExcelByWhatsApp(userPhone, fileUrl)
+        const fileName = "Avisos_Facebook"
+        await sendExcelByWhatsApp(userPhone, fileUrl, fileName)
         
 	} catch (error) {
 		console.log("Error in scrapeFacebook.js:", error.message);
