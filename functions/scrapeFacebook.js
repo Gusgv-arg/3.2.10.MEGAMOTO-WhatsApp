@@ -21,6 +21,8 @@ export const scrapeFacebook = async (userPhone) => {
 		// Crear un nuevo libro de Excel
 		const workbook = new ExcelJS.Workbook();
 
+		const worksheets = {}; // Objeto para rastrear los worksheets creados
+
 		// Inicializar la fila donde comenzaremos a agregar resultados
 		let startRow = 1;
 
@@ -29,24 +31,32 @@ export const scrapeFacebook = async (userPhone) => {
 			const name = ad.name;
 			const group = [ad]; // Agrupar el anuncio en un array
 
-			// Crear una nueva hoja con el nombre del anunciante
-			const worksheet = workbook.addWorksheet(name);
+			// Verificar si ya existe un worksheet para este nombre
+			let worksheet;
+			if (!worksheets[name]) {
+				// Crear una nueva hoja con el nombre del anunciante
+				worksheet = workbook.addWorksheet(name);
+				worksheets[name] = worksheet; // Guardar el worksheet en el objeto
+				startRow = 1; // Reiniciar la fila para un nuevo worksheet
+			} else {
+				worksheet = worksheets[name]; // Usar el worksheet existente
+			}
 
 			// Inicializar la fila para este grupo
-			startRow = 1;
+			let currentRow = startRow;
 
 			for (const result of group) {
 				const { text, images, extraTexts } = result;
 
 				// Agregar el texto a la celda correspondiente
-				worksheet.getCell(`A${startRow}`).value = text;
+				worksheet.getCell(`A${currentRow}`).value = text;
 
 				// Contar la cantidad de imágenes y cards
 				const imageCount = images ? images.length : 0;
 
 				// Agregar la cantidad de avisos debajo del texto
 				worksheet.getCell(
-					`A${startRow + 1}`
+					`A${currentRow + 1}`
 				).value = `Cantidad de avisos: ${imageCount}`;
 
 				// Ajustar el tamaño de las celdas para las imágenes
@@ -77,7 +87,7 @@ export const scrapeFacebook = async (userPhone) => {
 						});
 
 						// Calcular la fila y columna para la imagen
-						const row = startRow + 1;
+						const row = currentRow + 1;
 						const col = (i * 2) % 6; // Columna 0, 2, 4 para las imágenes
 
 						// Agregar la imagen a la celda correspondiente
@@ -92,7 +102,7 @@ export const scrapeFacebook = async (userPhone) => {
 
 						// Incrementar la fila después de cada 3 imágenes
 						if ((i + 1) % 3 === 0) {
-							startRow += 2;
+							currentRow += 2;
 						}
 						// Ajustar la altura de la fila vacía debajo de las imágenes
 						worksheet.getRow(row + 2).height = 15;
@@ -107,16 +117,17 @@ export const scrapeFacebook = async (userPhone) => {
 							const extraTextCell = worksheet.getCell(`A${extraTextRow}`);
 							extraTextCell.value = video + concatenatedTexts; // Agregar texto concatenado
 							extraTextCell.alignment = { wrapText: true }; // Ajustar texto en la celda
-							
+
 							// Ajustar la altura de la fila para que se muestre el texto completo
 							const lineCount = concatenatedTexts.split("\n").length; // Contar líneas
-							worksheet.getRow(extraTextRow).height = lineCount * 20; 
+							worksheet.getRow(extraTextRow).height = lineCount * 20;
 						}
+						// Incrementar la fila de inicio para el siguiente aviso
+						currentRow += Math.ceil(imageCount / 3) * 2;
 					}
+					// Actualizar la fila de inicio para el siguiente grupo
+					startRow = currentRow;
 				}
-
-				// Incrementar la fila de inicio para el siguiente aviso
-				startRow += Math.ceil(imageCount / 3) * 2;
 			}
 		}
 
