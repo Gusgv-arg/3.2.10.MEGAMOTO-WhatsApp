@@ -49,14 +49,15 @@ export const scrapeFacebook = async (userPhone) => {
 				const { text, images, extraTexts } = result;
 
 				// Agregar el texto a la celda correspondiente
-				worksheet.getCell(`A${currentRow}`).value = text;
+				worksheet.getCell(`A${currentRow}`).value = text; //currentRow = 1
 
 				// Contar la cantidad de imágenes y cards
 				const imageCount = images ? images.length : 0;
 
 				// Agregar la cantidad de avisos debajo del texto
+				currentRow += 1; // currentRow = 2
 				worksheet.getCell(
-					`A${currentRow + 1}`
+					`A${currentRow}`
 				).value = `Cantidad de avisos: ${imageCount}`;
 
 				// Ajustar el tamaño de las celdas para las imágenes
@@ -88,8 +89,8 @@ export const scrapeFacebook = async (userPhone) => {
 						});
 
 						// Calcular la fila y columna para la imagen
-						const row = currentRow;
-						const col = (i % 3) * 2; // Columna 0, 2, 4 para las imágenes
+						const row = currentRow; // row y currentRow son = 2
+						const col = (i % 3) * 2;
 
 						// Agregar la imagen a la celda correspondiente
 						worksheet.addImage(imageId, {
@@ -118,7 +119,6 @@ export const scrapeFacebook = async (userPhone) => {
 						const concatenatedTexts = extraTexts
 							.map((extra) => extra.text)
 							.join("\n");
-						//worksheet.getCell(`A${extraTextRow}`).value = video + concatenatedTexts;
 						const extraTextCell = worksheet.getCell(`A${extraTextRow}`);
 						extraTextCell.value = video + concatenatedTexts; // Agregar texto concatenado
 						extraTextCell.alignment = { wrapText: true }; // Ajustar texto en la celda
