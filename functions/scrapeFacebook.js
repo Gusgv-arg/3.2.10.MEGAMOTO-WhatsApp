@@ -102,13 +102,16 @@ export const scrapeFacebook = async (userPhone) => {
 						// Ajustar la altura de la fila para que se muestre la imagen
 						worksheet.getRow(row + 1).height = 400; // row + 1 = 3
 
-						// Incrementar la fila después de cada 3 imágenes
+						// Incrementar 2 filas después de cada 3 imágenes
 						if ((i + 1) % 3 === 0) {
-							currentRow += 2; // currentRow + 2 = 4 (despues de la primer fila) 
+							currentRow += 2; // currentRow + 2 = 4 (despues de la primer fila)
+						}
+
+						// Asegurarse de que haya una fila vacía después de las imágenes
+						if (i === (imageCount - 1)) {
+							currentRow += 2; // Incrementar para dejar una fila vacía después
 						}
 					}
-					// Asegurarse de que haya una fila vacía después de las imágenes
-					currentRow += 1; // Incrementar para dejar una fila vacía después
 
 					// Agregar textos de extraTexts debajo de las imágenes
 					if (extraTexts && extraTexts.length > 0) {
