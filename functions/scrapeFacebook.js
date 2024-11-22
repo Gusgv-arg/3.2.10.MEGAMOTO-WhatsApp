@@ -49,7 +49,7 @@ export const scrapeFacebook = async (userPhone) => {
 				const { text, images, extraTexts } = result;
 
 				// Agregar el texto a la celda correspondiente
-				worksheet.getCell(`A${currentRow}`).value = text; //currentRow = 1
+				worksheet.getCell(`A${currentRow}`).value = "AVISO:" + text; //currentRow = 1
 
 				// Contar la cantidad de imágenes y cards
 				const imageCount = images ? images.length : 0;
@@ -109,7 +109,7 @@ export const scrapeFacebook = async (userPhone) => {
 
 						// Asegurarse de que haya una fila vacía después de las imágenes
 						if (i === (imageCount - 1)) {
-							currentRow += 2; // Incrementar para dejar una fila vacía después
+							currentRow += 3; // Incrementar para dejar una fila vacía después
 						}
 					}
 
@@ -125,7 +125,7 @@ export const scrapeFacebook = async (userPhone) => {
 
 						// Ajustar la altura de la fila para que se muestre el texto completo
 						const lineCount = concatenatedTexts.split("\n").length; // Contar líneas
-						worksheet.getRow(extraTextRow).height = lineCount * 20;
+						worksheet.getRow(extraTextRow).height = lineCount * 25;
 						currentRow += 2 // se incrementa currentRow
 					}
 					// Actualizar la fila de inicio para el siguiente grupo
