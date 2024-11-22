@@ -98,6 +98,8 @@ export const scrapeFacebook = async (userPhone) => {
 							const extraTextRow = startRow + 3; 
 							const concatenatedTexts = extraTexts.map(extra => extra.text).join('\n'); 
 							worksheet.getCell(`A${extraTextRow}`).value = video + concatenatedTexts; 
+							//worksheet.getRow(row + 2).height = 15;
+							worksheet.getRow(extraTextRow).height = 25;
 						}
 					}
 				}
