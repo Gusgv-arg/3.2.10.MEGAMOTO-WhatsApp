@@ -87,8 +87,8 @@ export const scrapeFacebook = async (userPhone) => {
 						});
 
 						// Calcular la fila y columna para la imagen
-						const row = currentRow + 1;
-						const col = (i * 2) % 6; // Columna 0, 2, 4 para las imágenes
+						const row = currentRow;
+						const col = (i % 3) * 2; // Columna 0, 2, 4 para las imágenes
 
 						// Agregar la imagen a la celda correspondiente
 						worksheet.addImage(imageId, {
@@ -98,32 +98,33 @@ export const scrapeFacebook = async (userPhone) => {
 						});
 
 						// Ajustar la altura de la fila para que se muestre la imagen
-						worksheet.getRow(row + 1).height = 400;
+						worksheet.getRow(row).height = 400;
 
 						// Incrementar la fila después de cada 3 imágenes
 						if ((i + 1) % 3 === 0) {
-							currentRow += 2;
+							currentRow += 1;
 						}
-						// Ajustar la altura de la fila vacía debajo de las imágenes
-						worksheet.getRow(row + 2).height = 15;
+					}
+					// Asegurarse de que haya una fila vacía después de las imágenes
+					currentRow += 1; // Incrementar para dejar una fila vacía después
 
-						// Agregar textos de extraTexts debajo de las imágenes
-						if (extraTexts && extraTexts.length > 0) {
-							const extraTextRow = startRow + 3;
-							const concatenatedTexts = extraTexts
-								.map((extra) => extra.text)
-								.join("\n");
-							//worksheet.getCell(`A${extraTextRow}`).value = video + concatenatedTexts;
-							const extraTextCell = worksheet.getCell(`A${extraTextRow}`);
-							extraTextCell.value = video + concatenatedTexts; // Agregar texto concatenado
-							extraTextCell.alignment = { wrapText: true }; // Ajustar texto en la celda
+					// Ajustar la altura de la fila vacía debajo de las imágenes
+					worksheet.getRow(row + 2).height = 15;
 
-							// Ajustar la altura de la fila para que se muestre el texto completo
-							const lineCount = concatenatedTexts.split("\n").length; // Contar líneas
-							worksheet.getRow(extraTextRow).height = lineCount * 20;
-						}
-						// Incrementar la fila de inicio para el siguiente aviso
-						currentRow += Math.ceil(imageCount / 3) * 2;
+					// Agregar textos de extraTexts debajo de las imágenes
+					if (extraTexts && extraTexts.length > 0) {
+						const extraTextRow = currentRow;
+						const concatenatedTexts = extraTexts
+							.map((extra) => extra.text)
+							.join("\n");
+						//worksheet.getCell(`A${extraTextRow}`).value = video + concatenatedTexts;
+						const extraTextCell = worksheet.getCell(`A${extraTextRow}`);
+						extraTextCell.value = video + concatenatedTexts; // Agregar texto concatenado
+						extraTextCell.alignment = { wrapText: true }; // Ajustar texto en la celda
+
+						// Ajustar la altura de la fila para que se muestre el texto completo
+						const lineCount = concatenatedTexts.split("\n").length; // Contar líneas
+						worksheet.getRow(extraTextRow).height = lineCount * 20;
 					}
 					// Actualizar la fila de inicio para el siguiente grupo
 					startRow = currentRow;
