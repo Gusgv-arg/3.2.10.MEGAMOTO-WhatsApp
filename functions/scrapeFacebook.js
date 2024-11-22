@@ -110,7 +110,7 @@ export const scrapeFacebook = async (userPhone) => {
 							
 							// Ajustar la altura de la fila para que se muestre el texto completo
 							const lineCount = concatenatedTexts.split("\n").length; // Contar líneas
-							worksheet.getRow(extraTextRow).height = lineCount * 15; // Ajustar altura (15 es un valor aproximado, puedes modificarlo)
+							worksheet.getRow(extraTextRow).height = lineCount * 20; 
 						}
 					}
 				}
