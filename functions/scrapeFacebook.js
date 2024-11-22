@@ -66,13 +66,14 @@ export const scrapeFacebook = async (userPhone) => {
 				worksheet.getColumn(4).width = 5;
 				worksheet.getColumn(5).width = 40;
 
+				let video;
 				// Agregar imágenes de "images"
 				if (imageCount > 0) {
 					for (let i = 0; i < imageCount; i++) {
 						const imageUrl = images[i]?.originalImageUrl
 							? images[i].originalImageUrl
 							: images[i].videoPreviewImageUrl;
-						const video = images[i].videoPreviewImageUrl ? "Video. " : "";
+						video = images[i].videoPreviewImageUrl ? "Video. " : "";
 
 						// Descargar la imagen y agregarla a la hoja
 						const response = await fetch(imageUrl);
