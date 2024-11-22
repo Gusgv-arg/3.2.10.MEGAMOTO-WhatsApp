@@ -100,18 +100,15 @@ export const scrapeFacebook = async (userPhone) => {
 						});
 
 						// Ajustar la altura de la fila para que se muestre la imagen
-						worksheet.getRow(row).height = 400;
+						worksheet.getRow(row + 1).height = 400; // row + 1 = 3
 
 						// Incrementar la fila después de cada 3 imágenes
 						if ((i + 1) % 3 === 0) {
-							currentRow += 1;
+							currentRow += 2; // currentRow + 2 = 4 (despues de la primer fila) 
 						}
 					}
 					// Asegurarse de que haya una fila vacía después de las imágenes
 					currentRow += 1; // Incrementar para dejar una fila vacía después
-
-					// Ajustar la altura de la fila vacía debajo de las imágenes
-					//worksheet.getRow(currentRow + 2).height = 15;
 
 					// Agregar textos de extraTexts debajo de las imágenes
 					if (extraTexts && extraTexts.length > 0) {
