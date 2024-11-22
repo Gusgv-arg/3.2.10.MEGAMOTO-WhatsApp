@@ -11,11 +11,13 @@ const __dirname = path.dirname(__filename);
 export const scrapeFacebook = async (userPhone) => {
 	try {
 		// Uses other API as a microservice for scrapping
-		const ads = await axios.get("https://three-2-13-web-scrapping.onrender.com/scrape/facebook");
-		console.log("Avisos:", ads.data)
+		const ads = await axios.get(
+			"https://three-2-13-web-scrapping.onrender.com/scrape/facebook"
+		);
+		console.log("Avisos:", ads.data);
 
-		const results = ads.data
-		
+		const results = ads.data;
+
 		// Crear un nuevo libro de Excel
 		const workbook = new ExcelJS.Workbook();
 
@@ -24,7 +26,7 @@ export const scrapeFacebook = async (userPhone) => {
 
 		// Iterar sobre los nombres agrupados
 		for (const ad of results) {
-			const name = ad.name; 
+			const name = ad.name;
 			const group = [ad]; // Agrupar el anuncio en un array
 
 			// Crear una nueva hoja con el nombre del anunciante
@@ -57,8 +59,10 @@ export const scrapeFacebook = async (userPhone) => {
 				// Agregar imágenes de "images"
 				if (imageCount > 0) {
 					for (let i = 0; i < imageCount; i++) {
-						const imageUrl = images[i]?.originalImageUrl ? images[i].originalImageUrl : images[i].videoPreviewImageUrl;
-						const video = images[i].videoPreviewImageUrl ? "Video. ": ""
+						const imageUrl = images[i]?.originalImageUrl
+							? images[i].originalImageUrl
+							: images[i].videoPreviewImageUrl;
+						const video = images[i].videoPreviewImageUrl ? "Video. " : "";
 
 						// Descargar la imagen y agregarla a la hoja
 						const response = await fetch(imageUrl);
@@ -92,14 +96,21 @@ export const scrapeFacebook = async (userPhone) => {
 						}
 						// Ajustar la altura de la fila vacía debajo de las imágenes
 						worksheet.getRow(row + 2).height = 15;
-						
+
 						// Agregar textos de extraTexts debajo de las imágenes
 						if (extraTexts && extraTexts.length > 0) {
-							const extraTextRow = startRow + 3; 
-							const concatenatedTexts = extraTexts.map(extra => extra.text).join('\n'); 
-							worksheet.getCell(`A${extraTextRow}`).value = video + concatenatedTexts; 
-							//worksheet.getRow(row + 2).height = 15;
-							worksheet.getRow(extraTextRow).height = 25;
+							const extraTextRow = startRow + 3;
+							const concatenatedTexts = extraTexts
+								.map((extra) => extra.text)
+								.join("\n");
+							//worksheet.getCell(`A${extraTextRow}`).value = video + concatenatedTexts;
+							const extraTextCell = worksheet.getCell(`A${extraTextRow}`);
+							extraTextCell.value = video + concatenatedTexts; // Agregar texto concatenado
+							extraTextCell.alignment = { wrapText: true }; // Ajustar texto en la celda
+							
+							// Ajustar la altura de la fila para que se muestre el texto completo
+							const lineCount = concatenatedTexts.split("\n").length; // Contar líneas
+							worksheet.getRow(extraTextRow).height = lineCount * 15; // Ajustar altura (15 es un valor aproximado, puedes modificarlo)
 						}
 					}
 				}
@@ -111,25 +122,22 @@ export const scrapeFacebook = async (userPhone) => {
 
 		// Define a temporal file for the excel
 		const tempFilePath = path.join(__dirname, "../public/Avisos_Facebook.xlsx");
-		
-        // Obtain complete route for the temporal file
+
+		// Obtain complete route for the temporal file
 		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/Avisos_Facebook.xlsx`;
-        console.log("FileUrl:", fileUrl)
+		console.log("FileUrl:", fileUrl);
 
 		// Guardar el archivo de Excel
 		await workbook.xlsx.writeFile(tempFilePath);
-        console.log("tempFilePath:", tempFilePath)
+		console.log("tempFilePath:", tempFilePath);
 		console.log(`Archivo de Excel creado en: ${fileUrl}`);
-		
-        // Send the excel to the admin
-        const fileName = "Avisos_Facebook"
-        await sendExcelByWhatsApp(userPhone, fileUrl, fileName)
-        
+
+		// Send the excel to the admin
+		const fileName = "Avisos_Facebook";
+		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
 	} catch (error) {
 		console.log("Error in scrapeFacebook.js:", error.message);
-		const errorMessage = `*NOTIFICACION DE ERROR:*\nEn el proceso de scrapping de Facebook hubo un error: ${error.message}`
-        adminWhatsAppNotification(userPhone, errorMessage)
-    
+		const errorMessage = `*NOTIFICACION DE ERROR:*\nEn el proceso de scrapping de Facebook hubo un error: ${error.message}`;
+		adminWhatsAppNotification(userPhone, errorMessage);
 	}
 };
-
