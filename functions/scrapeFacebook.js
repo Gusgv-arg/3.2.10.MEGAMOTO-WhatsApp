@@ -125,7 +125,7 @@ export const scrapeFacebook = async (userPhone) => {
 
 						// Ajustar la altura de la fila para que se muestre el texto completo
 						const lineCount = concatenatedTexts.split("\n").length; // Contar líneas
-						worksheet.getRow(extraTextRow).height = lineCount * 25;
+						worksheet.getRow(extraTextRow).height = lineCount * 30;
 						currentRow += 2 // se incrementa currentRow
 					}
 					// Actualizar la fila de inicio para el siguiente grupo
