@@ -109,7 +109,7 @@ export const scrapeFacebook = async (userPhone) => {
 					currentRow += 1; // Incrementar para dejar una fila vacía después
 
 					// Ajustar la altura de la fila vacía debajo de las imágenes
-					worksheet.getRow(row + 2).height = 15;
+					//worksheet.getRow(currentRow + 2).height = 15;
 
 					// Agregar textos de extraTexts debajo de las imágenes
 					if (extraTexts && extraTexts.length > 0) {
