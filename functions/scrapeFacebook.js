@@ -58,6 +58,7 @@ export const scrapeFacebook = async (userPhone) => {
 				if (imageCount > 0) {
 					for (let i = 0; i < imageCount; i++) {
 						const imageUrl = images[i]?.originalImageUrl ? images[i].originalImageUrl : images[i].videoPreviewImageUrl;
+						const video = images[i].videoPreviewImageUrl ? "Video. ": ""
 
 						// Descargar la imagen y agregarla a la hoja
 						const response = await fetch(imageUrl);
@@ -91,12 +92,13 @@ export const scrapeFacebook = async (userPhone) => {
 						}
 						// Ajustar la altura de la fila vacía debajo de las imágenes
 						worksheet.getRow(row + 2).height = 15;
-					}
-					// Agregar textos de extraTexts debajo de las imágenes
-					if (extraTexts && extraTexts.length > 0) {
-						const extraTextRow = startRow + 1; // Fila para los textos extra
-						const concatenatedTexts = extraTexts.map(extra => extra.text).join('\n'); // Concatenar textos
-						worksheet.getCell(`A${extraTextRow}`).value = concatenatedTexts; // Agregar texto concatenado
+						
+						// Agregar textos de extraTexts debajo de las imágenes
+						if (extraTexts && extraTexts.length > 0) {
+							const extraTextRow = startRow + 3; 
+							const concatenatedTexts = extraTexts.map(extra => extra.text).join('\n'); 
+							worksheet.getCell(`A${extraTextRow}`).value = video + concatenatedTexts; 
+						}
 					}
 				}
 
