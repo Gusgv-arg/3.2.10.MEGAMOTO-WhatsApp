@@ -1,10 +1,12 @@
 import axios from "axios";
 import { modelos } from "../excel/modelos.js";
+import dotenv from "dotenv"
+dotenv.config()
 
 const HUGGING_FACE_API_URL =
 	"https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2";
 
-const HUGGING_FACE_API_KEY = "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"; // Reemplaza con tu API Key
+const tokenHuggingFace = process.env.HUGGING_FACE_API_KEY
 
 export const lookModel = async (allProducts) => {
 	const results = []; // Array para acumular los resultados
@@ -31,7 +33,7 @@ export const lookModel = async (allProducts) => {
 									},
 								},
 								{
-									headers: { Authorization: `Bearer ${HUGGING_FACE_API_KEY}` },
+									headers: { Authorization: `Bearer ${tokenHuggingFace}` },
 								}
 							);
 							//console.log(`Similitudes para "${model.modelo}":`, response.data);
