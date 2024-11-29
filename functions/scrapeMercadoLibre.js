@@ -1,9 +1,11 @@
+import axios from "axios"
 import path from "path";
 import { fileURLToPath } from "url";
 import ExcelJS from "exceljs";
 import { lookModel } from "./lookModel.js";
 // import { allProducts } from "../excel/allproducts.js"; // array para hacer pruebas hardcodeado
 import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
+import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -80,6 +82,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		// Enviar el archivo Excel por WhatsApp (opcional)
 		const fileName = "Precios_Actualizados";
 		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
+		
 	} catch (error) {
 		console.log("Error en scrapeMercadoLibre.js:", error.message);
 		const errorMessage = `*NOTIFICACION DE ERROR:*
