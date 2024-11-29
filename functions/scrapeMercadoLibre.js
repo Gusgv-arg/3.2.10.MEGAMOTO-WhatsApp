@@ -82,11 +82,13 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		// Enviar el archivo Excel por WhatsApp (opcional)
 		const fileName = "Precios_Actualizados";
 		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
-		
+
 	} catch (error) {
 		console.log("Error en scrapeMercadoLibre.js:", error.message);
-		const errorMessage = `*NOTIFICACION DE ERROR:*
-En el proceso de scraping de Mercado Libre hubo un error: ${error.message}`;
+		let errorMessage = `*NOTIFICACION DE ERROR:*\nEn el proceso de scraping de Mercado Libre hubo un error: ${error.message}`;
+		if (error.message === "Request failed with status code 502"){
+			errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema momentáneo en el hosting de Servidor (Render). Podes intentar nuevamente o esperar una hora.`
+		}
 		// Notificar al administrador
 		adminWhatsAppNotification(userPhone, errorMessage);
 	}
