@@ -1,57 +1,92 @@
-import axios from "axios"
-import XLSX from "xlsx"; 
 import path from "path";
 import { fileURLToPath } from "url";
+import ExcelJS from "exceljs";
+import { lookModel } from "./lookModel.js";
+// import { allProducts } from "../excel/allproducts.js"; // array para hacer pruebas hardcodeado
 import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
-import { convertArrayToText } from "../utils/convertArrayToText.js";
-import { marketAnalisisWithAssistant } from "../utils/marketAnalisisWithAssistant.js";
-import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const scrapeMercadoLibre = async(userPhone)=>{
+export const scrapeMercadoLibre = async (userPhone) => {
+	try {
+		// Uses other API as a microservice for scrapping
+		const precios = await axios.get(
+			"https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre"
+		);
+		console.log("Precios:", precios.data);
 
-    try {
-        // Uses other API as a microservice for scrapping
-        const precios = await axios.get("https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre");
-        //console.log("Precios:", precios.data)
-        
-        const allProducts = precios.data
-        
-        // Transform the array in a txt file 
-        const txtData = convertArrayToText(allProducts)
-        console.log("TxtData:", txtData)
+		const allProducts = precios.data;
 
-        // Send the txt file to the Assistant specialized GPT
-        const gptAnalisis = await marketAnalisisWithAssistant(txtData) 
-        console.log("gptAnalisis:", gptAnalisis)
-        
-        // Add gptAnalisis to excel file
-        const gptDataArray = gptAnalisis.messageGpt.split('\n').map(line => ({ Analysis: line })); // Convertir a array de objetos
-        const gptWs = XLSX.utils.json_to_sheet(gptDataArray); // Crear hoja de trabajo para GPT Analisis
-        
-        // Create an excel file with 2 sheets
-        const ws = XLSX.utils.json_to_sheet(allProducts); 
-        const wb = XLSX.utils.book_new(); 
-        XLSX.utils.book_append_sheet(wb, gptWs, "Análisis MegaBot"); 
-        XLSX.utils.book_append_sheet(wb, ws, "Productos"); 
-        
-        // Define a temporal file for the excel 
-		const tempFilePath = path.join(__dirname, "../public/productos.xlsx")
-        XLSX.writeFile(wb, tempFilePath);
-        
-        // Obtain complete route for the temporal file
-		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/productos.xlsx`;
-        console.log("FileUrl:", fileUrl)
+		const correctModels = await lookModel(allProducts);
 
-        // Send the excel to the admin
-        const fileName="Precios_Mercado_Libre"
-        await sendExcelByWhatsApp(userPhone, fileUrl, fileName)
-        
-    } catch (error) {
-        console.log("Error en callScrapper:", error.message)
-        const errorMessage = `*NOTIFICACION DE ERROR:*\nEn el proceso de scrapping de Mercado Libre hubo un error: ${error.message}`
-        adminWhatsAppNotification(userPhone, errorMessage)
-    }
-}
+		// Convertir precios a números
+		correctModels.forEach((model) => {
+			model.precio = parseFloat(
+				model.precio.replace(/\./g, "").replace(",", ".")
+			);
+		});
+
+		//console.log("correctModels:", correctModels)
+		// Ruta del archivo Excel predefinido y la ruta para guardar el archivo actualizado
+		const templatePath = path.join(
+			__dirname,
+			"../public/precios_template.xlsx"
+		);
+		const outputPath = path.join(
+			__dirname,
+			"../public/precios_mercado_libre.xlsx"
+		);
+
+		// Cargar el archivo predefinido
+		const workbook = new ExcelJS.Workbook();
+		await workbook.xlsx.readFile(templatePath);
+
+		// Seleccionar la hoja "Avisos"
+		const avisosSheet = workbook.getWorksheet("Avisos");
+
+		if (!avisosSheet) {
+			throw new Error("La hoja 'Avisos' no existe en el archivo predefinido.");
+		}
+
+		// Limpiar el contenido anterior (manteniendo encabezados)
+		const rowCount = avisosSheet.rowCount;
+		for (let i = rowCount; i > 1; i--) {
+			// Comenzar desde la última fila y eliminar hacia arriba
+			avisosSheet.spliceRows(i, 1);
+		}
+
+		// Añadir los nuevos datos a la hoja "Avisos"
+		avisosSheet.addRows(
+			correctModels.map((model) => [
+				model.titulo,
+				model.modelo,
+				model.precio,
+				model.link,
+				model.ubicacion,
+				model.vendedor,
+				model.atributos,
+			])
+		);
+
+		// Guardar el archivo actualizado en una ubicación pública
+		await workbook.xlsx.writeFile(outputPath);
+		console.log("Archivo actualizado guardado en:", outputPath);
+
+		// Generar la URL pública del archivo
+		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/precios_mercado_libre.xlsx`;
+		console.log("Archivo disponible en:", fileUrl);
+
+		// Enviar el archivo Excel por WhatsApp (opcional)
+		const fileName = "Precios_Actualizados";
+		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
+	} catch (error) {
+		console.log("Error en scrapeMercadoLibre.js:", error.message);
+		const errorMessage = `*NOTIFICACION DE ERROR:*
+En el proceso de scraping de Mercado Libre hubo un error: ${error.message}`;
+		// Notificar al administrador
+		adminWhatsAppNotification(userPhone, errorMessage);
+	}
+};
+
+scrapeMercadoLibre();
