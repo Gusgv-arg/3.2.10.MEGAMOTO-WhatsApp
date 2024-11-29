@@ -89,4 +89,4 @@ En el proceso de scraping de Mercado Libre hubo un error: ${error.message}`;
 	}
 };
 
-scrapeMercadoLibre();
+
