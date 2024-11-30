@@ -38,12 +38,12 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			"../public/precios_template.xlsx"
 		); */
 
-		const templatePath="https://github.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/blob/main/public/precios_template.xlsx"
+		const templatePath="https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/precios_template.xlsx"
 		const outputPath = path.join(
 			__dirname,
 			"../public/precios_mercado_libre.xlsx"
 		);
-
+		
 		// Cargar el archivo predefinido
 		const workbook = new ExcelJS.Workbook();
 		await workbook.xlsx.readFile(templatePath);
