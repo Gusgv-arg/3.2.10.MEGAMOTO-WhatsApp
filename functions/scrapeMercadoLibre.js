@@ -46,7 +46,14 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		
 		// Cargar el archivo predefinido
 		const workbook = new ExcelJS.Workbook();
-		await workbook.xlsx.readFile(templatePath);
+		try {
+			await workbook.xlsx.readFile(templatePath);
+			
+		} catch (error) {
+			console.log("Error al acceder a precios_template.xlsx", error.message)
+			const errorMessage = "No se pudo cargar el archivo de plantilla. Verifica la URL y el acceso.";
+			adminWhatsAppNotification(userPhone, errorMessage);
+		}
 
 		// Seleccionar la hoja "Avisos"
 		const avisosSheet = workbook.getWorksheet("Avisos");
