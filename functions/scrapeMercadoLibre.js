@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import ExcelJS from "exceljs";
 import { lookModel } from "./lookModel2.js";
-import { allProducts } from "../excel/allproducts.js"; // array para hacer pruebas hardcodeado
+//import { allProducts } from "../excel/allproducts.js"; // array para hacer pruebas hardcodeado
 import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 
@@ -25,7 +25,6 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		let correctModels
 		try {
 			correctModels = await lookModel(allProducts);
-			console.log("CorrectModels:", correctModels)
 		} catch (error) {
 			console.log("Error  en lookModel.js", error.message)
 		}
@@ -112,8 +111,8 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema momentáneo en Render que es donde está hosteado el Servidor. Podes intentar nuevamente o esperar una hora.`
 		}
 		// Notificar al administrador
-		//adminWhatsAppNotification(userPhone, errorMessage);
+		adminWhatsAppNotification(userPhone, errorMessage);
 	}
 };
-scrapeMercadoLibre()
+//scrapeMercadoLibre()
 
