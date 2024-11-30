@@ -1,5 +1,5 @@
 import axios from "axios";
-import { adminWhatsAppNotification } from "./adminWhatsAppNotification";
+import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
