@@ -17,7 +17,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			"https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre"
 		);
 		if (precios.data){
-			console.log("Se recibieron precios de Mercado Libre!!");
+			console.log("Se recibieron precios de Mercado Libre!! Ejemplo primer registro:", precios.data[0]);
 		}
 
 		const allProducts = precios.data;

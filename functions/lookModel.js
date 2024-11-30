@@ -7,6 +7,7 @@ const HUGGING_FACE_API_URL =
 	"https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2";
 
 const tokenHuggingFace = process.env.HUGGING_FACE_API_KEY
+console.log("token hugging face:", tokenHuggingFace)
 
 export const lookModel = async (allProducts) => {
 	const results = []; // Array para acumular los resultados
