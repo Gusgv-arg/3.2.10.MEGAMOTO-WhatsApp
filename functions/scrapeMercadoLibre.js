@@ -2,8 +2,8 @@ import axios from "axios"
 import path from "path";
 import { fileURLToPath } from "url";
 import ExcelJS from "exceljs";
-import { lookModel } from "./lookModel.js";
-// import { allProducts } from "../excel/allproducts.js"; // array para hacer pruebas hardcodeado
+import { lookModel } from "./lookModel2.js";
+import { allProducts } from "../excel/allproducts.js"; // array para hacer pruebas hardcodeado
 import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 
@@ -22,9 +22,10 @@ export const scrapeMercadoLibre = async (userPhone) => {
 
 		const allProducts = precios.data;
 
+		let correctModels
 		try {
-			const correctModels = await lookModel(allProducts);
-			console.log("Se buscaron los modelos de los avisos")
+			correctModels = await lookModel(allProducts);
+			console.log("CorrectModels:", correctModels)
 		} catch (error) {
 			console.log("Error  en lookModel.js", error.message)
 		}
@@ -52,7 +53,12 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		// Cargar el archivo predefinido
 		const workbook = new ExcelJS.Workbook();
 		try {
-			await workbook.xlsx.readFile(templatePath);
+			// Fetch the template file using axios first
+			const response = await axios.get(templatePath, {
+				responseType: 'arraybuffer'
+			});
+			await workbook.xlsx.load(response.data);
+			console.log("Template file loaded successfully");
 			
 		} catch (error) {
 			console.log("Error al acceder a precios_template.xlsx", error.message)
@@ -106,8 +112,8 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema momentáneo en Render que es donde está hosteado el Servidor. Podes intentar nuevamente o esperar una hora.`
 		}
 		// Notificar al administrador
-		adminWhatsAppNotification(userPhone, errorMessage);
+		//adminWhatsAppNotification(userPhone, errorMessage);
 	}
 };
-
+scrapeMercadoLibre()
 

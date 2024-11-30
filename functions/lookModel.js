@@ -3,6 +3,7 @@ import { modelos } from "../excel/modelos.js";
 import dotenv from "dotenv"
 dotenv.config()
 
+// Uses Hugging Face model to search for similarity 
 const HUGGING_FACE_API_URL =
 	"https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2";
 
