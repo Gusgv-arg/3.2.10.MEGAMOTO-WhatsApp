@@ -22,7 +22,12 @@ export const scrapeMercadoLibre = async (userPhone) => {
 
 		const allProducts = precios.data;
 
-		const correctModels = await lookModel(allProducts);
+		try {
+			const correctModels = await lookModel(allProducts);
+			console.log("Se buscaron los modelos de los avisos")
+		} catch (error) {
+			console.log("Error  en lookModel.js", error.message)
+		}
 
 		// Convertir precios a números
 		correctModels.forEach((model) => {
