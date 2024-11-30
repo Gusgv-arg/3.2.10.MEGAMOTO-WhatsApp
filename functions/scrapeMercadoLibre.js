@@ -16,7 +16,9 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		const precios = await axios.get(
 			"https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre"
 		);
-		console.log("Precios:", precios.data);
+		if (precios.data){
+			console.log("Se recibieron precios de Mercado Libre!!");
+		}
 
 		const allProducts = precios.data;
 
@@ -31,10 +33,12 @@ export const scrapeMercadoLibre = async (userPhone) => {
 
 		//console.log("correctModels:", correctModels)
 		// Ruta del archivo Excel predefinido y la ruta para guardar el archivo actualizado
-		const templatePath = path.join(
+		/* const templatePath = path.join(
 			__dirname,
 			"../public/precios_template.xlsx"
-		);
+		); */
+
+		const templatePath="https://github.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/blob/main/public/precios_template.xlsx"
 		const outputPath = path.join(
 			__dirname,
 			"../public/precios_mercado_libre.xlsx"
