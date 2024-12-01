@@ -101,7 +101,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		console.log("Archivo disponible en:", fileUrl);
 
 		// Enviar el archivo Excel por WhatsApp (opcional)
-		const fileName = "Precios_Actualizados";
+		const fileName = "Precios Mercado Libre";
 		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
 
 	} catch (error) {
