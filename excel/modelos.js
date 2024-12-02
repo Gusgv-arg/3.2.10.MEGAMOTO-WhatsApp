@@ -180,7 +180,9 @@ export const modelos = [
 		sinonimos: [
 			"Motomel Blitz 110 Base",
 			"Blitz110",
-			"Blitz 110",			
+			"Blitz 110",
+			"Motomel Blitz 110cc V8 Base V8",
+			"Blizt110 Cc"			
 		],
 		cilindradas: 110,
 		url: "https://motomel.com.ar/fichas-tecnicas/ficha-tecnica-blitz-110-start.pdf",
@@ -206,6 +208,9 @@ export const modelos = [
 		sinonimos: [
 			"Motomel Blitz 110 Base Automática",
 			"Motomel Blitz Automática",			
+			"Motomel Blitz 110 Automática",			
+			"Blitz Automática",			
+			"Blitz 110 Automática",			
 		],
 		cilindradas: 110,
 		url: "https://motomel.com.ar/fichas-tecnicas/ficha-tecnica-blitz-110-automatica.pdf",
@@ -228,7 +233,9 @@ export const modelos = [
 		precio: 1376548,
 		sinonimos: [
 			"Motomel Blitz 110 Tunning",
+			"Motomel Blitz 110 Tuning",
 			"Motomel Blitz 110 Tunning New",
+			"Motomel Blitz 110 Tuning New",
 			"Motomel Blitz V8 Tuning",
 		],
 		cilindradas: 110,
@@ -260,7 +267,7 @@ export const modelos = [
 		familia: "DLX",
 		marca: "Motomel",
 		precio: 1080249,
-		sinonimos: ["110", "Motomel DELUXE", "Motomel DLX Deluxe"],
+		sinonimos: ["110", "Motomel DELUXE", "Motomel DLX Deluxe", "Motomel DLX", "Motomel DLX 110"],
 		cilindradas: 110,
 		url: "https://motomel.com.ar/fichas-tecnicas/ficha-tecnica-dlx-110.pdf",
 		vigencia: "29/03/2024",
