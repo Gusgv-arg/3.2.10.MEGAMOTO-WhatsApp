@@ -4,7 +4,7 @@ export const modelos = [
 		familia: "180",
 		marca: "Benelli",
 		precio: 3669431,
-		sinonimos: ["180S"],
+		sinonimos: ["Benelli 180S", "Benelli 180 S", "180S", "180 S"],
 		cilindradas: 180,
 		url: "https://www.benelli.com/ar-es/products/180s",
 		vigencia: "29/03/2024",
