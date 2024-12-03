@@ -34,7 +34,7 @@ export const modelos = [
 		familia: "502",
 		marca: "Benelli",
 		precio: 12462490,
-		sinonimos: ["Benelli 500", "Benelli500", "502C"],
+		sinonimos: ["Benelli 500", "Benelli500", "502C", "Benelli Leoncino 502c"],
 		cilindradas: 500,
 		url: "https://www.benelli.com/ar-es/products/502c",
 		vigencia: "29/03/2024",
@@ -44,7 +44,7 @@ export const modelos = [
 		familia: "752",
 		marca: "Benelli",
 		precio: 15559655,
-		sinonimos: ["Benelli 750", "Benelli750", "Benelli752", "Benelli 752", "752 S"],
+		sinonimos: ["Benelli 750", "Benelli750", "Benelli752", "Benelli 752", "752 S", "Benelli 752S"],
 		cilindradas: 750,
 		url: "https://www.benelli.com/ar-es/products/752s-2",
 		vigencia: "29/03/2024",
@@ -67,7 +67,8 @@ export const modelos = [
 		sinonimos: [
 			"Benelli 250",
 			"Benelli250",
-			"Benelli Leoncino 250"			
+			"Benelli Leoncino 250",		
+			"Benelli Leoncino250"			
 		],
 		cilindradas: 250,
 		url: "https://www.benelli.com/ar-es/products/leoncino-250",
@@ -81,7 +82,8 @@ export const modelos = [
 		sinonimos: [
 			"Benelli 500",
 			"Benelli500",
-			"Benelli Leoncino 500"			
+			"Benelli Leoncino 500",			
+			"Benelli Leoncino 500t"			
 		],
 		cilindradas: 500,
 		url: "https://www.benelli.com/ar-es/products/leoncino-500",
@@ -97,6 +99,7 @@ export const modelos = [
 			"TRAIL",			
 			"Benelli Trail",
 			"Benelli Leoncino 500 Trail",
+			"Benelli Leoncino 500Trail",
 			"Leoncino 500 Trail"
 		],
 		cilindradas: 500,
@@ -118,7 +121,7 @@ export const modelos = [
 		familia: "TNT",
 		marca: "Benelli",
 		precio: 16804480,
-		sinonimos: ["Benelli 600", "Benelli600", "Benelli TNT 600", "Benelli TNT600"],
+		sinonimos: ["Benelli 600", "Benelli600", "Benelli TNT 600", "Benelli TNT600", "Benelli TNT600i"],
 		cilindradas: 600,
 		url: "https://www.benelli.com/ar-es/products/tnt600i",
 		vigencia: "29/03/2024",
@@ -148,7 +151,7 @@ export const modelos = [
 		familia: "TRK",
 		marca: "Benelli",
 		precio: 13897700,
-		sinonimos: ["BENELLI TRK502-X NEW", "BENELLI TRK502X"],
+		sinonimos: ["BENELLI TRK502-X NEW", "BENELLI TRK 502X", "TRK 502x", "Benelli TRK502x", "Benelli TRK 502new"],
 		cilindradas: 500,
 		url: "https://www.benelli.com/ar-es/products/trk-502-x",
 		vigencia: "29/03/2024",
@@ -217,6 +220,7 @@ export const modelos = [
 			"Motomel Blitz 110 Base Automática",
 			"Motomel Blitz Automática",			
 			"Motomel Blitz 110 Automática",			
+			"Motomel Blitz 110 Automatica",			
 			"Blitz Automática",			
 			"Blitz 110 Automática",			
 		],
@@ -288,7 +292,7 @@ export const modelos = [
 		familia: "MAX",
 		marca: "Motomel",
 		precio: 1398274,
-		sinonimos: ["Motomel Max", "Motomel Max 110"],
+		sinonimos: ["Motomel Max", "Motomel Max 110", "Motomel Max110"],
 		cilindradas: 110,
 		url: "https://motomel.com.ar/fichas-tecnicas/ficha-tecnica-max-110.pdf",
 		vigencia: "29/03/2024",
@@ -336,6 +340,7 @@ export const modelos = [
 		precio: 1688402,
 		sinonimos: [
 			"Motomel Skua 150",
+			"Motomel Skua 150cc",
 			"Motomel Skua New Generation",
 			"Skua 150",
 			
@@ -361,6 +366,7 @@ export const modelos = [
 		precio: 2437609,
 		sinonimos: [
 			"Motomel Skua 250 Base",
+			"Motomel Skua 250",
 			"Motomel Skua Base",
 			
 		],
@@ -422,7 +428,7 @@ export const modelos = [
 		familia: "XMM",
 		marca: "Motomel",
 		precio: 2992419,
-		sinonimos: ["Motomel XMM", "Motomel XMM 250"],
+		sinonimos: ["Motomel XMM", "Motomel XMM 250", "Motomel XMM250", "Motomel XMM 250cc"],
 		cilindradas: 250,
 		url: "https://motomel.com.ar/fichas-tecnicas/ficha-tecnica-xmm-250.pdf",
 		vigencia: "29/03/2024",
@@ -452,7 +458,7 @@ export const modelos = [
 		familia: "GSX",
 		marca: "Suzuki",
 		precio: 2699339,
-		sinonimos: ["Suzuki GSX 125", "GSX125", "Suzuki GSX125"],
+		sinonimos: ["Suzuki GSX 125", "GSX125", "Suzuki GSX-125r"],
 		cilindradas: 125,
 		url: "https://suzukimotosarg.com.ar/wp-content/uploads/2023/05/Ficha-tecnica-GSX-125R.pdf",
 		vigencia: "29/03/2024",
@@ -472,7 +478,7 @@ export const modelos = [
 		familia: "STRATO",
 		marca: "MOTOMEL",
 		precio: 2111032,
-		sinonimos: ["Motomel Strato Eléctrica", "Motomel Eléctrica"],
+		sinonimos: ["Motomel Strato Eléctrica", "Motomel Eléctrica", "Motomel Strato E", "Motomel Strato Electrica"],
 		cilindradas: 2000,
 		url: "https://motomel.com.ar/fichas-tecnicas/ficha-tecnica-stratoe.pdf",
 		vigencia: "29/03/2024",
@@ -482,7 +488,7 @@ export const modelos = [
 		familia: "",
 		marca: "MOTOMEL",
 		precio: 1528227,
-		sinonimos: [""],
+		sinonimos: ["Motomel Victory", "Motomel Victory 150"],
 		cilindradas: 0,
 		url: "",
 		vigencia: "29/03/2024",
