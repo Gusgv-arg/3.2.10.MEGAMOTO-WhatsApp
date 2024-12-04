@@ -68,7 +68,8 @@ export const modelos = [
 			"Benelli 250",
 			"Benelli250",
 			"Benelli Leoncino 250",		
-			"Benelli Leoncino250"			
+			"Benelli Leoncino250",
+			"Benelli Leoncino"			
 		],
 		cilindradas: 250,
 		url: "https://www.benelli.com/ar-es/products/leoncino-250",
@@ -121,7 +122,7 @@ export const modelos = [
 		familia: "TNT",
 		marca: "Benelli",
 		precio: 16804480,
-		sinonimos: ["Benelli 600", "Benelli600", "Benelli TNT 600", "Benelli TNT600", "Benelli TNT600i"],
+		sinonimos: ["Benelli 600", "Benelli600", "Benelli TNT 600", "Benelli TNT600", "Benelli TNT600i", "Benelli TNT 600i"],
 		cilindradas: 600,
 		url: "https://www.benelli.com/ar-es/products/tnt600i",
 		vigencia: "29/03/2024",
@@ -131,7 +132,7 @@ export const modelos = [
 		familia: "TRK",
 		marca: "Benelli",
 		precio: 6220379,
-		sinonimos: ["Benelli 250", "Benelli250", "Benelli 251", "Benelli251", "Benelli TRK251", "Benelli TRK 251"],
+		sinonimos: ["TRK 251", "Benelli 250", "Benelli250", "Benelli 251", "Benelli251", "Benelli TRK251", "Benelli TRK 251"],
 		cilindradas: 250,
 		url: "https://www.benelli.com/ar-es/products/trk-251",
 		vigencia: "29/03/2024",
