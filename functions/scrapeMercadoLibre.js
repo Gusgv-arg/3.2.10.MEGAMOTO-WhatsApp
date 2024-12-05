@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
 import ExcelJS from "exceljs";
@@ -16,23 +16,31 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		const precios = await axios.get(
 			"https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre"
 		);
-		if (precios.data){
-			console.log("Se recibieron precios de Mercado Libre!! Ejemplo primer registro:", precios.data[0]);
+		if (precios.data) {
+			console.log(
+				"Se recibieron precios de Mercado Libre!! Ejemplo primer registro:",
+				precios.data[0]
+			);
+		} else {
+			// Si no se reciben datos, lanzar un error
+			throw new Error("No se recibieron datos de precios.");
 		}
 
 		const allProducts = precios.data;
 
-		let correctModels
+		let correctModels;
 		try {
 			correctModels = await lookModel(allProducts);
 		} catch (error) {
-			console.log("Error  en lookModel.js", error.message)
+			console.log("Error  en lookModel.js", error.message);
 		}
 
 		// Convertir precios a números
-		if (correctModels) { // Verificar que correctModels no sea undefined
+		if (correctModels) {
+			// Verificar que correctModels no sea undefined
 			correctModels.forEach((model) => {
-				if (model.precio) { // Verificar si model.precio está definido
+				if (model.precio) {
+					// Verificar si model.precio está definido
 					model.precio = parseFloat(
 						model.precio.replace(/\./g, "").replace(",", ".")
 					);
@@ -51,25 +59,26 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			"../public/precios_template.xlsx"
 		); */
 
-		const templatePath="https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/precios_template.xlsx"
+		const templatePath =
+			"https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/precios_template.xlsx";
 		const outputPath = path.join(
 			__dirname,
 			"../public/precios_mercado_libre.xlsx"
 		);
-		
+
 		// Cargar el archivo predefinido
 		const workbook = new ExcelJS.Workbook();
 		try {
 			// Fetch the template file using axios first
 			const response = await axios.get(templatePath, {
-				responseType: 'arraybuffer'
+				responseType: "arraybuffer",
 			});
 			await workbook.xlsx.load(response.data);
 			console.log("Template file loaded successfully");
-			
 		} catch (error) {
-			console.log("Error al acceder a precios_template.xlsx", error.message)
-			const errorMessage = "No se pudo cargar el archivo de plantilla. Verifica la URL y el acceso.";
+			console.log("Error al acceder a precios_template.xlsx", error.message);
+			const errorMessage =
+				"No se pudo cargar el archivo de plantilla. Verifica la URL y el acceso.";
 			adminWhatsAppNotification(userPhone, errorMessage);
 		}
 
@@ -111,16 +120,23 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		// Enviar el archivo Excel por WhatsApp (opcional)
 		const fileName = "Precios Mercado Libre";
 		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
-
 	} catch (error) {
 		console.log("Error en scrapeMercadoLibre.js:", error.message);
-		let errorMessage = `*NOTIFICACION DE ERROR:*\nEn el proceso de scraping de Mercado Libre hubo un error: ${error.message}`;
-		if (error.message === "Request failed with status code 502"){
-			errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema momentáneo en Render que es donde está hosteado el Servidor. Podes intentar nuevamente o esperar una hora.`
+		let errorMessage;
+		if (error.response && error.response.data && error.response.data.error) {
+			// Si hay una respuesta de la API, usar el mensaje de error de la respuesta
+			errorMessage = `*NOTIFICACION DE ERROR:*\nError en la API de Scraping: ${error.response.data.error}`;
+		} else {
+			// Si no hay respuesta, usar el mensaje de error general
+			errorMessage = `*NOTIFICACION DE ERROR:*\nHubo un error en la solicitud: ${error.message}`;
+		}
+
+		// Manejo específico para el error 502
+		if (error.message === "Request failed with status code 502") {
+			errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema momentáneo en Render que es donde está hosteado el Servidor. Puedes intentar nuevamente o esperar una hora.`;
 		}
 		// Notificar al administrador
 		adminWhatsAppNotification(userPhone, errorMessage);
 	}
 };
 //scrapeMercadoLibre()
-
