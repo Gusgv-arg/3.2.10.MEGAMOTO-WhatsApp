@@ -84,6 +84,7 @@ export const modelos = [
 			"Benelli 500",
 			"Benelli500",
 			"Benelli Leoncino 500",			
+			"Benelli Leoncino 500/250",			
 			"Benelli Leoncino 500t"			
 		],
 		cilindradas: 500,
