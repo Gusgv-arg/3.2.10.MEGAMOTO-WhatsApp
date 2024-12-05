@@ -1,14 +1,14 @@
 export const allProducts = [
     {
-      titulo: "Motomel Blitz 110 Base Patentada",
+      titulo: "Benelli Trk 502 X - Consulta Descuento Efectivo",
       precio: "10",
       link: "https://moto.mercadolibre.com.ar/MLA-1455396971-motomel-blitz-110-base-patentada-1567000-o-12de182000-_JM#polycard_client=search-nordic&position=1&search_layout=grid&type=item&tracking_id=841c573d-b0e9-477b-84ed-df6c3d27f099",
       ubicacion: "Capital Federal - Capital Federal",
       vendedor: "Por Moto Roma ",
       atributos: "2024, 0 Km",
     },
-    {
-      titulo: "Motomel Blitz 110 Base Patentada $1.567.000 O 12de$182.000",
+     {
+      titulo: "Benelli Trk X 502 Rayos Versys Gs Vstrom Mejor Precio Promo",
       precio: "20",
       link: "https://moto.mercadolibre.com.ar/MLA-1455396971-motomel-blitz-110-base-patentada-1567000-o-12de182000-_JM#polycard_client=search-nordic&position=1&search_layout=grid&type=item&tracking_id=841c573d-b0e9-477b-84ed-df6c3d27f099",
       ubicacion: "Capital Federal - Capital Federal",
@@ -16,7 +16,23 @@ export const allProducts = [
       atributos: "2024, 0 Km",
     },
     {
-      titulo: "Motomel Blitz 110 Base",
+      titulo: "Motomel Skua 250 Patentada $3.664.000 O 12de$424000 (150 200",
+      precio: "30",
+      link: "https://moto.mercadolibre.com.ar/MLA-1455396971-motomel-blitz-110-base-patentada-1567000-o-12de$182000-_JM#polycard_client=search-nordic&position=1&search_layout=grid&type=item&tracking_id=841c573d-b0e9-477b-84ed-df6c3d27f099",
+      ubicacion: "Capital Federal - Capital Federal",
+      vendedor: "Por Moto Roma ",
+      atributos: "2024, 0 Km",
+    },
+    {
+      titulo: "Motomel Skua Silver 150 0km Cross Enduro No Xr Xtz Creditos",
+      precio: "30",
+      link: "https://moto.mercadolibre.com.ar/MLA-1455396971-motomel-blitz-110-base-patentada-1567000-o-12de$182000-_JM#polycard_client=search-nordic&position=1&search_layout=grid&type=item&tracking_id=841c573d-b0e9-477b-84ed-df6c3d27f099",
+      ubicacion: "Capital Federal - Capital Federal",
+      vendedor: "Por Moto Roma ",
+      atributos: "2024, 0 Km",
+    },
+    {
+      titulo: "Motomel Skua Silver 150",
       precio: "30",
       link: "https://moto.mercadolibre.com.ar/MLA-1455396971-motomel-blitz-110-base-patentada-1567000-o-12de$182000-_JM#polycard_client=search-nordic&position=1&search_layout=grid&type=item&tracking_id=841c573d-b0e9-477b-84ed-df6c3d27f099",
       ubicacion: "Capital Federal - Capital Federal",

@@ -369,8 +369,8 @@ export const modelos = [
 		marca: "Motomel",
 		precio: 2437609,
 		sinonimos: [
-			"Motomel Skua 250 Base",
 			"Motomel Skua 250",
+			"Motomel Skua 250 Base",
 			"Motomel Skua Base",
 			"Motomel Skua 200",			
 		],

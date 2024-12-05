@@ -2,7 +2,7 @@ import axios from "axios"
 import path from "path";
 import { fileURLToPath } from "url";
 import ExcelJS from "exceljs";
-import { lookModel } from "./lookModel2.js";
+import { lookModel } from "./lookModelWithEmbedding2.js";
 //import { allProducts } from "../excel/allproducts.js"; // array para hacer pruebas hardcodeado
 import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
