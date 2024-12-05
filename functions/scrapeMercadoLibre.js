@@ -30,11 +30,19 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		}
 
 		// Convertir precios a números
-		correctModels.forEach((model) => {
-			model.precio = parseFloat(
-				model.precio.replace(/\./g, "").replace(",", ".")
-			);
-		});
+		if (correctModels) { // Verificar que correctModels no sea undefined
+			correctModels.forEach((model) => {
+				if (model.precio) { // Verificar si model.precio está definido
+					model.precio = parseFloat(
+						model.precio.replace(/\./g, "").replace(",", ".")
+					);
+				} else {
+					console.warn(`Precio no definido para el modelo: ${model.modelo}`);
+				}
+			});
+		} else {
+			console.warn("No se encontraron modelos correctos.");
+		}
 
 		//console.log("correctModels:", correctModels)
 		// Ruta del archivo Excel predefinido y la ruta para guardar el archivo actualizado

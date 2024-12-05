@@ -67,12 +67,12 @@ export const lookModel = async (allProducts) => {
                     
                     // Coincidencia exacta
                     if (productTitle === cleanModelText) {
-                        bestMatches.push({ model, similarity: 1.0, length: cleanModelText.length });
+                        bestMatches.push({ model, precio: product.precio, similarity: 1.0, length: cleanModelText.length });
                         highestSimilarity = 1.0;
                     }
                     // Coincidencia por inclusión
                     else if (productTitle.includes(cleanModelText)) {
-                        bestMatches.push({ model, similarity: 0.9, length: cleanModelText.length });
+                        bestMatches.push({ model, precio: product.precio, similarity: 0.9, length: cleanModelText.length });
                         highestSimilarity = Math.max(highestSimilarity, 0.9);
                     }
                 });
@@ -90,10 +90,10 @@ export const lookModel = async (allProducts) => {
                         const similarity = calculateSimilarity(productVector, modelVector);
 
                         if (similarity > highestSimilarity) {
-                            bestMatches = [{ model, similarity, length: cleanModelText.length }];
+                            bestMatches = [{ model, precio: product.precio, similarity, length: cleanModelText.length }];
                             highestSimilarity = similarity;
                         } else if (similarity === highestSimilarity) {
-                            bestMatches.push({ model, similarity, length: cleanModelText.length });
+                            bestMatches.push({ model, precio: product.precio, similarity, length: cleanModelText.length });
                         }
                     });
                 });
