@@ -1,11 +1,19 @@
 import { modelos } from "../excel/modelos.js";
-//import { allProducts } from "../excel/allproducts.js";
+//import { allProducts } from "../excel/allproducts.js"; // Para hacer pruebas harcodeadas
 
 // Función para limpiar texto
 const cleanText = (text) => {
     return text.toLowerCase()
         .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "") // Eliminar caracteres especiales, excepto guiones
         .replace(/\s+/g, " ") // Reemplazar múltiples espacios por uno solo
+        .trim(); // Eliminar espacios al inicio y al final
+};
+
+// Función para limpiar y normalizar texto
+const normalizeText = (text) => {
+    return text.toLowerCase()
+        .replace(/[-\s]+/g, " ") // Reemplazar guiones y múltiples espacios por uno solo
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "") // Eliminar caracteres especiales
         .trim(); // Eliminar espacios al inicio y al final
 };
 
@@ -54,67 +62,37 @@ export const lookModel = async (allProducts) => {
 
     allProducts.forEach(product => {
         try {
-            const productTitle = cleanText(product.titulo);
+            const productTitle = normalizeText(product.titulo);
             let bestMatches = [];
             let highestSimilarity = -1;
 
-            // Primera pasada: buscar coincidencias exactas o por inclusión
+            // Usar similitud de coseno para todos los modelos y sinónimos
             modelos.forEach(model => {
                 const modelTexts = [model.modelo, ...model.sinonimos].filter(text => text && text !== "");
                 
                 modelTexts.forEach(modelText => {
-                    const cleanModelText = cleanText(modelText);
-                    
-                    // Coincidencia exacta
-                    if (productTitle === cleanModelText) {
-                        bestMatches.push({ model, precio: product.precio, similarity: 1.0, length: cleanModelText.length });
-                        highestSimilarity = 1.0;
-                    }
-                    // Coincidencia por inclusión
-                    else if (productTitle.includes(cleanModelText)) {
-                        bestMatches.push({ model, precio: product.precio, similarity: 0.9, length: cleanModelText.length });
-                        highestSimilarity = Math.max(highestSimilarity, 0.9);
+                    const cleanModelText = normalizeText(modelText);
+                    const productVector = textToVector(productTitle);
+                    const modelVector = textToVector(cleanModelText);
+                    const similarity = calculateSimilarity(productVector, modelVector);
+
+                    if (similarity > highestSimilarity) {
+                        bestMatches = [{ model: model.modelo, similarity }];
+                        highestSimilarity = similarity;
+                    } else if (similarity === highestSimilarity) {
+                        bestMatches.push({ model: model.modelo, similarity });
                     }
                 });
             });
 
-            // Si no hay coincidencias exactas o por inclusión, usar similitud de coseno
-            if (bestMatches.length === 0) {
-                modelos.forEach(model => {
-                    const modelTexts = [model.modelo, ...model.sinonimos].filter(text => text && text !== "");
-                    
-                    modelTexts.forEach(modelText => {
-                        const cleanModelText = cleanText(modelText);
-                        const productVector = textToVector(productTitle);
-                        const modelVector = textToVector(cleanModelText);
-                        const similarity = calculateSimilarity(productVector, modelVector);
-
-                        if (similarity > highestSimilarity) {
-                            bestMatches = [{ model, precio: product.precio, similarity, length: cleanModelText.length }];
-                            highestSimilarity = similarity;
-                        } else if (similarity === highestSimilarity) {
-                            bestMatches.push({ model, precio: product.precio, similarity, length: cleanModelText.length });
-                        }
-                    });
-                });
-            }
-
-            // Seleccionar el mejor match basado en la similitud más alta y la longitud más larga
+            // Seleccionar el mejor match basado en la similitud más alta
             if (bestMatches.length > 0 && highestSimilarity > 0.5) {
-                // Ordenar por similitud y longitud
-                bestMatches.sort((a, b) => {
-                    if (a.similarity === b.similarity) {
-                        return b.length - a.length; // Si la similitud es igual, preferir el texto más largo
-                    }
-                    return b.similarity - a.similarity;
-                });
-
+                // Ordenar por similitud
+                bestMatches.sort((a, b) => b.similarity - a.similarity);
                 const bestMatch = bestMatches[0];
                 results.push({
-                    producto: product,
-                    modeloEncontrado: bestMatch.model,
-                    similitud: bestMatch.similarity,
-                    titulo_limpio: productTitle
+                    ...product, // Mantener todas las propiedades del producto
+                    modelo: bestMatch.model // Agregar solo el nombre del modelo correspondiente
                 });
             }
 

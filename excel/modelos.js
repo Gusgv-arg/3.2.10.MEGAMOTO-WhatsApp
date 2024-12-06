@@ -153,7 +153,7 @@ export const modelos = [
 		familia: "TRK",
 		marca: "Benelli",
 		precio: 13897700,
-		sinonimos: ["BENELLI TRK502-X NEW", "BENELLI TRK 502X", "TRK 502x", "Benelli TRK502 x", "Benelli TRK 502xnew", "Benelli Trk 502 X", "Benelli Trk X 502 X", "Benelli Trk 502 X 502x", "Benelli Trk 502x 502 X"],
+		sinonimos: ["Benelli TRK 502x", "BENELLI TRK502-X NEW", "BENELLI TRK 502X", "TRK 502x", "Benelli TRK 502xnew", "Benelli Trk 502 X", "Benelli Trk X 502 X", "Benelli Trk 502 X 502x", "Benelli Trk 502x 502 X"],
 		cilindradas: 500,
 		url: "https://www.benelli.com/ar-es/products/trk-502-x",
 		vigencia: "29/03/2024",

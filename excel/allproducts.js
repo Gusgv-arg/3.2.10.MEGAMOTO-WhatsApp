@@ -1,6 +1,6 @@
 export const allProducts = [
     {
-      titulo: "Benelli Trk 502 X - Consulta Descuento Efectivo",
+      titulo: "Benelli Trk 502X - Consulta Descuento Efectivo",
       precio: "10",
       link: "https://moto.mercadolibre.com.ar/MLA-1455396971-motomel-blitz-110-base-patentada-1567000-o-12de182000-_JM#polycard_client=search-nordic&position=1&search_layout=grid&type=item&tracking_id=841c573d-b0e9-477b-84ed-df6c3d27f099",
       ubicacion: "Capital Federal - Capital Federal",
