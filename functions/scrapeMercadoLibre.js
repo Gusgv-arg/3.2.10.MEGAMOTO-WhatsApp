@@ -12,16 +12,22 @@ const __dirname = path.dirname(__filename);
 
 export const scrapeMercadoLibre = async (userPhone) => {
 	try {
+		// Advises Admin of the task
+		const task = "*NOTIFICACION:*\nSe envió tu solicitud a otra API que busca en Mercado Libre todas las publicaciones de los modelos que vende Megamoto. Es un proceso que tarda.\n!Paciencia!"
+		await adminWhatsAppNotification(userPhone, task)
+		
 		// Uses other API as a microservice for scrapping
 		const precios = await axios.get(
 			"https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre"
 		);
+		
+		// Advises Admin that data was received
 		if (precios.data && precios.data.length > 0) {
 			console.log(
 				`Se recibieron ${precios.data.length} precios de Mercado Libre!! Ejemplo primer registro:`,
 				precios.data[0]
 			);
-			const message = `*NOTIFICACION:*\nSe recibieron ${precios.data.length} avisos de Mercado Libre. Ahora falta procesar los datos y generar el Excel.\n¡Paciencia!`;
+			const message = `*NOTIFICACION:*\nSe recibieron ${precios.data.length} avisos de Mercado Libre. Ahora falta procesar los datos y generar el Excel.\n¡Falta menos!`;
 			await adminWhatsAppNotification(userPhone, message);
 		} else {
 			// Si no se reciben datos, lanzar un error
