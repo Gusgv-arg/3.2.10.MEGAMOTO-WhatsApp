@@ -16,7 +16,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		const precios = await axios.get(
 			"https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre"
 		);
-		if (precios.data) {
+		if (precios.data && precios.data.length > 0) {
 			console.log(
 				"Se recibieron precios de Mercado Libre!! Ejemplo primer registro:",
 				precios.data[0]
@@ -26,7 +26,8 @@ export const scrapeMercadoLibre = async (userPhone) => {
 
 		} else {
 			// Si no se reciben datos, lanzar un error
-			throw new Error("No se recibieron datos de precios.");
+			console.log("Hubo un error en el Scrapin:", precios.data)
+			throw new Error(precios.data.error);
 		}
 
 		const allProducts = precios.data;
