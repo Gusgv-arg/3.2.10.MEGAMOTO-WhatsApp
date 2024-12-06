@@ -2,7 +2,7 @@ import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
 import ExcelJS from "exceljs";
-import { lookModel } from "./lookModelWithEmbedding.js";
+import { lookModelWithEmbedding } from "./lookModelWithEmbedding.js";
 //import { allProducts } from "../excel/allproducts.js"; // array para hacer pruebas hardcodeado
 import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
@@ -18,15 +18,14 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		);
 		if (precios.data && precios.data.length > 0) {
 			console.log(
-				"Se recibieron precios de Mercado Libre!! Ejemplo primer registro:",
+				`Se recibieron ${precios.data.length} precios de Mercado Libre!! Ejemplo primer registro:`,
 				precios.data[0]
 			);
-			const message = `*NOTIFICACION:*\nSe recibieron ${precios.data.length} avisos de Mercado Libre. Ahora falta procesar los datos y generar el Excel.\n¡Paciencia!`
-			await adminWhatsAppNotification(userPhone, message)
-
+			const message = `*NOTIFICACION:*\nSe recibieron ${precios.data.length} avisos de Mercado Libre. Ahora falta procesar los datos y generar el Excel.\n¡Paciencia!`;
+			await adminWhatsAppNotification(userPhone, message);
 		} else {
 			// Si no se reciben datos, lanzar un error
-			console.log("Hubo un error en el Scrapin:", precios.data)
+			console.log("Hubo un error en el Scrapin:", precios.data);
 			throw new Error(precios.data.error);
 		}
 
@@ -34,13 +33,16 @@ export const scrapeMercadoLibre = async (userPhone) => {
 
 		let correctModels;
 		try {
-			correctModels = await lookModel(allProducts);
+			correctModels = await lookModelWithEmbedding(allProducts);
+			console.log(
+				`CorrectModels: ${correctModels.length} registros - Ejemplo 1 registro: ${correctModels[0]}`
+			);
 		} catch (error) {
-			console.log("Error  en lookModel.js", error.message);
+			console.log("Error en lookModelWithEmbedding.js", error.message);
 		}
 
 		// Convertir precios a números
-		if (correctModels) {
+		if (correctModels && correctModels.length > 0) {
 			// Verificar que correctModels no sea undefined
 			correctModels.forEach((model) => {
 				if (model.precio) {
@@ -101,8 +103,9 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		}
 
 		// Añadir los nuevos datos a la hoja "Avisos"
-		avisosSheet.addRows(
-			correctModels.map((model) => [
+		if (correctModels && correctModels.length > 0) {
+			// Asegúrate de que los datos se están formateando correctamente
+			const rowsToAdd = correctModels.map((model) => [
 				model.titulo,
 				model.modelo,
 				model.precio,
@@ -110,8 +113,17 @@ export const scrapeMercadoLibre = async (userPhone) => {
 				model.ubicacion,
 				model.vendedor,
 				model.atributos,
-			])
-		);
+			]);
+
+			// Verifica que rowsToAdd no esté vacío antes de agregar
+			if (rowsToAdd.length > 0) {
+				avisosSheet.addRows(rowsToAdd);
+			} else {
+				console.warn("No hay datos para agregar a la hoja 'Avisos'.");
+			}
+		} else {
+			console.warn("No se encontraron modelos correctos.");
+		}
 
 		// Guardar el archivo actualizado en una ubicación pública
 		await workbook.xlsx.writeFile(outputPath);

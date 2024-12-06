@@ -57,7 +57,7 @@ const isSubstring = (shorter, longer) => {
 };
 
 // Función principal para buscar modelos
-export const lookModel = async (allProducts) => {
+export const lookModelWithEmbedding = async (allProducts) => {
     const results = [];
 
     allProducts.forEach(product => {
@@ -102,7 +102,7 @@ export const lookModel = async (allProducts) => {
     });
 
     results.sort((a, b) => b.similitud - a.similitud);
-    console.log("Results:", results);
+    console.log("Results - ejemplo del primer registro:", results[0]);
     return results;
 };
 
