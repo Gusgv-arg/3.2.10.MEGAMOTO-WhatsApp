@@ -21,6 +21,9 @@ export const scrapeMercadoLibre = async (userPhone) => {
 				"Se recibieron precios de Mercado Libre!! Ejemplo primer registro:",
 				precios.data[0]
 			);
+			const message = `*NOTIFICACION:*\nSe recibieron ${precios.data.length()} avisos de Mercado Libre. Ahora falta procesar los datos y generar el Excel.`
+			await adminWhatsAppNotification(userPhone, message)
+
 		} else {
 			// Si no se reciben datos, lanzar un error
 			throw new Error("No se recibieron datos de precios.");
