@@ -21,7 +21,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 				"Se recibieron precios de Mercado Libre!! Ejemplo primer registro:",
 				precios.data[0]
 			);
-			const message = `*NOTIFICACION:*\nSe recibieron ${precios.data.length()} avisos de Mercado Libre. Ahora falta procesar los datos y generar el Excel.`
+			const message = `*NOTIFICACION:*\nSe recibieron ${precios.data.length} avisos de Mercado Libre. Ahora falta procesar los datos y generar el Excel.\n¡Paciencia!`
 			await adminWhatsAppNotification(userPhone, message)
 
 		} else {
