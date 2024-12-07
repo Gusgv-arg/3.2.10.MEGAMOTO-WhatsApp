@@ -106,8 +106,8 @@ export const lookModelWithEmbedding = async (allProducts) => {
     });
 
     results.sort((a, b) => b.similitud - a.similitud);
-    //console.log("Results - ejemplo del primer registro:", results[0]);
-    console.log("Results:", results);
+    console.log("Results - ejemplo del primer registro:", results[0]);
+    //console.log("Results:", results);
     return results;
 };
 
