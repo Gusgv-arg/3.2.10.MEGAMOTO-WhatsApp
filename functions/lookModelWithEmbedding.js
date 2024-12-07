@@ -1,19 +1,20 @@
 import { modelos } from "../excel/modelos.js";
 //import { allProducts } from "../excel/allproducts.js"; // Para hacer pruebas harcodeadas
 
-// Función para limpiar texto
-const cleanText = (text) => {
-    return text.toLowerCase()
-        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "") // Eliminar caracteres especiales, excepto guiones
-        .replace(/\s+/g, " ") // Reemplazar múltiples espacios por uno solo
-        .trim(); // Eliminar espacios al inicio y al final
-};
-
 // Función para limpiar y normalizar texto
 const normalizeText = (text) => {
     return text.toLowerCase()
         .replace(/[-\s]+/g, " ") // Reemplazar guiones y múltiples espacios por uno solo
         .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "") // Eliminar caracteres especiales
+        .trim(); // Eliminar espacios al inicio y al final
+};
+
+// Función para ajustar títulos
+const adjustTitle = (title) => {
+    return title
+        .replace(/\s*\(.*?\)\s*$/, "") // Eliminar texto entre paréntesis al final
+        .replace(/\$.*$/, "") // Eliminar texto después del signo "$"
+        .replace(/0km.*$/, "") // Eliminar texto después de "0km"
         .trim(); // Eliminar espacios al inicio y al final
 };
 
@@ -62,7 +63,10 @@ export const lookModelWithEmbedding = async (allProducts) => {
 
     allProducts.forEach(product => {
         try {
-            const productTitle = normalizeText(product.titulo);
+            // Ajustar el título del producto
+            const adjustedTitle = adjustTitle(product.titulo);
+            const productTitle = normalizeText(adjustedTitle);
+            console.log("productTtitle:", productTitle)
             let bestMatches = [];
             let highestSimilarity = -1;
 
@@ -102,9 +106,10 @@ export const lookModelWithEmbedding = async (allProducts) => {
     });
 
     results.sort((a, b) => b.similitud - a.similitud);
-    console.log("Results - ejemplo del primer registro:", results[0]);
+    //console.log("Results - ejemplo del primer registro:", results[0]);
+    console.log("Results:", results);
     return results;
 };
 
 // Llamada a la función
-//lookModel(allProducts);
+//lookModelWithEmbedding(allProducts);

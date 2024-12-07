@@ -194,7 +194,8 @@ export const modelos = [
 			"Blitz110",
 			"Blitz 110",
 			"Motomel Blitz 110cc V8 Base V8",
-			"Blizt110 Cc"			
+			"Blizt110 Cc",
+			"Moto Motomel Blitz Base 110cc"			
 		],
 		cilindradas: 110,
 		url: "https://motomel.com.ar/fichas-tecnicas/ficha-tecnica-blitz-110-start.pdf",
