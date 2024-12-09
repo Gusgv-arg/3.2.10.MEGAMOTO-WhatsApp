@@ -114,25 +114,25 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				const campaignName = parts.slice(1).join("_");
 
 				//Call the functions that inactivates Campaign
+				res.status(200).send("EVENT_RECEIVED");
 				await changeCampaignStatus("inactiva", campaignName, userPhone);
 
-				res.status(200).send("EVENT_RECEIVED");
 			} else if (message.startsWith("activar")) {
 				const parts = message.split(" ");
 				const campaignName = parts.slice(1).join("_");
 
 				//Call the functions that activates Campaign
+				res.status(200).send("EVENT_RECEIVED");
 				await changeCampaignStatus("activa", campaignName, userPhone);
 
-				res.status(200).send("EVENT_RECEIVED");
 			} else if (message === "megabot campañas") {
 				await listCampaigns(userPhone);
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message === "megabot leads") {
+				res.status(200).send("EVENT_RECEIVED");
 				const leads = await exportLeadsToExcel(userPhone);
 
-				res.status(200).send("EVENT_RECEIVED");
 			} else if (message === "megabot precios") {
 				if (isScrapperCalled === false) {
 					isScrapperCalled = true;
