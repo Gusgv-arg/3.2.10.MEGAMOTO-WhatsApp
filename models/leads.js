@@ -1,5 +1,19 @@
 import mongoose from "mongoose";
 
+const flowDetailSchema = new mongoose.Schema({
+	flowName: String,
+	flowDate: String,
+	flowThreadId: String,
+	messages: String,
+	client_status: { type: String, enum: ["contactado", "respuesta", "falta DNI", "falta modelo", "faltan modelo y DNI", "error","transferido al vendedor", "vendedor", "vendedor más tarde", "vendedor derivado", "compró", "sin definición", "no compró"] },
+	vendor_name: String,
+	vendor_phone: Number,
+	flow_token: String,
+	flow_status: { type: String, enum: ["activa", "inactiva"] },
+	history: String,
+	error: String,
+});
+
 const campaignDetailSchema = new mongoose.Schema({
 	campaignName: String,
 	campaignDate: Date,
@@ -39,6 +53,7 @@ const leadsSchema = new mongoose.Schema(
 		botSwitch: { type: String, enum: ["ON", "OFF"], required: true },
 		responses: { type: Number },
 		campaigns: [campaignDetailSchema],
+		flows: [flowDetailSchema],
 	},
 	{
 		timestamps: true,

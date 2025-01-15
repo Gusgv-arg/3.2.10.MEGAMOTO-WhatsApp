@@ -13,7 +13,7 @@ import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotific
 const myPhone = process.env.MY_PHONE;
 
 // Class definition for the Queue
-export class MessageQueue {
+export class WhatsAppMessageQueue {
 	constructor() {
 		this.queues = new Map();
 	}

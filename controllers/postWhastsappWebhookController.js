@@ -1,10 +1,12 @@
 import axios from "axios";
-import { MessageQueue } from "../utils/queue/messageQueue.js";
-
+import { WhatsAppMessageQueue } from "../utils/queue/whatsAppQueue.js";
+import { WhatsAppFlowMessageQueue } from "../utils/queue/whatsAppFlowQueue.js";
 
 // Define a new instance of MessageQueue
-const messageQueue = new MessageQueue();
+const whatsAppQueue = new WhatsAppMessageQueue();
+const whatsAppFlowQueue = new WhatsAppFlowMessageQueue();
 
+// Function that distributes to each Queue depending on its type
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
 	const type = req.type;
@@ -67,7 +69,14 @@ export const postWhatsappWebhookController = async (req, res) => {
 				documentId: documentId ? documentId : "",
 			};
 
-			messageQueue.enqueueMessage(userMessage, userPhone);
+			// Distribution to different Queues
+			if (type==="interactive"){
+				whatsAppFlowQueue.enqueueMessage(userMessage, userPhone);
+
+			} else {
+				whatsAppQueue.enqueueMessage(userMessage, userPhone);
+			}
+
 
 			// Returns a '200 OK' response to all requests
 			res.status(200).send("EVENT_RECEIVED");
