@@ -1,17 +1,17 @@
 import { changeMegaBotSwitch } from "../functions/changeMegaBotSwitch.js";
-import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
+import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppNotification.js";
 import {
 	botSwitchOffNotification,
 	botSwitchOnNotification,
 	helpFunctionNotification,
 	inexistingTemplate,
 	templateError,
-} from "../utils/notificationMessages.js";
-import { getMediaWhatsappUrl } from "../utils/getMediaWhatsappUrl.js";
-import { downloadWhatsAppMedia } from "../utils/downloadWhatsAppMedia.js";
-import { changeCampaignStatus } from "../utils/changeCampaignStatus.js";
-import listCampaigns from "../utils/listCampaigns.js";
-import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
+} from "../utils/notifications/notificationMessages.js";
+import { getMediaWhatsappUrl } from "../utils/media/getMediaWhatsappUrl.js";
+import { downloadWhatsAppMedia } from "../utils/media/downloadWhatsAppMedia.js";
+import { changeCampaignStatus } from "../utils/campaigns/changeCampaignStatus.js";
+import listCampaigns from "../utils/campaigns/listCampaigns.js";
+import { exportLeadsToExcel } from "../utils/excel/exportLeadsToExcel.js";
 import { processPedidoYa } from "../functions/processPedidoYa.js";
 import { scrapeMercadoLibre } from "../functions/scrapeMercadoLibre.js";
 import { scrapeFacebook } from "../functions/scrapeFacebook.js";
@@ -62,7 +62,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await adminWhatsAppNotification(userPhone, botSwitchOnNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
-			
 			} else if (message === "megabot no responder") {
 				//Change general switch to OFF
 				await changeMegaBotSwitch("OFF");
@@ -71,13 +70,11 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await adminWhatsAppNotification(userPhone, botSwitchOffNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
-			
 			} else if (message === "megabot") {
 				// WhatsApp Admin notification
 				await adminWhatsAppNotification(userPhone, helpFunctionNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
-			
 			} else if (message.startsWith("campaña")) {
 				// Campaigns format: "campaña" "template name" "campaign name"
 				const parts = message.split(" ");
@@ -113,7 +110,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				}
 
 				res.status(200).send("EVENT_RECEIVED");
-			
 			} else if (message.startsWith("inactivar")) {
 				const parts = message.split(" ");
 				const campaignName = parts.slice(1).join("_");
@@ -121,7 +117,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				//Call the functions that inactivates Campaign
 				res.status(200).send("EVENT_RECEIVED");
 				await changeCampaignStatus("inactiva", campaignName, userPhone);
-			
 			} else if (message.startsWith("activar")) {
 				const parts = message.split(" ");
 				const campaignName = parts.slice(1).join("_");
@@ -129,16 +124,13 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				//Call the functions that activates Campaign
 				res.status(200).send("EVENT_RECEIVED");
 				await changeCampaignStatus("activa", campaignName, userPhone);
-			
 			} else if (message === "megabot campañas") {
 				await listCampaigns(userPhone);
 
 				res.status(200).send("EVENT_RECEIVED");
-			
 			} else if (message === "megabot leads") {
 				res.status(200).send("EVENT_RECEIVED");
 				const leads = await exportLeadsToExcel(userPhone);
-			
 			} else if (message === "megabot precios") {
 				if (isScrapperCalled === false) {
 					isScrapperCalled = true;
@@ -151,7 +143,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			} else if (message === "megabot facebook") {
 				res.status(200).send("EVENT_RECEIVED");
 				await scrapeFacebook(userPhone);
-			
 			} else if (message.startsWith("plantilla")) {
 				res.status(200).send("EVENT_RECEIVED");
 

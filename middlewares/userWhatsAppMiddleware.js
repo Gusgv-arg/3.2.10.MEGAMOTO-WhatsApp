@@ -1,8 +1,8 @@
 import Leads from "../models/leads.js";
-import { greeting } from "../utils/greeting.js";
-import { createGptThread } from "../utils/createGptThread.js";
-import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
-import { handleWhatsAppMaxResponses } from "../utils/handleWhatsAppMaxResponses.js";
+import { greeting } from "../utils/notifications/greeting.js";
+import { createGptThread } from "../utils/ai/createGptThread.js";
+import { handleWhatsappGreeting } from "../utils/whatsapp/handleWhatsappGreeting.js";
+import { handleWhatsAppMaxResponses } from "../utils/whatsapp/handleWhatsAppMaxResponses.js";
 
 const maxResponses = process.env.MAX_RESPONSES;
 const myPhone = process.env.MY_PHONE;

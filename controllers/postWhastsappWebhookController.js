@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MessageQueue } from "../utils/messageQueue.js";
+import { MessageQueue } from "../utils/queue/messageQueue.js";
 
 
 // Define a new instance of MessageQueue

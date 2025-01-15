@@ -1,6 +1,6 @@
 import axios from "axios";
-import Leads from "../models/leads.js";
 import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
+import Leads from "../../models/leads.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
@@ -10,7 +10,7 @@ export const leadTemplateWabNotification = async (templateName, senderId) => {
 	console.log("Template Name--->", templateName);
 	let lead;
 	let currentCampaign;
-	let campaignDate
+	let campaignDate;
 
 	try {
 		// Look for lead in DB
@@ -26,9 +26,9 @@ export const leadTemplateWabNotification = async (templateName, senderId) => {
 		currentCampaign = lead.campaigns[lead.campaigns.length - 1];
 
 		// Prepare Template variables
-		campaignDate = new Date(
-			currentCampaign.campaignDate
-		).toLocaleDateString("es-AR");
+		campaignDate = new Date(currentCampaign.campaignDate).toLocaleDateString(
+			"es-AR"
+		);
 		const vendor_phone = currentCampaign.vendor_phone;
 
 		// Clean the messages to remove new lines and excessive spaces
@@ -70,7 +70,7 @@ export const leadTemplateWabNotification = async (templateName, senderId) => {
 		};
 		//console.log("MessageData--->", messageData)
 		//console.log("Parameters:", parameters)
-		
+
 		// Post the Notification to the vendor
 		const response = await axios.post(url, messageData, {
 			headers: { "Content-Type": "application/json" },
@@ -79,10 +79,17 @@ export const leadTemplateWabNotification = async (templateName, senderId) => {
 		if (response.data) {
 			console.log(`Notification for client ${lead.name} sent to the vendor!!`);
 		} else {
-			console.log(`ERROR sending vendor Notification for client ${lead.name}!!`);
+			console.log(
+				`ERROR sending vendor Notification for client ${lead.name}!!`
+			);
 		}
 	} catch (error) {
-		console.log("Error in leadTemplateWabNotification.js:", error.message, "wile sending notification from:", lead.name);
+		console.log(
+			"Error in leadTemplateWabNotification.js:",
+			error.message,
+			"wile sending notification from:",
+			lead.name
+		);
 
 		// Change status of client
 		currentCampaign.client_status = "vendedor no notificado";

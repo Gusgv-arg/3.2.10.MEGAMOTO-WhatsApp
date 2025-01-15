@@ -1,4 +1,5 @@
-import Leads from "../models/leads.js"
+
+import Leads from "../../models/leads.js";
 import { createGptThread } from "./createGptThread.js";
 
 // Function that creates a new thread && saves it in DB

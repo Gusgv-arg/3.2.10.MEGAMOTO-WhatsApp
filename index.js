@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
-import { errorHandler } from "./utils/errorHandler.js";
+import { errorHandler } from "./utils/errors/errorHandler.js";
 import testingRouter from "./routers/testingRouter.js";
 import whatsappRouter from "./routers/whatsappRouter.js";
 import BotSwitch from "./models/botSwitch.js"
-import createBotSwitchInstance from "./utils/createBotSwitchInstance.js";
+import createBotSwitchInstance from "./utils/dataBase/createBotSwitchInstance.js";
 import path from 'path';
 import { fileURLToPath } from "url";
 

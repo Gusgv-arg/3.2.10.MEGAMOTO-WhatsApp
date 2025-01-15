@@ -1,14 +1,14 @@
-import audioToText from "./audioToText.js";
-import { convertBufferImageToUrl } from "./convertBufferImageToUrl.js";
-import { downloadWhatsAppMedia } from "./downloadWhatsAppMedia.js";
-import { errorMessage1 } from "./errorMessages.js";
-import { getMediaWhatsappUrl } from "./getMediaWhatsappUrl.js";
-import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
-import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
-import { saveMessageInDb } from "./saveMessageInDb.js";
-import { leadTemplateWabNotification } from "./leadTemplateWabNotification.js";
-import { addMessagesToThread } from "./addMessagesToThread.js";
-import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
+import audioToText from "../media/audioToText.js";
+import { convertBufferImageToUrl } from "../media/convertBufferImageToUrl.js";
+import { downloadWhatsAppMedia } from "../media/downloadWhatsAppMedia.js";
+import { errorMessage1 } from "../errors/errorMessages.js";
+import { getMediaWhatsappUrl } from "../media/getMediaWhatsappUrl.js";
+import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
+import { processMessageWithAssistant } from "../ai/processMessageWithAssistant.js";
+import { saveMessageInDb } from "../dataBase/saveMessageInDb.js";
+import { leadTemplateWabNotification } from "../notifications/leadTemplateWabNotification.js";
+import { addMessagesToThread } from "../ai/addMessagesToThread.js";
+import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -193,7 +193,7 @@ export class MessageQueue {
 					//handleWhatsappMessage(senderId, errorMessage);
 
 					// Send WhatsApp error message to Admin
-					const errorMessage = `*NOTIFICACION DE ERROR:*\n${error.message}`
+					const errorMessage = `*NOTIFICACION DE ERROR:*\n${error.message}`;
 					await adminWhatsAppNotification(myPhone, errorMessage);
 				}
 			}

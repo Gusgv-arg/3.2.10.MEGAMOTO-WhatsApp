@@ -1,5 +1,5 @@
 import axios from "axios";
-import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
+import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
@@ -18,7 +18,7 @@ export const sendExcelByWhatsApp = async (userPhone, fileUrl, fileName) => {
 				filename: fileName,
 			},
 		};
-        
+
 		const response = await axios
 			.post(url, data, {
 				headers: {
@@ -31,13 +31,18 @@ export const sendExcelByWhatsApp = async (userPhone, fileUrl, fileName) => {
 					error.response ? error.response.data : error.message
 				);
 			});
-		
-        if (response.data) {
+
+		if (response.data) {
 			console.log("Excel enviado por whatsApp al Admin!", response.data);
 		}
 	} catch (error) {
-		console.log("Error in sendExcelByWhatsApp.js:", error.response ? error.response.data : error.message);
-		const errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema enviando el Excel por WhatsApp: ${error.response ? error.response.data : error.message}`
-		adminWhatsAppNotification(userPhone, errorMessage)
+		console.log(
+			"Error in sendExcelByWhatsApp.js:",
+			error.response ? error.response.data : error.message
+		);
+		const errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema enviando el Excel por WhatsApp: ${
+			error.response ? error.response.data : error.message
+		}`;
+		adminWhatsAppNotification(userPhone, errorMessage);
 	}
 };

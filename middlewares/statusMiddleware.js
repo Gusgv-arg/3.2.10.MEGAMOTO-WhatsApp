@@ -1,5 +1,5 @@
 import Leads from "../models/leads.js";
-import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
+import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppNotification.js";
 
 const myPhone = process.env.MY_PHONE;
 

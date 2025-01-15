@@ -1,5 +1,5 @@
 import axios from "axios";
-import { saveMessageInDb } from "./saveMessageInDb.js";
+import { saveMessageInDb } from "../dataBase/saveMessageInDb.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;

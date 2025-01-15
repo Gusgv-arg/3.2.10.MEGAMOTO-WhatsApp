@@ -1,6 +1,9 @@
-import Leads from "../models/leads.js";
-import { logError } from "./logError.js";
-import { dniNotification, pagoConPrestamo } from "./notificationMessages.js";
+import Leads from "../../models/leads.js";
+import { logError } from "../errors/logError.js";
+import {
+	dniNotification,
+	pagoConPrestamo,
+} from "../notifications/notificationMessages.js";
 
 export const saveMessageInDb = async (
 	senderId,
@@ -92,7 +95,9 @@ export const saveMessageInDb = async (
 				} else if (messageGpt === pagoConPrestamo) {
 					currentCampaign.payment = "préstamo";
 					currentCampaign.client_status = "dni";
-					console.log(`Payment updated to "préstamo" && Client status updated to "dni"`);
+					console.log(
+						`Payment updated to "préstamo" && Client status updated to "dni"`
+					);
 				} else if (messageGpt === dniNotification) {
 					currentCampaign.payment = "préstamo";
 					currentCampaign.client_status = "vendedor";

@@ -2,8 +2,8 @@ import axios from "axios";
 import ExcelJS from "exceljs";
 import { fileURLToPath } from "url";
 import path from "path";
-import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
-import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
+import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
+import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppNotification.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -108,7 +108,7 @@ export const scrapeFacebook = async (userPhone) => {
 						}
 
 						// Asegurarse de que haya una fila vacía después de las imágenes
-						if (i === (imageCount - 1)) {
+						if (i === imageCount - 1) {
 							currentRow += 3; // Incrementar para dejar una fila vacía después
 						}
 					}
@@ -126,7 +126,7 @@ export const scrapeFacebook = async (userPhone) => {
 						// Ajustar la altura de la fila para que se muestre el texto completo
 						const lineCount = concatenatedTexts.split("\n").length; // Contar líneas
 						worksheet.getRow(extraTextRow).height = lineCount * 30;
-						currentRow += 2 // se incrementa currentRow
+						currentRow += 2; // se incrementa currentRow
 					}
 					// Actualizar la fila de inicio para el siguiente grupo
 					startRow = currentRow;

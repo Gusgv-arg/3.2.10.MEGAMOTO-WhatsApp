@@ -1,12 +1,12 @@
 import OpenAI from "openai";
-import Leads from "../models/leads.js";
-import { getStockPrice } from "../functions/getStockPrice.js";
+import Leads from "../../models/leads.js";
+import { getStockPrice } from "../../functions/getStockPrice.js";
 import {
 	errorMessage1,
 	errorMessage2,
 	errorMessage3,
 	errorMessage5,
-} from "./errorMessages.js";
+} from "../errors/errorMessages.js";
 import { cleanThread } from "./cleanThread.js";
 import {
 	dniNotification,
@@ -15,8 +15,8 @@ import {
 	pagoConPrestamo,
 	pagoContadoOTarjeta,
 	tengoConsultas,
-} from "./notificationMessages.js";
-import dniDetector from "./dniDetector.js";
+} from "../notifications/notificationMessages.js";
+import dniDetector from "../others/dniDetector.js";
 
 const API_KEY = process.env.OPENAI_API_KEY;
 
@@ -89,28 +89,25 @@ export const processMessageWithAssistant = async (
 		/* const thread_messages = await openai.beta.threads.messages.list(threadId)
 		thread_messages.data.forEach(message => {
 			console.log("Content del mensaje:", message.content);
-		}); */		
+		}); */
 
 		// If type is Document or Button return a specific message
 		if (type === "document") {
 			const errorMessage = errorMessage5;
 			return { errorMessage, threadId, campaignFlag };
-		
 		} else if (
 			type === "button" &&
 			userMessage.toLowerCase() === "no gracias"
 		) {
 			return { noGracias, threadId, campaignFlag };
-		
 		} else if (
 			userMessage.toLowerCase() === "sí, pago de contado" ||
 			userMessage.toLowerCase() === "sí, pago con tarjeta"
 		) {
 			return { pagoContadoOTarjeta, threadId, campaignFlag };
-		
 		} else if (userMessage.toLowerCase() === "sí, pago con préstamo") {
 			return { pagoConPrestamo, threadId, campaignFlag };
-		} else if (userMessage.toLowerCase() === "sí, pero tengo consultas"){
+		} else if (userMessage.toLowerCase() === "sí, pero tengo consultas") {
 			return { tengoConsultas, threadId, campaignFlag };
 		}
 
@@ -126,9 +123,7 @@ export const processMessageWithAssistant = async (
 				content: [
 					{
 						type: "text",
-						text: userMessage
-							? userMessage
-							: "Dime que ves en esta imágen",
+						text: userMessage ? userMessage : "Dime que ves en esta imágen",
 					},
 					{
 						type: "image_url",

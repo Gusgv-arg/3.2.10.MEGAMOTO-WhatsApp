@@ -1,8 +1,8 @@
-import Leads from "../models/leads.js";
+import Leads from "../../models/leads.js";
 import { addMessagesToThread } from "./addMessagesToThread.js";
-import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
-import { logError } from "./logError.js";
-import { templateWhatsAppNotification } from "./templateWhatsAppNotification.js";
+import { handleWhatsappMessage } from "../handleWhatsappMessage.js";
+import { logError } from "../errors/logError.js";
+import { templateWhatsAppNotification } from "../notifications/templateWhatsAppNotification.js";
 
 // Save the predefined button message in DB && in GPT Thread && notifiy vendor
 export const buttonActions = async (
@@ -111,8 +111,6 @@ export const buttonActions = async (
 				const campaignDate = new Date(
 					currentCampaign.campaignDate
 				).toLocaleDateString("es-AR");
-
-				
 			}
 		}
 	} catch (error) {

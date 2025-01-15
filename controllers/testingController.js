@@ -1,5 +1,5 @@
-import { handleTestMessage } from "../utils/handleTestMessage.js";
-import { processMessageWithAssistant } from "../utils/processMessageWithAssistant.js";
+import { handleTestMessage } from "../utils/others/handleTestMessage.js";
+import { processMessageWithAssistant } from "../utils/ai/processMessageWithAssistant.js";
 
 export const testingController = (req, res) => {
 	const body = req.body;

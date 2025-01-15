@@ -1,7 +1,7 @@
 import axios from "axios";
 import BotSwitch from "../models/botSwitch.js";
-import { userWhatsAppNotification } from "../utils/userWhatsAppNotification.js";
-import { errorMessage1 } from "../utils/errorMessages.js";
+import { userWhatsAppNotification } from "../utils/notifications/userWhatsAppNotification.js";
+import { errorMessage1 } from "../utils/errors/errorMessages.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;

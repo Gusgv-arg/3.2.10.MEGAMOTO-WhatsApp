@@ -2,11 +2,11 @@ import dotenv from "dotenv";
 import axios from "axios";
 import xlsx from "xlsx";
 import { v4 as uuidv4 } from "uuid";
-import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
+import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppNotification.js";
 import Leads from "../models/leads.js";
-import { createCampaignOrSurveyThread } from "../utils/createCampaignOrSurveyThread.js";
-import { searchTemplate } from "../utils/searchTemplate.js";
-import { createGeneralThread } from "../utils/createGeneralThread.js";
+import { createCampaignOrSurveyThread } from "../utils/ai/createCampaignOrSurveyThread.js";
+import { searchTemplate } from "../utils/templates/searchTemplate.js";
+import { createGeneralThread } from "../utils/ai/createGeneralThread.js";
 
 dotenv.config();
 
@@ -113,11 +113,11 @@ export const processTemplateExcel = async (
 								{
 									type: "text",
 									text: nombre,
-								},/* 
+								} /* 
 								{
 									type: "text",
 									text: modelo,
-								}, */
+								}, */,
 							],
 						},
 						{
@@ -126,16 +126,14 @@ export const processTemplateExcel = async (
 							index: 0,
 							parameters: [
 								{
-									"type": "action",
-									"action": {
-									  "flow_token": flowToken,   //optional, default is "unused"
-									  "flow_action_data": {
-										 
-									  }   // optional, json object with the data payload for the first screen
-									}
-							}  						
-							],							
-						  }
+									type: "action",
+									action: {
+										flow_token: flowToken, //optional, default is "unused"
+										flow_action_data: {}, // optional, json object with the data payload for the first screen
+									},
+								},
+							],
+						},
 					],
 				},
 			};

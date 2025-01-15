@@ -1,4 +1,4 @@
-import BotSwitch from "../models/botSwitch.js";
+import BotSwitch from "../../models/botSwitch.js";
 
 let botSwitchInstance;
 let maxRetries = 5;

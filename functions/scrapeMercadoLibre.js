@@ -4,8 +4,8 @@ import { fileURLToPath } from "url";
 import ExcelJS from "exceljs";
 import { lookModelWithEmbedding } from "./lookModelWithEmbedding.js";
 //import { allProducts } from "../excel/allproducts.js"; // array para hacer pruebas hardcodeado
-import { sendExcelByWhatsApp } from "../utils/sendExcelByWhatsApp.js";
-import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
+import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
+import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppNotification.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,14 +13,15 @@ const __dirname = path.dirname(__filename);
 export const scrapeMercadoLibre = async (userPhone) => {
 	try {
 		// Advises Admin of the task
-		const task = "*NOTIFICACION:*\nSe envió tu solicitud a otra API que busca en Mercado Libre todas las publicaciones de los modelos que vende Megamoto. Es un proceso que tarda.\n¡Paciencia!"
-		await adminWhatsAppNotification(userPhone, task)
-		
+		const task =
+			"*NOTIFICACION:*\nSe envió tu solicitud a otra API que busca en Mercado Libre todas las publicaciones de los modelos que vende Megamoto. Es un proceso que tarda.\n¡Paciencia!";
+		await adminWhatsAppNotification(userPhone, task);
+
 		// Uses other API as a microservice for scrapping
 		const precios = await axios.get(
 			"https://three-2-13-web-scrapping.onrender.com/scrape/mercado_libre"
 		);
-		
+
 		// Advises Admin that data was received
 		if (precios.data && precios.data.length > 0) {
 			console.log(

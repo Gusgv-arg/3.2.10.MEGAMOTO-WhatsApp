@@ -1,6 +1,6 @@
 import axios from "axios";
 import nodemailer from "nodemailer";
-import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
+import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
 
 const transporter = nodemailer.createTransport({
 	host: "smtp.gmail.com",
@@ -29,11 +29,12 @@ export const sendLeadsByMail = async (filePath, mail, userPhone) => {
 
 	try {
 		let info = await transporter.sendMail(mailOptions);
-		
+
 		// Notify the Admin by WhatsApp
-		await adminWhatsAppNotification(userPhone, `*NOTIFICACION envío Leads.xls por mail:*\nSe envió Leads.xls por mail a ${mail}.`
+		await adminWhatsAppNotification(
+			userPhone,
+			`*NOTIFICACION envío Leads.xls por mail:*\nSe envió Leads.xls por mail a ${mail}.`
 		);
-		
 	} catch (error) {
 		console.error("Error en sendLeadsByMail.js:", error.message);
 		throw error;

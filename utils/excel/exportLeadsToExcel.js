@@ -1,8 +1,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import xlsx from "xlsx";
-import Leads from "../models/leads.js";
-import { sendLeadsByMail } from "../utils/sendLeadsByMail.js";
+import Leads from "../../models/leads.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;

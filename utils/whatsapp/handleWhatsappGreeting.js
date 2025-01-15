@@ -1,5 +1,5 @@
 import axios from "axios";
-import { greeting } from "../utils/greeting.js";
+import { greeting } from "../notifications/greeting.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;

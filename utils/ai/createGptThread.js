@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { greeting, messengerGreeting } from "../utils/greeting.js";
+import { greeting, messengerGreeting } from "../notifications/greeting.js";
 import dotenv from "dotenv"
 dotenv.config()
 
