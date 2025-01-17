@@ -23,7 +23,8 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 			});
 
 			let lastFlow = lead.flows[lead.flows.length - 1];
-			lastFlow.messages += `${currentDateTime} - MegaBot: ${notification}`;
+			console.log("userMessage",userMessage)
+            lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - MegaBot: ${notification}`;
 			lastFlow.history += `${currentDateTime} - MegaBot: notificación enviada. `;
 
 			// Update lead

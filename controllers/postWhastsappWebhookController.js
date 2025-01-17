@@ -10,10 +10,9 @@ const whatsAppFlowQueue = new WhatsAppFlowMessageQueue();
 export const postWhatsappWebhookController = async (req, res) => {
 	
 	const body = req.body;
-	const type = req.type;
 	console.log("Messages-->", body.entry[0].changes[0].value.messages[0]);
-	
-	
+	const type = body?.entry[0]?.changes[0]?.value?.messages[0]?.type;
+		
 	let audioId;
 	let imageId;
 	let documentId;
