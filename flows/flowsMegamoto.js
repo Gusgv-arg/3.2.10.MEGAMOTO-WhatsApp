@@ -1,3 +1,5 @@
+const textoFlow1 = "¡Hola {{1}}! Para atenderte más rápido completá el formulario y un vendedor te va a estar contactando."
+
 const flow1 = {   "version": "6.0",
   "screens": [
     {
@@ -15,39 +17,71 @@ const flow1 = {   "version": "6.0",
                 "type": "Dropdown",
                 "label": "Motomel",
                 "required": false,
-                "name": "Motomel_16449a",
+                "name": "Motomel",
                 "data-source": [
                   {
-                      "id": "Blitz 110",
-                      "title": "Blitz 110"
+                      "id": "BLITZ 110 V8 START",
+                      "title": "BLITZ 110 V8 START"
                   },
                   {
-                      "id": "CG 150",
+                      "id": "BLITZ 110 V8 BASE ONE - B1 Automatica - NEW",
+                      "title": "BLITZ 110 V8 BASE ONE - B1 Automatica - NEW"
+                  },
+                  {
+                      "id": "BLITZ 110 V8 PLUS",
+                      "title": "BLITZ 110 V8 PLUS"
+                  },
+                  {
+                      "id": "BLITZ 110 V8 FULL ONE - B1 - ALEACION DISCO - NEW",
+                      "title": "BLITZ 110 V8 FULL ONE - B1 - ALEACION DISCO - NEW"
+                  },
+                  {
+                      "id": "BLITZ 110 V8 TUNNING NEW",
+                      "title": "BLITZ 110 V8 TUNNING NEW"
+                  },
+                  {
+                      "id": "BLITZ 110 BLACK EDITION",
+                      "title": "BLITZ 110 BLACK EDITION"
+                  },
+                  {
+                      "id": "CG 150 S2 START",
+                      "title": "CG 150 S2 START"
+                  },
+                  {
+                      "id": "CG 150 S2 FULL (aleac / disco)",
                       "title": "CG 150"
                   },
                   {
-                      "id": "DLX 110",
-                      "title": "DLX 110"
+                      "id": "DLX 110 DELUXE",
+                      "title": "DLX 110 DELUXE"
                   },
                   {
-                      "id": "MAX 110",
-                      "title": "MAX 110"
+                      "id": "MAX 110 A/E",
+                      "title": "MAX 110 A/E"
                   },
                   {
-                      "id": "SIRIUS 190",
-                      "title": "SIRIUS 190"
+                      "id": "SIRIUS 190 NUEVO PRODUCTO",
+                      "title": "SIRIUS 190 NUEVO PRODUCTO"
                   },
                   {
-                      "id": "SKUA 125",
-                      "title": "SKUA 125"
+                      "id": "SKUA 125 X-TREME",
+                      "title": "SKUA 125 X-TREME"
                   },
                   {
-                      "id": "SKUA 150",
-                      "title": "SKUA 150"
+                      "id": "SKUA 150 NEW GENERATION",
+                      "title": "SKUA 150 NEW GENERATION"
                   },
                   {
-                      "id": "SKUA 250",
-                      "title": "SKUA 250"
+                      "id": "SKUA 150 SILVER EDITION",
+                      "title": "SKUA 150 SILVER EDITION"
+                  },
+                  {
+                      "id": "SKUA 250 BASE NEW",
+                      "title": "SKUA 250 BASE NEW"
+                  },
+                  {
+                      "id": "SKUA 250 ADVENTURE NUEVO MODELO",
+                      "title": "SKUA 250 ADVENTURE NUEVO MODELO"
                   },
                   {
                       "id": "STRATO 150 ALPINO",
@@ -75,15 +109,19 @@ const flow1 = {   "version": "6.0",
                 "type": "Dropdown",
                 "label": "Suzuki",
                 "required": false,
-                "name": "Suzuki_939cbe",
+                "name": "Suzuki",
                 "data-source": [
                   {
-                      "id": "AX 100",
-                      "title": "AX 100"
+                      "id": "AX100",
+                      "title": "AX100"
                   },
                   {
-                      "id": "GN 125",
-                      "title": "GN 125"
+                      "id": "GN125",
+                      "title": "GN125"
+                  },
+                  {
+                      "id": "GSX125",
+                      "title": "GSX125"
                   },
                   {
                       "id": "GIXXER GSX 150",
@@ -95,15 +133,15 @@ const flow1 = {   "version": "6.0",
                 "type": "Dropdown",
                 "label": "Benelli",
                 "required": false,
-                "name": "Benelli_731fad",
+                "name": "Benelli",
                 "data-source": [
                   {
                       "id": "Leoncino 250",
                       "title": "Leoncino 250"
                   },
                   {
-                      "id": "Leoncino 500 (todas AM 2022)",
-                      "title": "Leoncino 500 (todas AM 2022)"
+                      "id": "Leoncino 500 (todas AM2022)",
+                      "title": "Leoncino 500 (todas AM2022)"
                   },
                   {
                       "id": "Leoncino 500 Trail",
@@ -118,32 +156,36 @@ const flow1 = {   "version": "6.0",
                       "title": "TNT 15"
                   },
                   {
-                      "id": "251 S",
-                      "title": "251 S"
+                      "id": "251S",
+                      "title": "251S"
+                  },
+                  {
+                      "id": "302S",
+                      "title": "302S"
                   },
                   {
                       "id": "502 C",
                       "title": "502 C"
                   },
                   {
-                      "id": "TRK 251 ABS",
-                      "title": "TRK 251 ABS"
+                      "id": "TRK251 ABS",
+                      "title": "TRK251 ABS"
                   },
                   {
-                      "id": "TRK 502 NEW",
-                      "title": "TRK 502 NEW"
+                      "id": "TRK502 NEW",
+                      "title": "TRK502 NEW"
                   },
                   {
-                      "id": "TRK 502 X NEW",
-                      "title": "TRK 502 X NEW"
+                      "id": "TRK502-X NEW",
+                      "title": "TRK502-X NEW"
                   },
                   {
                       "id": "TNT 600i ABS nueva",
                       "title": "TNT 600i ABS nueva"
                   },
                   {
-                      "id": "752 S",
-                      "title": "752 S"
+                      "id": "752S",
+                      "title": "752S"
                   },
                   {
                       "id": "180 S",
@@ -156,6 +198,10 @@ const flow1 = {   "version": "6.0",
                   {
                       "id": "TRK 702",
                       "title": "TRK 702"
+                  },                    
+                  {
+                      "id": "TRK 702 X",
+                      "title": "TRK 702 X"
                   }
                 ]
               },                
@@ -195,11 +241,11 @@ const flow1 = {   "version": "6.0",
                 "type": "Dropdown",
                 "label": "Keeway",
                 "required": false,
-                "name": "Keeway_915524",
+                "name": "Keeway",
                 "data-source": [
                   {
-                    "id": "K-Light 202",
-                    "title": "K-Light 202"
+                    "id": "KEEWAY K-Light 202",
+                    "title": "KEEWAY K-Light 202"
                   },
                   {
                     "id": "RK 150",
@@ -215,7 +261,7 @@ const flow1 = {   "version": "6.0",
                 "type": "Dropdown",
                 "label": "SYM",
                 "required": false,
-                "name": "SYM_69580a",
+                "name": "SYM",
                 "data-source": [
                   {
                     "id": "Citycom 300 i",
@@ -229,9 +275,9 @@ const flow1 = {   "version": "6.0",
               },
               {
                 "type": "Dropdown",
-                "label": "Teknial motos eléctricas",
+                "label": "Teknial eléctricas",
                 "required": false,
-                "name": "Teknial motos eléctricas",
+                "name": "Teknial eléctricas",
                 "data-source": [
                   {
                     "id": "TK-REVOLT",
@@ -263,14 +309,14 @@ const flow1 = {   "version": "6.0",
                     "name": "screen_nfurcm"
                   },
                   "payload": {
-                    "Motomel": "${form.Motomel_16449a}",
-                    "Suzuki": "${form.Suzuki_939cbe}",
-                    "Benelli": "${form.Benelli_731fad}",
+                    "Motomel": "${form.Motomel}",
+                    "Suzuki": "${form.Suzuki}",
+                    "Benelli": "${form.Benelli}",
                     "TVS": "${form.TVS}",
-                    "Keeway": "${form.Keeway_915524}",
-                    "SYM": "${form.SYM_69580a}",
+                    "Keeway": "${form.Keeway}",
+                    "SYM": "${form.SYM}",
                     "No sé":"${form.No sé}",
-                    "Teknial motos eléctricas":"${form.Teknial motos eléctricas}"
+                    "Teknial eléctricas":"${form.Teknial eléctricas}"
                   }
                 }
               }
@@ -311,7 +357,7 @@ const flow1 = {   "version": "6.0",
           "type": "string",
           "__example__": "Example"
         },
-        "Teknial motos eléctricas": {
+        "Teknial eléctricas": {
           "type": "string",
           "__example__": "Example"
         }
@@ -327,7 +373,7 @@ const flow1 = {   "version": "6.0",
                 "type": "CheckboxGroup",
                 "label": "Seleccionar lo que corresponda",
                 "required": true,
-                "name": "Seleccionar_lo_que_corresponda_ffc531",
+                "name": "Seleccionar lo que corresponda",
                 "data-source": [
                   {
                     "id": "Efectivo, Transferencia o Tarjeta de Débito",
@@ -357,7 +403,7 @@ const flow1 = {   "version": "6.0",
                     "name": "screen_xvbvvl"
                   },
                   "payload": {
-                    "Seleccionar lo que corresponda": "${form.Seleccionar_lo_que_corresponda_ffc531}",
+                    "Seleccionar lo que corresponda": "${form.Seleccionar lo que corresponda}",
                     "Motomel": "${data.Motomel}",
                     "Suzuki": "${data.Suzuki}",
                     "Benelli": "${data.Benelli}",
@@ -365,7 +411,7 @@ const flow1 = {   "version": "6.0",
                     "SYM": "${data.SYM}",
                     "TVS": "${data.TVS}",
                     "No sé": "${data.No sé}",
-                    "Teknial motos eléctricas": "${data.Teknial motos eléctricas}"
+                    "Teknial eléctricas": "${data.Teknial eléctricas}"
                   }
                 }
               }
@@ -413,7 +459,7 @@ const flow1 = {   "version": "6.0",
           "type": "string",
           "__example__": "Example"
         },
-        "Teknial motos eléctricas": {
+        "Teknial eléctricas": {
           "type": "string",
           "__example__": "Example"
         }
@@ -431,7 +477,7 @@ const flow1 = {   "version": "6.0",
               },
               {
                 "type": "TextInput",
-                "name": "DNI_b16fd8",
+                "name": "DNI",
                 "label": "DNI",
                 "required": false,
                 "input-type": "number",
@@ -447,7 +493,7 @@ const flow1 = {   "version": "6.0",
                     "name": "screen_hedboy"
                   },
                   "payload": {
-                    "DNI": "${form.DNI_b16fd8}",
+                    "DNI": "${form.DNI}",
                     "Seleccionar lo que corresponda": "${data.Seleccionar lo que corresponda}",
                     "Motomel": "${data.Motomel}",
                     "Suzuki": "${data.Suzuki}",
@@ -456,7 +502,7 @@ const flow1 = {   "version": "6.0",
                     "SYM": "${data.SYM}",
                     "TVS": "${data.TVS}",
                     "No sé": "${data.No sé}",
-                    "Teknial motos eléctricas": "${data.Teknial motos eléctricas}"
+                    "Teknial eléctricas": "${data.Teknial eléctricas}"
                   }
                 }
               }
@@ -508,7 +554,7 @@ const flow1 = {   "version": "6.0",
           "type": "string",
           "__example__": "Example"
         },
-        "Teknial motos eléctricas": {
+        "Teknial eléctricas": {
           "type": "string",
           "__example__": "Example"
         }
@@ -525,7 +571,7 @@ const flow1 = {   "version": "6.0",
                 "type": "TextArea",
                 "label": "Preguntas",
                 "required": false,
-                "name": "Preguntas_df18e9",
+                "name": "Preguntas",
                 "helper-text": "Puede preguntar por ejemplo por otro modelo de una misma marca"
               },
               {
@@ -534,7 +580,7 @@ const flow1 = {   "version": "6.0",
                 "on-click-action": {
                   "name": "complete",
                   "payload": {
-                    "Preguntas": "${form.Preguntas_df18e9}",
+                    "Preguntas": "${form.Preguntas}",
                     "DNI": "${data.DNI}",
                     "Seleccionar lo que corresponda": "${data.Seleccionar lo que corresponda}",
                     "Motomel": "${data.Motomel}",
@@ -544,7 +590,7 @@ const flow1 = {   "version": "6.0",
                     "SYM": "${data.SYM}",
                     "TVS": "${data.TVS}",
                     "No sé":"${data.No sé}",
-                    "Teknial": "${data.Teknial motos eléctricas}"
+                    "Teknial": "${data.Teknial eléctricas}"
                   }
                 }
               }

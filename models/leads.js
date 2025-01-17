@@ -3,14 +3,17 @@ import mongoose from "mongoose";
 const flowDetailSchema = new mongoose.Schema({
 	flowName: String,
 	flowDate: String,
-	flowThreadId: String,
-	messages: String,
 	client_status: { type: String, enum: ["contactado", "respuesta", "falta DNI", "falta modelo", "faltan modelo y DNI", "error","transferido al vendedor", "vendedor", "vendedor más tarde", "vendedor derivado", "compró", "sin definición", "no compró"] },
+	brand: {type: String, enum : ["Benelli", "Suzuki", "Sym", "Motomel", "Keeway", "Tarpan", "Teknial eléctricas", "TVS", "No sé"]},
+	model: String,
+	payment: {type: String, enum: ["contado", "tarjeta", "préstamo"]},
+	dni: Number,
+	messages: String,
 	vendor_name: String,
 	vendor_phone: Number,
-	flow_token: String,
-	flow_status: { type: String, enum: ["activa", "inactiva"] },
 	history: String,
+	flow_token: String,
+	flow_status: { type: String, enum: ["activo", "inactivo"] },
 	error: String,
 });
 

@@ -4,11 +4,9 @@ import { saveMessageInDb } from "../dataBase/saveMessageInDb.js";
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
-// Function that sends GPT message to the user and saves in DB
-export const handleWhatsappMessage = async (senderId, messageGpt) => {
+// Function that sends message to the user
+export const handleWhatsappMessage = async (senderId, message) => {
 	try {
-		const name = "MegaBot";
-		const channel = "whatsapp";
 
 		// Posts the message to Whatsapp
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
@@ -19,7 +17,7 @@ export const handleWhatsappMessage = async (senderId, messageGpt) => {
 			type: "text",
 			text: {
 				preview_url: true,
-				body: messageGpt,
+				body: message,
 			},
 		};
 
@@ -36,7 +34,8 @@ export const handleWhatsappMessage = async (senderId, messageGpt) => {
 				);
 			});
 	} catch (error) {
-		console.log("Error en handleWhatsappMessage.js", error.message);
-		throw error;
+		console.log("Error en handleWhatsappMessage.js", error.response ? error.response.data : error.message);
+		
+		throw error.response ? error.response.data : error.message;
 	}
 };

@@ -4,7 +4,7 @@ export const extractFlowToken_1Responses = (userMessage) => {
 	let DNI = true;
 
 	// Definir las marcas a buscar
-	const marcas = ["Benelli", "Suzuki", "Sym", "Motomel", "Keeway", "Tarpan", "Teknial motos eléctricas", "TVS", "No sé"];
+	const marcas = ["Benelli", "Suzuki", "Sym", "Motomel", "Keeway", "Tarpan", "Teknial eléctricas", "TVS", "No sé"];
 	let marcasEncontradas = [];
 	let modelosEncontrados = [];
 

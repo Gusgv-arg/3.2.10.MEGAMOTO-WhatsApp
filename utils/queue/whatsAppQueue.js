@@ -9,6 +9,7 @@ import { saveMessageInDb } from "../dataBase/saveMessageInDb.js";
 import { leadTemplateWabNotification } from "../notifications/leadTemplateWabNotification.js";
 import { addMessagesToThread } from "../ai/addMessagesToThread.js";
 import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
+import { processWhatsAppWithApi } from "../whatsapp/processWhatsAppWithApi.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -36,7 +37,7 @@ export class WhatsAppMessageQueue {
 			let documentURL;
 
 			try {
-				// ---------- AUDIO ---------- //
+				// Determine the message depending the TYPE: text, audio, image or document
 				if (newMessage.type === "audio") {
 					// --- WhatsApp Audio --- //
 					if (newMessage.channel === "whatsapp") {
@@ -112,73 +113,19 @@ export class WhatsAppMessageQueue {
 					}
 				}
 
-				// Process the message with the Assistant
-				const response = await processMessageWithAssistant(
-					senderId,
-					newMessage.message,
-					imageURL,
-					newMessage.type
-				);
+				// Process whatsApp with API
+				const response = await processWhatsAppWithApi(newMessage)
+				console.log("Response:", response)
+				
+				// Send the answer to the user
+				//await handleWhatsappMessage(senderId, responseToUser);
 
-				if (newMessage.channel === "whatsapp") {
-					// Response to user by Whatsapp (can be gpt, error message, notification or buttons predefined answers)
-					const responseToUser = response?.messageGpt
-						? response.messageGpt
-						: response.errorMessage
-						? response.errorMessage
-						: response.notification
-						? response.notification
-						: response.dniNotification
-						? response.dniNotification
-						: response.noGracias
-						? response.noGracias
-						: response.pagoContadoOTarjeta
-						? response.pagoContadoOTarjeta
-						: response.pagoConPrestamo
-						? response.pagoConPrestamo
-						: response.tengoConsultas;
-
-					// Send the answer to the user
-					await handleWhatsappMessage(senderId, responseToUser);
-
-					// Save the message in the database
-					await saveMessageInDb(
-						senderId,
-						responseToUser,
-						response?.threadId ? response.threadId : null,
-						newMessage,
-						response?.campaignFlag
-					);
-
-					// Save notifications in GPT thread
-					if (
-						response.noGracias ||
-						response.dniNotification ||
-						response.pagoConPrestamo ||
-						response.pagoContadoOTarjeta ||
-						response.tengoConsultas
-					) {
-						const campaignThreadId = response.threadId;
-
-						await addMessagesToThread(
-							campaignThreadId,
-							newMessage.message,
-							responseToUser
-						);
-					}
-
-					// Notify the vendor if dniNotification or pagoContadoOTarjeta or tengoConsultas
-					if (
-						response.dniNotification ||
-						response.pagoContadoOTarjeta ||
-						response.tengoConsultas
-					) {
-						const templateName = "lead_megamoto";
-
-						// Function that notifies lead to the vendor
-						await leadTemplateWabNotification(templateName, senderId);
-					}
-				}
+				// Save the message in the database
+				
+				// Function that notifies lead to the vendor
+						
+					
+				
 			} catch (error) {
 				console.error(`14. Error in messageQueue.js: ${error.message}`);
 				// Send error message to the user
