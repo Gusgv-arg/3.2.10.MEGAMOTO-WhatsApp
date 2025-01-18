@@ -16,7 +16,8 @@ export const extractFlowResponses = (userMessage) => {
 			console.log("FinalNotification:", finalNotification)
 			return {finalNotification, flowToken};
 		} else {
-			const greet = `*¡Hola ${userMessage.name} 👋!* En breve te va a contactar un vendedor por tu consulta:\n\n`;
+			const greet = `*¡Hola ${userMessage.name} 👋, gracias por tu respuesta!* En breve vas a recibir una notificación con los datos del vendedor que te estará contactando:\n\n`;
+			
 			finalNotification = greet + extraction;
 			console.log("FinalNotification:", finalNotification)
 			const flowToken = 1;
@@ -39,7 +40,7 @@ export const extractFlowResponses = (userMessage) => {
   name: 'gustavo gomez villafane',
   userPhone: '5491161405589',
   channel: 'whatsapp',
-  message: '{"Preguntas":"Hola","Seleccionar lo que corresponda":{"1":"Efectivo, Transferencia o Tarjeta de Débito"},"Motomel":"BLITZ 110 V8 START","flow_token":"1"}',
+  message: '{"Seleccionar lo que corresponda":{"0":"Efectivo, Transferencia o Tarjeta de Débito","1":"Tarjeta de Crédito"},"Motomel":"BLITZ 110 V8 BASE ONE - B1 Automatica - NEW","Suzuki":"AX100","flow_token":"1"}',
   type: 'interactive',
   audioId: '',
   imageId: '',

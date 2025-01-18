@@ -20,7 +20,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			existingLead = await createLeadInDb(userMessage);
 
 			// Envía un mensaje previo de bienvenida x si no se ve el Flow
-			const greeting = `¡Hola, gracias por contactarte con Megamoto!Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\nImportante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+			const greeting = `¡Hola, gracias por contactarte con Megamoto! Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\nImportante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 			await handleWhatsappMessage(userMessage.userPhone, greeting);
 
@@ -31,7 +31,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			await saveNotificationInDb(userMessage, greeting);
 
 			// Actualiza el log
-            log = "1-Se creo el lead en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó en BD."
+            log = "1-Se creo el lead en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1."
             return log
 		
         } else {
@@ -64,7 +64,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await saveNotificationInDb(userMessage, notification);
                 
                     // Actualiza el log
-                    log = `1-Se notificó al lead recordando su vendedor. 2-Alarma al vendedor ${lastFlowVendor}. 3-Se grabó todo en BD`
+                    log = `1-Se notificó al lead recordando su vendedor. 2-Alarma al vendedor ${lastFlowVendor}. `
                     
                     return log
                     
@@ -79,7 +79,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await saveNotificationInDb(userMessage, notification);
                     
                     // Actualiza el log
-                    log = `1-Se notificó al Lead de que no tiene un vendedor asignado. 2-Se grabó en BD.`
+                    log = `1-Se notificó al Lead de que no tiene un vendedor asignado. `
                     
                     return log
 					
@@ -89,7 +89,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
                 // Lead ya existe y NO tiene un Flow abierto arranca el proceso de 0.
 				
                 // Envía un mensaje previo de bienvenida x si no se ve el Flow
-				const greeting2 = `*Notificación automática*\n¡Gracias por contactarte nuevamente con Megamoto!\nPara atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n*Importante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular*. \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+				const greeting2 = `¡Hola nuevamente, gracias por seguir confiando en Megamoto!\nPara atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n*Importante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular*. \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
                 
 				await handleWhatsappMessage(userMessage.userPhone, greeting2);
                 

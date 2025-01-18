@@ -19,7 +19,7 @@ const currentDateTime = new Date().toLocaleString("es-AR", {
             flowDate: currentDateTime,
             client_status: "contactado",
             messages: "",
-            history: "",
+            history: `${currentDateTime} - Status: contactado. `,
             flow_token: "1",
             flow_status: "activo"            
         }

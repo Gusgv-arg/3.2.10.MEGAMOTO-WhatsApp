@@ -32,7 +32,9 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			?.type
 			? body.entry[0].changes[0].value.messages[0].type
 			: body.entry[0].changes[0];
-		const userPhone = body.entry[0].changes[0]?.value?.messages[0]?.from;
+		const userPhone = body.entry[0].changes[0]?.value?.messages?.[0]?.from
+			? body.entry[0].changes[0].value.messages[0].from
+			: "";
 		console.log("Type of whatsapp message", typeOfWhatsappMessage);
 
 		// Admin INSTRUCTIONS: can be text or document format in case of Campaign!!!

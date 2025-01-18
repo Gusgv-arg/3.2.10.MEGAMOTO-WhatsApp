@@ -28,14 +28,14 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					await saveNotificationInDb(userMessage, finalNotification)
 					
 					// Actualiza el log
-					log = `1-Se extrajo la respuesta del Flow 1. 2-Se mandó whatsapp al lead x respuesta incompleta. 3-Se reenvió FLOW 1. 4-Se guardó en BD.`;
+					log = `1-Se extrajo la respuesta del Flow 1. 2-Se mandó whatsapp al lead x respuesta incompleta. 3-Se reenvió FLOW 1. `;
 					
 				} else {
 					// Guarda en BD
 					await saveNotificationInDb(userMessage, finalNotification)
 					
 					// Actualiza el log
-					log = `1-Se extrajo la respuesta del Flow. 2-Se mandó whatsapp al lead de que un vendedor lo estará contactando.`;
+					log = `1-Se extrajo la respuesta del Flow 1. 2-Se mandó whatsapp al lead de que un vendedor lo estará contactando.`;
 				}
 
 				return log;

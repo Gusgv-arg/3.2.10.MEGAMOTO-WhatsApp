@@ -14,7 +14,8 @@ export const extractFlowToken_1Responses = (flowMessage) => {
 		let match;
 		while ((match = regex.exec(flowMessage)) !== null) {
 			marcasEncontradas.push(m);
-			modelosEncontrados.push(match[1]); 
+			modelosEncontrados.push(match[1]);
+			// ACA VA LA FUNCION QUE BUSCA PRECIO 
 		}
 	});
 
@@ -25,7 +26,7 @@ export const extractFlowToken_1Responses = (flowMessage) => {
 			marcasEncontradas
 				.map(
 					(marca, index) =>
-						`Marca: ${marca}\nModelo: ${modelosEncontrados[index]}\n`
+						`Marca: ${marca}\nModelo: ${modelosEncontrados[index]}\nPrecio: $ xxxx (No incluye patentamiento y a reconfirmar por el vendedor.)`
 				)
 				.join("");
 	} else {
@@ -34,12 +35,16 @@ export const extractFlowToken_1Responses = (flowMessage) => {
 	}
 
 	// Extraer el método de pago
-	const metodoPagoRegex = /"Seleccionar lo que corresponda":{"[0-9]+":"([^"]+)"/;
+	const metodoPagoRegex = /"Seleccionar lo que corresponda":{([^}]*)}/;
 	const metodoPagoMatch = flowMessage.match(metodoPagoRegex);
 	let metodoPagoArray = [];
 
-	if (metodoPagoMatch && metodoPagoMatch[1]) {
-		metodoPagoArray = metodoPagoMatch[1].split(", ");
+	if (metodoPagoMatch) {
+		const opcionesRegex = /"(\d+)":"([^"]+)"/g;
+		let match;
+		while ((match = opcionesRegex.exec(metodoPagoMatch[1])) !== null) {
+			metodoPagoArray.push(match[2]);
+		}
 		extraction += `Método de pago: ${metodoPagoArray.join(", ")}\n`;
 	}
 
@@ -66,15 +71,15 @@ export const extractFlowToken_1Responses = (flowMessage) => {
 		
 	// Send different messages depending customer responses
 	if (model === false && DNI === false){
-		extraction = "*IMPORTANTE:* Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves el formulario entrá en tu celular.*";
+		extraction = "*IMPORTANTE:* Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para esto te volvemos a enviar el Formulario.¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves un segundo mensaje entrá en tu celular.*";
 		return extraction
 		
 	} else if (model === false){
-		extraction = "*IMPORTANTE:* Por favor informanos tu *modelo de interes*. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves el formulario entrá en tu celular.*";
+		extraction = "*IMPORTANTE:* Por favor informanos tu *modelo de interes*. Para esto te volvemos a enviar el Formulario.\n¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves un segundo mensaje entrá en tu celular.*";
 		return extraction
 		
 	} else if (DNI === false){
-		extraction = "*IMPORTANTE:* Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves el formulario entrá en tu celular.*";
+		extraction = "*IMPORTANTE:* Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves el un segundo mensaje entrá en tu celular.*";
 		return extraction
 		
 	} else {

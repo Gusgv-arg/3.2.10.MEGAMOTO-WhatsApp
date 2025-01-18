@@ -22,16 +22,39 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				second: "2-digit",
 			});
 
+			// Actualizar mensajes
 			let lastFlow = lead.flows[lead.flows.length - 1];
 			lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification}`;
-			lastFlow.history += `${currentDateTime} - API: notificación enviada. `;
+
+			// Actualizar estado y history del lead
+			if (notification.includes("IMPORTANTE")) {
+				// Casos de faltantes de informacion en el FLOW 1
+
+				if (notification.includes("modelo de interes y tu DNI")) {
+					// Si falta el modelo y el DNI
+					lastFlow.client_status = "faltan modelo y DNI";
+					lastFlow.history += `${currentDateTime} - Status: faltan modelo y DNI. `;
+				} else if (notification.includes("préstamo")) {
+					// Si falta el DNI
+					lastFlow.client_status = "falta DNI";
+					lastFlow.history += `${currentDateTime} - Status: falta DNI. `;
+				} else if (notification.includes("modelo")) {
+					// Si falta modelo
+					lastFlow.client_status = "falta modelo";
+					lastFlow.history += `${currentDateTime} - Status: falta modelo. `;
+				}
+			} else if (notification.includes("¡Gracias por confiar en Megamoto!")) {
+				// Envío completo del FLOW 1
+				lastFlow.client_status = "respuesta";
+				lastFlow.history += `${currentDateTime} - Status: respuesta. `;
+			}
 
 			// Update lead
 			await lead.save();
 			return;
 		}
 	} catch (error) {
-		console.log("error en saveNotificationInDb.js:", error.message)
-        throw new Error(error.message);
+		console.log("error en saveNotificationInDb.js:", error.message);
+		throw new Error(error.message);
 	}
 };
