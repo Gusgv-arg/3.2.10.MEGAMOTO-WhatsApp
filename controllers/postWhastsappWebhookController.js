@@ -8,36 +8,35 @@ const whatsAppFlowQueue = new WhatsAppFlowMessageQueue();
 
 // Function that distributes to each Queue depending on its type
 export const postWhatsappWebhookController = async (req, res) => {
-	
 	const body = req.body;
 	console.log("Messages-->", body.entry[0].changes[0].value.messages[0]);
 	const type = body?.entry[0]?.changes[0]?.value?.messages[0]?.type;
-		
+
 	let audioId;
 	let imageId;
 	let documentId;
 	if (type === "audio") {
 		audioId = body.entry[0].changes[0].value.messages[0].audio
-		? body.entry[0].changes[0].value.messages[0].audio.id
-		: "otro formato";
+			? body.entry[0].changes[0].value.messages[0].audio.id
+			: "otro formato";
 		console.log("Audio ID:", audioId);
 	} else if (type === "image") {
 		imageId = body.entry[0].changes[0].value.messages[0].image
-		? body.entry[0].changes[0].value.messages[0].image.id
+			? body.entry[0].changes[0].value.messages[0].image.id
 			: "otro formato";
 	} else if (type === "document") {
 		documentId = body.entry[0].changes[0].value.messages[0].document
-		? body.entry[0].changes[0].value.messages[0].document.id
-		: "otro formato";
+			? body.entry[0].changes[0].value.messages[0].document.id
+			: "otro formato";
 	}
 	//console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
 	//console.log("Changes-->", body.entry[0].changes[0])
 	//console.log("Contacts-->", body.entry[0].changes[0].value.contacts)
-	
+
 	if (body.entry[0]) {
 		// Returns a '200 OK' response to all requests
 		res.status(200).send("EVENT_RECEIVED");
-	
+
 		if (
 			body.entry &&
 			body.entry[0].changes &&
@@ -55,7 +54,10 @@ export const postWhatsappWebhookController = async (req, res) => {
 					? body.entry[0].changes[0].value.messages[0].document.caption
 					: type === "button"
 					? body.entry[0].changes[0].value.messages[0].button.text
-					: "unknown message";
+					: type === "interactive"
+					? body.entry[0].changes[0].value.messages[0].interactive.nfm_reply
+							.response_json
+					: "no se pudo extraer el mensaje";
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
 			const channel = "whatsapp";
 			const name = body.entry[0].changes[0].value.contacts[0].profile.name;
@@ -73,6 +75,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 				imageId: imageId ? imageId : "",
 				documentId: documentId ? documentId : "",
 			};
+			console.log("Objeto creado userMessage:", userMessage)
 
 			// Distribution to different Queues
 			if (type === "interactive") {
@@ -80,7 +83,6 @@ export const postWhatsappWebhookController = async (req, res) => {
 			} else {
 				whatsAppQueue.enqueueMessage(userMessage);
 			}
-
 		}
 	} else {
 		console.log("Object send by WhatsApp not processed by this API", body);

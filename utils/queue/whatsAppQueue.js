@@ -114,35 +114,22 @@ export class WhatsAppMessageQueue {
 				}
 
 				// Process whatsApp with API
-				const response = await processWhatsAppWithApi(newMessage)
-				console.log("Response:", response)
-				
-				// Send the answer to the user
-				//await handleWhatsappMessage(senderId, responseToUser);
+				const response = await processWhatsAppWithApi(newMessage);
+				console.log(`Mensaje del cliente ${newMessage.name}: ${response}`);
 
-				// Save the message in the database
-				
-				// Function that notifies lead to the vendor
-						
-					
-				
 			} catch (error) {
-				console.error(`14. Error in messageQueue.js: ${error.message}`);
-				// Send error message to the user
-				const errorMessage = errorMessage1;
+				console.error(`Error en whatsAppMessageQueue.js: ${error.message}`);
 
 				// Change flag to allow next message processing
 				queue.processing = false;
 
-				// Error handlers
-				if (newMessage.channel === "whatsapp") {
-					// Send error message to customer
-					//handleWhatsappMessage(senderId, errorMessage);
+				// Error handlers: Send error message to customer
+				const customerErrorMessage = errorMessage1;
+				handleWhatsappMessage(newMessage.userPhone, customerErrorMessage);
 
-					// Send WhatsApp error message to Admin
-					const errorMessage = `*NOTIFICACION DE ERROR:*\n${error.message}`;
-					await adminWhatsAppNotification(myPhone, errorMessage);
-				}
+				// Send WhatsApp error message to Admin
+				const errorMessage = `*NOTIFICACION DE ERROR:*\nFunción: whatsAppQueue.js\nRegistro de la Queue: ${userMessage}\nError:${error.message}`;
+				await adminWhatsAppNotification(myPhone, errorMessage);
 			}
 		}
 		// Change flag to allow next message processing

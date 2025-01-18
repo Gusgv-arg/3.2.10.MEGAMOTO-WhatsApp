@@ -2,29 +2,29 @@ export const extractFlowToken_2Responses = (userMessage) => {
 	let extraction = "";
 
 	// Extraer la respuesta del vendedor
-	if (userMessage.includes("Tomar Lead")){
+	if (userMessage.message.includes("Tomar Lead")){
 		const regex = /"Tomar Lead":"([^"]+)"/;
-		const atención = userMessage.match(regex);
+		const atención = userMessage.message.match(regex);
 		extraction += `Respuesta del Vendedor: ${atención[1]}\n`;
 	}
 	
 	// Derivación del vendedor
-	if (userMessage.includes("Derivar Lead")){
+	if (userMessage.message.includes("Derivar Lead")){
 		const regex0 = /"Derivar Lead":"([^"]+)"/;
-		const derivar = userMessage.match(regex0);
+		const derivar = userMessage.message.match(regex0);
 		extraction += `Derivación a Vendedor: ${derivar[1]}\n`;
 	}
 
 	// Extraer notas del vendedor.
-	if (userMessage.includes("Notas")){
+	if (userMessage.message.includes("Notas")){
 		const regex1 = /"Notas sobre el lead":"([^"]+)"/;
-		const notas = userMessage.match(regex1);
+		const notas = userMessage.message.match(regex1);
 		extraction += `Notas del Vendedor: ${notas[1]}\n`;
 	}
 
 	// Extraer token
 	const regex2 = /"flow_token":"([^"]+)"/;
-	const flowToken = userMessage.match(regex2)[1];
+	const flowToken = userMessage.message.match(regex2)[1];
 	console.log(extraction)
 	return { extraction, flowToken };
 };

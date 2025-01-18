@@ -116,7 +116,6 @@ export const saveMessageInDb = async (
 
 				// Update lead
 				await lead.save();
-				console.log("Lead changes where saved!");
 				return;
 			} else {
 				console.log("there is no campaign flag so nothing was stored in DB!!");

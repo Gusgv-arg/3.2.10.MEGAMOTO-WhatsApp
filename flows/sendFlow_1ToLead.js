@@ -47,22 +47,19 @@ export const sendFlow_1ToLead = async (userMessage) => {
 		const response = await axios.post(url, payload, {
 			headers: { "Content-Type": "application/json" },
 		});
-		console.log(
-			`Flow 1 enviado a ${userMessage.name}: ${response.data.messages[0].id}`
-		);
 
-		// Looks existent lead
+		/* // Looks existent lead
 		let lead = await Leads.findOne({ id_user: userMessage.userPhone });
 
 		// Si no hay Flows o el Lead esta en la Fila se agrega un Flow
 		if (
-			lead.flows.length() === 0 ||
+			lead.flows.length === 0 ||
 			lead.flows[lead.flows.length - 1].client_status === "compró" ||
 			lead.flows[lead.flows.length - 1].client_status === "no compró"
 		) {
 			// Add a new flow to the lead
 			lead.flows.push({
-				messages: `${currentDateTime} - MegaBot: se envió un mensaje de bienvenida y un segundo mensaje con el Flow 1.`,
+				messages: `${currentDateTime} - API: envió mensaje de bienvenida y un segundo mensaje con el Flow 1.`,
 				history: `${currentDateTime} Status: contactado.`,
 			});
 			
@@ -70,16 +67,14 @@ export const sendFlow_1ToLead = async (userMessage) => {
 		} else {
 			lead.flows[
 				lead.flows.length - 1
-			].messages += `${currentDateTime} - MegaBot: se volvió a enviar Flow 1 x respuesta incompleta`;
+			].messages += `${currentDateTime} - API: envió mensaje de bienvenida y un segundo mensaje con el Flow 1`;
 			lead.flows[
 				lead.flows.length - 1
-			].history += `${currentDateTime} - Status: recontactado`;
-			console.log(
-				`Se actualizó el registro del Flow 1 vigente de ${userMessage.name}`
-			);
+			].history += `${currentDateTime} - Status: contactado`;
+
 		}
 
-		await lead.save();
+		await lead.save(); */
 	} catch (error) {
 		console.error(
 			`Error en sendFlow_1ToLead.js:`,

@@ -5,87 +5,116 @@ import { saveNotificationInDb } from "../dataBase/saveNotificationInDb.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 
 export const processWhatsAppWithApi = async (userMessage) => {
-    
+	
     let existingLead;
-    let notification;
+	let notification;
+    let log;
 
-    try {
-        // Busca el Lead
-        existingLead = await Leads.findOne({ id_user: userMessage.userPhone});
-        
-        // Si NO existe el Lead
-        if (!existingLead){
-            // Llama a la función para crear el Lead
-            existingLead = await createLeadInDb(userMessage)
+	try {
+		// Busca el Lead
+		existingLead = await Leads.findOne({ id_user: userMessage.userPhone });
 
-            // Envía un mensaje previo de bienvenida x si no se ve el Flow
-            const greeting = `*¡Gracias por contactarte con Megamoto!*\nPara atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n*Importante:* si estas en tu pc y no lo ves entrá en tu celular. \n\n¡Tu moto está más cerca!`
+		// Lead NO EXISTE -----------------------------------------------------------
+		if (!existingLead) {
+			// Llama a la función para crear el Lead y guardar en BD
+			existingLead = await createLeadInDb(userMessage);
 
-            await handleWhatsappMessage(userMessage.userPhone, greeting)
+			// Envía un mensaje previo de bienvenida x si no se ve el Flow
+			const greeting = `¡Hola, gracias por contactarte con Megamoto!Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\nImportante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
-            // Envía el Flow 1 al lead
-            await sendFlow_1ToLead(userMessage)
-            
+			await handleWhatsappMessage(userMessage.userPhone, greeting);
+
+			// Envía el Flow 1 al lead
+			await sendFlow_1ToLead(userMessage);
+			
+			// Graba notificación al cliente en la BDs 
+			await saveNotificationInDb(userMessage, greeting);
+
+			// Actualiza el log
+            log = "1-Se creo el lead en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó en BD."
+            return log
+		
         } else {
-            
-            // Si el lead ya existe 
-            const lastFlow = existingLead.flows[existingLead.flows.length-1]
-            const lastFlowStatus = lastFlow.client_status 
-            const lastFlowVendor = lastFlow.vendor_name
-            const lastFlowPhone = lastFlow.vendor_phone
-            
-            let notification;
+		// Lead EXISTE -------------------------------------------------------------
+		
+            const lastFlow = existingLead.flows[existingLead.flows.length - 1];
+			const lastFlowStatus = lastFlow.client_status;
+			const lastFlowVendor = lastFlow.vendor_name;
+			const lastFlowPhone = lastFlow.vendor_phone;
 
-            if (lastFlowStatus!== "compró" && lastFlowStatus !== "no compró"){
-                // El Lead está en la Fila
-                if (lastFlowVendor){
-                    // El lead ya tiene un vendedor asignado
+			let notification;
 
-                    notification = `Estimado ${userMessage.name}; le enviaremos tu consulta a tu vendedor asignado que te recordamos es ${lastFlowVendor} con el celular ${lastFlowPhone}. Agendalo para identificarlo cuando te contacte. Te pedimos un poco de paciencia.\n¡Haremos lo posible para atenderte cuanto antes!\n\n*MEGAMOTO* `
+			if (lastFlowStatus !== "compró" && lastFlowStatus !== "no compró") {
+				// El Lead está en la Fila
+				
+                if (lastFlowVendor) {
+					// El lead ya tiene un vendedor asignado
+
+					notification = `*Notificación automática*\nEstimado ${userMessage.name}; le enviaremos tu consulta a tu vendedor asignado que te recordamos es ${lastFlowVendor} con el celular ${lastFlowPhone}. Agendalo para identificarlo cuando te contacte. Te pedimos un poco de paciencia.\n¡Haremos lo posible para atenderte cuanto antes!\n\n*MEGAMOTO* `;
+
+					// Envía notificación de recordatorio al Lead
+					await handleWhatsappMessage(userMessage.userPhone, notification);
                     
-                    // Envía notificación al Lead
-                    await handleWhatsappMessage(userMessage.userPhone, notification)
+					// Envía alarma al vendedor con la pregunta del cliente
+                    const alarm = `*NOTIFICACION DEL SISTEMA:*\nEl cliente ${userMessage.name} cel: ${userMessage.userPhone} envió el siguiente mensaje: ${userMessage.message}.\n¡Suerte con tu venta!`
                     
-                    // Graba la notificación en la base de datos
-                    await saveNotificationInDb(userMessage, notification)
-
-                    // ---- ACA GENERAR UN PROCESO DE NOTIFICACION AL VENDEDOR CON LA PREGUNTA DEL CLIENTE 
-
-                    //------- VER SI A FUTURO CREO UNA ALARMA EN ESTA INSTANCIA O ALGUN PROCESO ESPECIAL -------
+					await handleWhatsappMessage(lastFlowPhone, alarm);
                     
-                } else {
+					// Graba notificación al cliente en la BDs (falta grabar la del vendedor)
+					await saveNotificationInDb(userMessage, notification);
+                
+                    // Actualiza el log
+                    log = `1-Se notificó al lead recordando su vendedor. 2-Alarma al vendedor ${lastFlowVendor}. 3-Se grabó todo en BD`
+                    
+                    return log
+                    
+				} else {
                     // El Lead NO tiene un vendedor asignado
-                    notification = `Estimado ${userMessage.name}; le estaremos enviando tu consulta al vendedor cuando te sea asignado. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n¡Tu moto está más cerca!\n\n*MEGAMOTO* `
+					notification = `*Notificación automática*\nEstimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
                     
-                    // Envía notificación al Lead
-                    await handleWhatsappMessage(userMessage.userPhone, notification)
+					// Envía notificación al Lead
+					await handleWhatsappMessage(userMessage.userPhone, notification);
                     
-                    // Graba la notificación en la base de datos
-                    await saveNotificationInDb(userMessage, notification)
-
+					// Graba la notificación en la base de datos
+					await saveNotificationInDb(userMessage, notification);
+                    
+                    // Actualiza el log
+                    log = `1-Se notificó al Lead de que no tiene un vendedor asignado. 2-Se grabó en BD.`
+                    
+                    return log
+					
                     //------- VER SI A FUTURO CREO UNA ALARMA EN ESTA INSTANCIA O ALGUN PROCESO ESPECIAL -------
-                }
+				}
+			} else {
+                // Lead ya existe y NO tiene un Flow abierto arranca el proceso de 0.
+				
+                // Envía un mensaje previo de bienvenida x si no se ve el Flow
+				const greeting2 = `*Notificación automática*\n¡Gracias por contactarte nuevamente con Megamoto!\nPara atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n*Importante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular*. \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
                 
-            } else {
-                // Lead ya existe y NO tiene un Flow abierto. Envía el Flow 1
-                await sendFlow_1ToLead(userMessage)
+				await handleWhatsappMessage(userMessage.userPhone, greeting2);
                 
-            }
+				// Envía el Flow 1
+				await sendFlow_1ToLead(userMessage);
+                
+                // Actualiza el log
+                log = `1-Se volvió a saludar al lead ya que estaba en BD y no tenía un Flow. 2-Se le envió Flow 1.`
 
-            
-        
+                return log
+			}
+		}
 
-        }   
-    
-    } catch (error) {
-        console.error("Error in processWhatsAppWithApi.js:", error?.response?.data
-            ? JSON.stringify(error.response.data)
-            : error.message);
+	} catch (error) {
+		console.error(
+			"Error in processWhatsAppWithApi.js:",
+			error?.response?.data
+				? JSON.stringify(error.response.data)
+				: error.message
+		);
 
-        const errorMessage = error?.response?.data
-        ? JSON.stringify(error.response.data)
-        : error.message
+		const errorMessage = error?.response?.data
+			? JSON.stringify(error.response.data)
+			: error.message;
 
-        throw errorMessage;
-    }
-}
+		throw errorMessage;
+	}
+};

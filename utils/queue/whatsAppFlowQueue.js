@@ -1,6 +1,7 @@
 import { saveMessageInDb } from "../dataBase/saveMessageInDb.js";
 import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
 import { processWhatsAppFlowWithApi } from "../whatsapp/processWhatsAppFlowWithApi.js";
+import { errorMessage1 } from "../errors/errorMessages.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -23,41 +24,28 @@ export class WhatsAppFlowMessageQueue {
 
 		while (queue.messages.length > 0) {
 			// Take the first record and delete it from the queue
-			let newMessage = queue.messages.shift();
+			let userMessage = queue.messages.shift();
 			let imageURL;
 			let documentURL;
 
 			try {
-
 				// Process the message
-				const response = await processWhatsAppFlowWithApi(
-					senderId,
-					newMessage.message,
-					imageURL,
-					newMessage.type
-				);
-                
-					
-
-					
-				
+				const response = await processWhatsAppFlowWithApi(userMessage);
+				console.log(`Flow de ${userMessage.name}: ${response}`);
 			} catch (error) {
 				console.error(`14. Error in messageQueue.js: ${error.message}`);
-				// Send error message to the user
-				const errorMessage = errorMessage1;
 
 				// Change flag to allow next message processing
 				queue.processing = false;
 
 				// Error handlers
-				if (newMessage.channel === "whatsapp") {
-					// Send error message to customer
-					//handleWhatsappMessage(senderId, errorMessage);
+				// Send error message to customer
+				const errorMessage = errorMessage1;
+				handleWhatsappMessage(senderId, errorMessage);
 
-					// Send WhatsApp error message to Admin
-					const errorMessage = `*NOTIFICACION DE ERROR:*\n${error.message}`;
-					await adminWhatsAppNotification(myPhone, errorMessage);
-				}
+				// Send WhatsApp error message to Admin
+				const alarm = `*NOTIFICACION DE ERROR:*\n${error.message}`;
+				await adminWhatsAppNotification(myPhone, alarm);
 			}
 		}
 		// Change flag to allow next message processing
