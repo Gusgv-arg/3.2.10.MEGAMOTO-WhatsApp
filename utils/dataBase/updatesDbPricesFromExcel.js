@@ -132,7 +132,7 @@ export const updateDbPricesFromExcel = async () => {
 		notification =
 			`*NOTIFICACION de actualización de Precios:*\nHay ${
 				dataExcel.length - 1
-			} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nSe desactivaron ${registrosDesactivados}.\nHay ${qNewModels} modelos nuevos.`
+			} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nHay ${qNewModels} modelos nuevos.\nSe desactivó: ${registrosDesactivados.map(modelo=>modelo.modelo)}.`
 		;
 		return notification
 
