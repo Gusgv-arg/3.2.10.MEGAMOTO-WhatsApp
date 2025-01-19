@@ -38,6 +38,7 @@ export const updateDbPricesFromExcel = async () => {
 		let qNewModels = 0;
 		let updatedModels = [];
 		let newModels = [];
+		let notification;
 
 		// Procesa los registros de dataExcel omitiendo el encabezado
 		for (let i = 1; i < dataExcel.length; i++) {
@@ -128,10 +129,10 @@ export const updateDbPricesFromExcel = async () => {
 			console.error("Error al buscar registros desactivados:", error);
 		}
 		
-		const notification =
+		notification =
 			`*NOTIFICACION de actualización de Precios:*\nHay ${
 				dataExcel.length - 1
-			} registros en el Excel y se actualizaron ${updates} modelos. Faltó actualizar: ${noPrice}.`
+			} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nSe desactivaron ${registrosDesactivados}.\nHay ${qNewModels} modelos nuevos.`
 		;
 		return notification
 
