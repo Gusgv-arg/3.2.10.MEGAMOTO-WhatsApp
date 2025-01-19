@@ -1,4 +1,6 @@
-export const extractFlowToken_1Responses = (flowMessage) => {
+import Prices from "../models/prices.js";
+
+export const extractFlowToken_1Responses = async (flowMessage) => {
 	let extraction = "";
 	let model = true;
 	let DNI = true;
@@ -15,20 +17,23 @@ export const extractFlowToken_1Responses = (flowMessage) => {
 		while ((match = regex.exec(flowMessage)) !== null) {
 			marcasEncontradas.push(m);
 			modelosEncontrados.push(match[1]);
-			// ACA VA LA FUNCION QUE BUSCA PRECIO 
 		}
 	});
-
+	
+	// Función que busca los precios del modelo buscado x el lead
+	const buscarPrecios = async (modelo) => {
+		const precioData = await Prices.findOne({ modelo }); 
+		return precioData ? precioData.precio : "No disponible"; 
+	};
+	
 	// Crear la notificación con la información extraída
 	if (marcasEncontradas.length > 0) {
-		extraction =
-			extraction +
-			marcasEncontradas
-				.map(
-					(marca, index) =>
-						`Marca: ${marca}\nModelo: ${modelosEncontrados[index]}\nPrecio: $ xxxx (No incluye patentamiento y a reconfirmar por el vendedor.)`
-				)
-				.join("");
+		for (const modelo of modelosEncontrados) {
+			const precio = await buscarPrecios(modelo); // Obtener el precio
+			const precioFormateado = typeof precio === 'number' ? precio.toLocaleString('es-AR', { style: 'decimal', minimumFractionDigits: 0 }) : precio; // Formatear el precio
+		extraction += `Marca: ${marcasEncontradas[modelosEncontrados.indexOf(modelo)]}\nModelo: ${modelo}\nPrecio: $ ${precioFormateado} - No incluye patentamiento y es a reconfirmar por el vendedor\n`;
+	}
+
 	} else {
 	// Caso que el cliente no informa marca y modelo. Se lo notifica y se le vuelve a enviar el flow 
 		model = false;

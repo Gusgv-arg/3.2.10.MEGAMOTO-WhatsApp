@@ -104,10 +104,10 @@ export const updateDbPricesFromExcel = async () => {
 				dataExcel.length - 1
 			} registros en el Excel y se actualizaron ${updates} modelos. Faltó actualizar: ${noPrice}.`
 		);
-		
+
 		// Crear una lista de modelos presentes en el Excel
 		let modelosEnExcel = dataExcel.map((entrada) => entrada.B);
-		
+
 		// Busca y cambia isActive false a los registros que están en la base pero no en el Excel
 		try {
 			await Prices.updateMany(
@@ -117,7 +117,7 @@ export const updateDbPricesFromExcel = async () => {
 		} catch (error) {
 			console.error("Error al desactivar registros antiguos:", error);
 		}
-		
+
 		// Busca los registros con isActive en false
 		let registrosDesactivados;
 		try {
@@ -128,14 +128,13 @@ export const updateDbPricesFromExcel = async () => {
 		} catch (error) {
 			console.error("Error al buscar registros desactivados:", error);
 		}
-		
-		notification =
-			`*NOTIFICACION de actualización de Precios:*\nHay ${
-				dataExcel.length - 1
-			} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nHay ${qNewModels} modelos nuevos.\nSe desactivó: ${registrosDesactivados.map(modelo=>modelo.modelo)}.`
-		;
-		return notification
 
+		notification = `*NOTIFICACION de actualización de Precios:*\nHay ${
+			dataExcel.length - 1
+		} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nHay ${qNewModels} modelos nuevos.\nSe desactivó: ${registrosDesactivados.map(
+			(modelo) => modelo.modelo
+		)}.`;
+		return notification;
 	} catch (error) {
 		console.log("Error en updatesDbPricesFromExcel", error.message);
 		throw error.message;

@@ -1,13 +1,13 @@
 import { extractFlowToken_1Responses } from "./extractFlowToken_1Responses.js";
 import { extractFlowToken_2Responses } from "./extractFlowToken_2Responses.js";
 
-export const extractFlowResponses = (userMessage) => {
+export const extractFlowResponses = async (userMessage) => {
 	let finalNotification = "";
 	const flowMessage = userMessage.message
 
 	if (flowMessage.includes('"flow_token":"1"')) {
 		// FLOW_TOKEN = 1 
-		const extraction = extractFlowToken_1Responses(flowMessage);
+		const extraction = await extractFlowToken_1Responses(flowMessage);
 		
 		// Verificar si extraction comienza con "¡IMPORTANTE!"
 		if (extraction.includes("IMPORTANTE:")) {
@@ -36,7 +36,7 @@ export const extractFlowResponses = (userMessage) => {
 	}
 };
 
-/* extractFlowResponses({
+extractFlowResponses({
   name: 'gustavo gomez villafane',
   userPhone: '5491161405589',
   channel: 'whatsapp',
@@ -45,4 +45,4 @@ export const extractFlowResponses = (userMessage) => {
   audioId: '',
   imageId: '',
   documentId: ''
-}); */ 
+});  
