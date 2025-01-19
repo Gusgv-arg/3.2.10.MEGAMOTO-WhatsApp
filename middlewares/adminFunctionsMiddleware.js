@@ -16,6 +16,8 @@ import { processPedidoYa } from "../functions/processPedidoYa.js";
 import { scrapeMercadoLibre } from "../functions/scrapeMercadoLibre.js";
 import { scrapeFacebook } from "../functions/scrapeFacebook.js";
 import { processTemplateExcel } from "../functions/processTemplateExcel.js";
+import { pricesModelCreation } from "../utils/dataBase/pricesModelCreation.js";
+import { updateDbPricesFromExcel } from "../utils/dataBase/updatesDbPricesFromExcel.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
@@ -147,28 +149,40 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await scrapeFacebook(userPhone);
 			} else if (message.startsWith("plantilla")) {
 				res.status(200).send("EVENT_RECEIVED");
-
+				
 				// Template format: "plantilla" "template name"
 				const parts = message.split(" ");
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
-
+				
 				// Get the Document URL from WhatsApp
 				const document = await getMediaWhatsappUrl(documentId);
 				const documentUrl = document.data.url;
 				//console.log("Document URL:", documentUrl);
-
+				
 				// Download Document from WhatsApp
 				const documentBuffer = await downloadWhatsAppMedia(documentUrl);
 				const documentBufferData = documentBuffer.data;
 				//console.log("Document download:", documentBufferData);
-
+				
 				// Call the new function to process the campaign
 				await processTemplateExcel(
 					documentBufferData,
 					templateName,
 					campaignName
 				);
+				
+			} else if (message === "crear precios") {
+				await pricesModelCreation();
+				
+				res.status(200).send("EVENT_RECEIVED");
+				
+			} else if (message === "actualizar precios") {
+				const notification = await updateDbPricesFromExcel();
+				
+				await adminWhatsAppNotification(userPhone, notification);
+				
+				res.status(200).send("EVENT_RECEIVED");
 			} else {
 				// Does next if its an admin message but is not an instruction
 				next();
