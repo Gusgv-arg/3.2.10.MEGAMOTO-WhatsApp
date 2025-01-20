@@ -8,7 +8,7 @@ const myPhone2 = process.env.MY_PHONE2;
 const myMail = process.env.MY_MAIL;
 const myMail2 = process.env.MY_MAIL2;
 
-export const exportLeadsToExcel = async (userPhone) => {
+export const exportCampaignsToExcel = async (userPhone) => {
 	
 	// Determine which Admin has sent the order
 	let mail;
@@ -66,8 +66,9 @@ export const exportLeadsToExcel = async (userPhone) => {
 
 		// Envía el archivo por correo electrónico
 		await sendLeadsByMail(filePath, mail, userPhone);
+
 	} catch (error) {
-		console.error("Error in exportLeadsToExcel.js:", error.message);
+		console.error("Error in exportCampaignsToExcel.js:", error.message);
 		throw error;
 	}
 };

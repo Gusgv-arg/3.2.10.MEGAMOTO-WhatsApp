@@ -143,6 +143,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		// Enviar el archivo Excel por WhatsApp (opcional)
 		const fileName = "Precios Mercado Libre";
 		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
+		
 	} catch (error) {
 		console.log("Error en scrapeMercadoLibre.js:", error.message);
 		let errorMessage;

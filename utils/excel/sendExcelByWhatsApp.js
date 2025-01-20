@@ -27,13 +27,13 @@ export const sendExcelByWhatsApp = async (userPhone, fileUrl, fileName) => {
 			})
 			.catch((error) => {
 				console.error(
-					"Error enviando a Facebook------------>",
+					"Error enviando Excel x WhatsApp:",
 					error.response ? error.response.data : error.message
 				);
 			});
 
 		if (response.data) {
-			console.log("Excel enviado por whatsApp al Admin!", response.data);
+			console.log(`${fileName} enviado por whatsApp a ${userPhone}`, response.data);
 		}
 	} catch (error) {
 		console.log(
