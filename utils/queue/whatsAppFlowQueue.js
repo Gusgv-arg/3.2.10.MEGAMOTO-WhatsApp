@@ -2,6 +2,7 @@ import { saveMessageInDb } from "../dataBase/saveMessageInDb.js";
 import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
 import { processWhatsAppFlowWithApi } from "../whatsapp/processWhatsAppFlowWithApi.js";
 import { errorMessage1 } from "../errors/errorMessages.js";
+import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -33,7 +34,7 @@ export class WhatsAppFlowMessageQueue {
 				const response = await processWhatsAppFlowWithApi(userMessage);
 				console.log(`Flow de ${userMessage.name}: ${response}`);
 			} catch (error) {
-				console.error(`14. Error in messageQueue.js: ${error.message}`);
+				console.error(`Error in whatsAppMFlowQueue.js: ${error.message}`);
 
 				// Change flag to allow next message processing
 				queue.processing = false;

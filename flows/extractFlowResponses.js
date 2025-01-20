@@ -36,13 +36,13 @@ export const extractFlowResponses = async (userMessage) => {
 	}
 };
 
-extractFlowResponses({
+/* extractFlowResponses({
   name: 'gustavo gomez villafane',
   userPhone: '5491161405589',
   channel: 'whatsapp',
-  message: '{"Seleccionar lo que corresponda":{"0":"Efectivo, Transferencia o Tarjeta de Débito","1":"Tarjeta de Crédito"},"Motomel":"BLITZ 110 V8 BASE ONE - B1 Automatica - NEW","Suzuki":"AX100","flow_token":"1"}',
+  message: '{"DNI":"20441170","Seleccionar lo que corresponda":{"0":"Préstamo Personal"},"Motomel":"BLITZ 110 V8 START","flow_token":"1"}',
   type: 'interactive',
   audioId: '',
   imageId: '',
   documentId: ''
-});  
+}); */  

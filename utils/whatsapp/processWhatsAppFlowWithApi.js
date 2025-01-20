@@ -11,7 +11,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 	try {
 		if (type === "interactive") {
 			// Llama a función para identificar el Flow TOKEN y extraer la información
-			const responses = extractFlowResponses(userMessage);
+			const responses = await extractFlowResponses(userMessage);
 
 			const { finalNotification, flowToken } = responses;
 
@@ -41,7 +41,8 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				return log;
 
 			} else if (flowToken.startsWith("2")) {
-			
+			console.log("entre en token 2")
+
 			}
 		} else {
 			console.log(

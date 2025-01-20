@@ -45,8 +45,24 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				}
 			} else if (notification.includes("¡Gracias por confiar en Megamoto!")) {
 				// Envío completo del FLOW 1
-				lastFlow.client_status = "respuesta";
-				lastFlow.history += `${currentDateTime} - Status: respuesta. `;
+
+				// Extraer informacion de la notificacion
+				const brandMatch = notification.match(/Marca: ([^\n]+)/);
+				const modelMatch = notification.match(/Modelo: ([^\n]+)/);
+				const paymentMatch = notification.match(
+					/Método de pago: (.*?)(?=\s*DNI:)/
+				);
+				const dniMatch = notification.match(/DNI: (\d+)/);
+
+				// Actualiza marca, modelo, método de pago y DNI
+				if (brandMatch) lastFlow.brand = brandMatch[1].trim();
+				if (modelMatch) lastFlow.model = modelMatch[1].trim();
+				if (paymentMatch) lastFlow.payment = paymentMatch[1].trim();
+				if (dniMatch) lastFlow.dni = parseInt(dniMatch[1]);
+
+				// Cambio del status del lead
+				lastFlow.client_status = "esperando";
+				lastFlow.history += `${currentDateTime} - Status: esperando. `;
 			}
 
 			// Update lead

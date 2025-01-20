@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 const flowDetailSchema = new mongoose.Schema({
 	flowName: String,
 	flowDate: String,
-	client_status: { type: String, enum: ["contactado", "respuesta", "falta DNI", "falta modelo", "faltan modelo y DNI", "error","transferido al vendedor", "vendedor", "vendedor más tarde", "vendedor derivado", "compró", "sin definición", "no compró"] },
+	client_status: { type: String, enum: ["contactado", "esperando", "falta DNI", "falta modelo", "faltan modelo y DNI", "error","transferido al vendedor", "vendedor", "vendedor más tarde", "vendedor derivado", "compró", "sin definición", "no compró"] },
 	brand: {type: String, enum : ["Benelli", "Suzuki", "Sym", "Motomel", "Keeway", "Tarpan", "Teknial eléctricas", "TVS", "No sé"]},
 	model: String,
-	payment: {type: String, enum: ["contado", "tarjeta", "préstamo"]},
+	payment: String,
 	dni: Number,
 	messages: String,
 	vendor_name: String,
