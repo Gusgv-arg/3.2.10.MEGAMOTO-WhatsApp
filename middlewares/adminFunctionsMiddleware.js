@@ -203,7 +203,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			// Genera un Excel con los datos 
 			const excelFile = await exportFlowLeadsToExcel(queue)
 			console.log("excel:", excelFile)
-			
+
 			// Se envía el Excel por WhatsApp
 			await sendExcelByWhatsApp(userPhone, excelFile, "Leads")
 		
