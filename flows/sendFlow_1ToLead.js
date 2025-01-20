@@ -2,6 +2,7 @@ import axios from "axios";
 import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppNotification.js";
 import Leads from "../models/leads.js";
 import { searchFlow_1Structure } from "./searchFlow_1Structure.js";
+import { DeviceRequestPromptManager } from "puppeteer";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
@@ -48,33 +49,10 @@ export const sendFlow_1ToLead = async (userMessage) => {
 			headers: { "Content-Type": "application/json" },
 		});
 
-		/* // Looks existent lead
-		let lead = await Leads.findOne({ id_user: userMessage.userPhone });
-
-		// Si no hay Flows o el Lead esta en la Fila se agrega un Flow
-		if (
-			lead.flows.length === 0 ||
-			lead.flows[lead.flows.length - 1].client_status === "compró" ||
-			lead.flows[lead.flows.length - 1].client_status === "no compró"
-		) {
-			// Add a new flow to the lead
-			lead.flows.push({
-				messages: `${currentDateTime} - API: envió mensaje de bienvenida y un segundo mensaje con el Flow 1.`,
-				history: `${currentDateTime} Status: contactado.`,
-			});
-			
-			
-		} else {
-			lead.flows[
-				lead.flows.length - 1
-			].messages += `${currentDateTime} - API: envió mensaje de bienvenida y un segundo mensaje con el Flow 1`;
-			lead.flows[
-				lead.flows.length - 1
-			].history += `${currentDateTime} - Status: contactado`;
-
-		}
-
-		await lead.save(); */
+		//console.log("Id del whatsApp FLOW1 enviado:", response.data.messages[0].id)
+		const wamId = response.data.messages[0].id
+		return wamId
+		
 	} catch (error) {
 		console.error(
 			`Error en sendFlow_1ToLead.js:`,

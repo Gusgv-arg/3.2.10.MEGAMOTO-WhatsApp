@@ -2,7 +2,7 @@ import Leads from "../../models/leads.js";
 import { extractFlowResponses } from "../../flows/extractFlowResponses.js";
 import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 import { sendFlow_1ToLead } from "../../flows/sendFlow_1ToLead.js";
-import {saveNotificationInDb} from "../dataBase/saveNotificationInDb.js"
+import { saveNotificationInDb } from "../dataBase/saveNotificationInDb.js";
 
 export const processWhatsAppFlowWithApi = async (userMessage) => {
 	const type = userMessage.type;
@@ -20,29 +20,30 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				await handleWhatsappMessage(userMessage.userPhone, finalNotification);
 
 				// Verificar que la respuesta esté completa
-				if (finalNotification.includes("IMPORTANTE")){
-					// Se vuelve a enviar el FLOW 1
-					await sendFlow_1ToLead(userMessage)
+				if (finalNotification.includes("IMPORTANTE")) {
 					
+					// Se vuelve a enviar el FLOW 1 y me hago del wamId
+					const wamId_Flow1 = await sendFlow_1ToLead(userMessage);
+
+					// Agrego el wamId al objeto userMessage para traquear status FLOW1
+					userMessage.wamId_Flow1 = wamId_Flow1;
+
 					// Guarda en BD
-					await saveNotificationInDb(userMessage, finalNotification)
-					
+					await saveNotificationInDb(userMessage, finalNotification);
+
 					// Actualiza el log
 					log = `1-Se extrajo la respuesta del Flow 1. 2-Se mandó whatsapp al lead x respuesta incompleta. 3-Se reenvió FLOW 1. `;
-					
 				} else {
 					// Guarda en BD
-					await saveNotificationInDb(userMessage, finalNotification)
-					
+					await saveNotificationInDb(userMessage, finalNotification);
+
 					// Actualiza el log
 					log = `1-Se extrajo la respuesta del Flow 1. 2-Se mandó whatsapp al lead de que un vendedor lo estará contactando.`;
 				}
 
 				return log;
-
 			} else if (flowToken.startsWith("2")) {
-			console.log("entre en token 2")
-
+				console.log("entre en token 2");
 			}
 		} else {
 			console.log(

@@ -134,7 +134,9 @@ export const updateDbPricesFromExcel = async () => {
 		} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nHay ${qNewModels} modelos nuevos.\nSe desactivó: ${registrosDesactivados.map(
 			(modelo) => modelo.modelo
 		)}.`;
+
 		return notification;
+	
 	} catch (error) {
 		console.log("Error en updatesDbPricesFromExcel", error.message);
 		throw error.message;

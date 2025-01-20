@@ -27,20 +27,20 @@ export const sendExcelByWhatsApp = async (userPhone, fileUrl, fileName) => {
 			})
 			.catch((error) => {
 				console.error(
-					"Error enviando Excel x WhatsApp:",
+					`Error enviando ${fileName} x WhatsApp a ${userPhone}:`,
 					error.response ? error.response.data : error.message
 				);
 			});
 
 		if (response.data) {
-			console.log(`${fileName} enviado por whatsApp a ${userPhone}`, response.data);
+			console.log(`Archivo ${fileName} enviado por whatsApp a ${userPhone}`);
 		}
 	} catch (error) {
 		console.log(
 			"Error in sendExcelByWhatsApp.js:",
 			error.response ? error.response.data : error.message
 		);
-		const errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema enviando el Excel por WhatsApp: ${
+		const errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema enviando el Excel  ${fileName} por WhatsApp: ${
 			error.response ? error.response.data : error.message
 		}`;
 		adminWhatsAppNotification(userPhone, errorMessage);

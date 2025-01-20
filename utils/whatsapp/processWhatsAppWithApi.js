@@ -24,10 +24,13 @@ export const processWhatsAppWithApi = async (userMessage) => {
 
 			await handleWhatsappMessage(userMessage.userPhone, greeting);
 
-			// Envía el Flow 1 al lead
-			await sendFlow_1ToLead(userMessage);
+			// Envía el Flow 1 al lead y me hago del wamId
+			const wamId_Flow1 = await sendFlow_1ToLead(userMessage);
 			
-			// Graba notificación al cliente en la BDs 
+			// Agrego el wmId al objeto userMessage para traquear status FLOW1
+			userMessage.wamId_Flow1 = wamId_Flow1
+						
+			// Graba notificación al cliente en la BDs  
 			await saveNotificationInDb(userMessage, greeting);
 
 			// Actualiza el log

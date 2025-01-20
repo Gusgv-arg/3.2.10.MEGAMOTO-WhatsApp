@@ -75,7 +75,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 				imageId: imageId ? imageId : "",
 				documentId: documentId ? documentId : "",
 			};
-			console.log("Objeto creado userMessage:", userMessage)
+			//console.log("Objeto creado userMessage:", userMessage)
 
 			// Distribution to different Queues
 			if (type === "interactive") {

@@ -5,13 +5,15 @@ import { adminFunctionsMiddleware } from "../middlewares/adminFunctionsMiddlewar
 import { whatsAppGeneralBotSwitchMiddleware } from "../middlewares/whatsAppGeneralBotSwitchMiddleware.js";
 import { postWhatsAppCampaign } from "../functions/postWhatsAppCampaign.js";
 import { statusMiddleware } from "../middlewares/statusMiddleware.js";
+import { statusFlowsMiddleware } from "../middlewares/statusFlowsMiddleware.js";
 
 const whatsappRouter = express.Router();
 
 whatsappRouter.get("/", getWhatsappWebhookController);
 whatsappRouter.post(
 	"/",
-	statusMiddleware,
+	//statusMiddleware,
+	statusFlowsMiddleware,
 	adminFunctionsMiddleware,
 	whatsAppGeneralBotSwitchMiddleware,
 	postWhatsappWebhookController

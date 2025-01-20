@@ -181,17 +181,12 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				campaignName
 			);
 		
-		} else if (message === "crear precios") {
-			await pricesModelCreation();
-
-			res.status(200).send("EVENT_RECEIVED");
-		
 		} else if (message === "actualizar precios") {
+			res.status(200).send("EVENT_RECEIVED");
+
 			const notification = await updateDbPricesFromExcel();
 
 			await adminWhatsAppNotification(userPhone, notification);
-
-			res.status(200).send("EVENT_RECEIVED");
 		
 		} else if (message === "fila") {
 			res.status(200).send("EVENT_RECEIVED");

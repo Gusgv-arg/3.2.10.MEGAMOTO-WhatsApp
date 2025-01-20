@@ -1,7 +1,7 @@
 import Prices from '../../models/prices.js';
 import { precios } from '../../excel/listaDePrecios.js';
 
-// Función para insertar los precios en la base de datos
+// Función para crear la base de datos - se una una sola vez!!!!!
 export const pricesModelCreation = async (req, res) => {
   try {
     // Elimina todos los documentos existentes en la colección Prices

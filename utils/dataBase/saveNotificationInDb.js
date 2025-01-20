@@ -63,7 +63,11 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				// Cambio del status del lead
 				lastFlow.client_status = "esperando";
 				lastFlow.history += `${currentDateTime} - Status: esperando. `;
-			}
+				
+			} else if (userMessage.wamId_Flow1){
+				// Grabo el wamId
+				lastFlow.wamId_flow1 = userMessage.wamId_Flow1;
+			}			
 
 			// Update lead
 			await lead.save();
