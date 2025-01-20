@@ -14,18 +14,18 @@ export const exportFlowLeadsToExcel = async (leads) => {
         // Definir las columnas
         worksheet.columns = [
             { header: 'Nombre', key: 'nombre', width: 20 },
-            { header: 'ID Usuario', key: 'idUsuario', width: 20 },
-            { header: 'Bot Switch', key: 'botSwitch', width: 20 },
+            { header: 'Teléfono', key: 'idUsuario', width: 20 },
             { header: 'Estado', key: 'estado', width: 20 },
-            { header: 'Fecha Flow', key: 'fechaFlow', width: 20 },
-            { header: 'Fecha a Contactar', key: 'fechaContactar', width: 20 },
+            { header: 'Primer Contacto', key: 'fechaFlow', width: 20 },
             { header: 'Marca', key: 'marca', width: 20 },
             { header: 'Modelo', key: 'modelo', width: 20 },
             { header: 'Forma de Pago', key: 'formaPago', width: 20 },
             { header: 'DNI', key: 'dni', width: 20 },
             { header: 'Vendedor', key: 'vendedor', width: 20 },
             { header: 'Teléfono Vendedor', key: 'telefonoVendedor', width: 20 },
+            { header: 'Fecha a Contactar', key: 'fechaContactar', width: 20 },
             { header: 'Estado del Flow', key: 'estadoFlow', width: 20 },
+            { header: 'Switch', key: 'botSwitch', width: 20 },
             { header: 'Error', key: 'error', width: 20 }
         ];
 
