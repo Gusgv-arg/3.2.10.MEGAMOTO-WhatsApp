@@ -20,6 +20,7 @@ import { pricesModelCreation } from "../utils/dataBase/pricesModelCreation.js";
 import { updateDbPricesFromExcel } from "../utils/dataBase/updatesDbPricesFromExcel.js";
 import { findFlowLeadsForVendors } from "../utils/dataBase/findFlowLeadsForVendors.js";
 import { exportFlowLeadsToExcel } from "../utils/excel/exportFlowLeadsToExcel.js";
+import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
@@ -202,7 +203,9 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			// Genera un Excel con los datos 
 			const excelFile = await exportFlowLeadsToExcel(queue)
 			console.log("excel:", excelFile)
+			
 			// Se envía el Excel por WhatsApp
+			await sendExcelByWhatsApp(userPhone, excelFile, "Leads")
 		
 		} else {
 			// Does next if its an admin message but is not an instruction
