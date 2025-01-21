@@ -24,13 +24,14 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	const buscarPrecios = async (modelo) => {
 		const precioData = await Prices.findOne({ modelo }); 
 		return precioData ? precioData.precio : "No disponible"; 
-	};
+	}; 
 	
 	// Crear la notificación con la información extraída
 	if (marcasEncontradas.length > 0) {
 		for (const modelo of modelosEncontrados) {
 			const precio = await buscarPrecios(modelo); // Obtener el precio
 			const precioFormateado = typeof precio === 'number' ? precio.toLocaleString('es-AR', { style: 'decimal', minimumFractionDigits: 0 }) : precio; // Formatear el precio
+			//const precioFormateado = 1111 // descomentar cuando hago pruebas en local
 		extraction += `Marca: ${marcasEncontradas[modelosEncontrados.indexOf(modelo)]}\nModelo: ${modelo}\nPrecio: $ ${precioFormateado} - No incluye patentamiento y es a reconfirmar por el vendedor\n`;
 	}
 
@@ -40,16 +41,15 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	}
 
 	// Extraer el método de pago
-	const metodoPagoRegex = /"Seleccionar lo que corresponda":{([^}]*)}/;
+	const metodoPagoRegex = /"Seleccionar lo que corresponda":\[(.*?)\]/;
 	const metodoPagoMatch = flowMessage.match(metodoPagoRegex);
 	let metodoPagoArray = [];
 
 	if (metodoPagoMatch) {
-		const opcionesRegex = /"(\d+)":"([^"]+)"/g;
-		let match;
-		while ((match = opcionesRegex.exec(metodoPagoMatch[1])) !== null) {
-			metodoPagoArray.push(match[2]);
-		}
+		metodoPagoArray = metodoPagoMatch[1]
+			.split(',')
+			.map(item => item.trim().replace(/"/g, ''))
+			.map(item => item.replace(/\\u00e9/g, 'é')); // Decodifica caracteres Unicode si es necesario
 		extraction += `Método de pago: ${metodoPagoArray.join(", ")}\n`;
 	}
 

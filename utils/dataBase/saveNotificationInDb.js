@@ -53,12 +53,16 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 					/Método de pago: (.*?)(?=\s*DNI:)/
 				);
 				const dniMatch = notification.match(/DNI: (\d+)/);
+				const priceMatch = notification.match(/Precio: \$\s*([0-9.,]+)/);
+				const questionsMatch = notification.match(/Preguntas o comentarios: ([^\n]+)/);
 
 				// Actualiza marca, modelo, método de pago y DNI
 				if (brandMatch) lastFlow.brand = brandMatch[1].trim();
 				if (modelMatch) lastFlow.model = modelMatch[1].trim();
 				if (paymentMatch) lastFlow.payment = paymentMatch[1].trim();
 				if (dniMatch) lastFlow.dni = parseInt(dniMatch[1]);
+				if (priceMatch) lastFlow.price = priceMatch[1].trim();
+				if (questionsMatch) lastFlow.questions = questionsMatch[1].trim();
 
 				// Cambio del status del lead
 				lastFlow.client_status = "esperando";

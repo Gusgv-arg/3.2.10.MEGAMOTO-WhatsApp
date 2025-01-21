@@ -40,7 +40,7 @@ export const extractFlowResponses = async (userMessage) => {
   name: 'gustavo gomez villafane',
   userPhone: '5491161405589',
   channel: 'whatsapp',
-  message: '{"DNI":"20441170","Seleccionar lo que corresponda":{"0":"Préstamo Personal"},"Motomel":"BLITZ 110 V8 START","flow_token":"1"}',
+  message: '{"Preguntas":"Hol","Seleccionar lo que corresponda":["Efectivo, Transferencia o Tarjeta de D\\u00e9bito"],"Motomel":"BLITZ 110 V8 START","flow_token":"1"}',
   type: 'interactive',
   audioId: '',
   imageId: '',

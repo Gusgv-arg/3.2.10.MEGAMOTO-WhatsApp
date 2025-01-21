@@ -9,7 +9,7 @@ const whatsAppFlowQueue = new WhatsAppFlowMessageQueue();
 // Function that distributes to each Queue depending on its type
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
-	console.log("Messages-->", body.entry[0].changes[0].value.messages[0]);
+	//console.log("Messages-->", body.entry[0].changes[0].value.messages[0]);
 	const type = body?.entry[0]?.changes[0]?.value?.messages[0]?.type;
 
 	let audioId;
@@ -75,7 +75,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 				imageId: imageId ? imageId : "",
 				documentId: documentId ? documentId : "",
 			};
-			//console.log("Objeto creado userMessage:", userMessage)
+			console.log("Objeto creado userMessage:", userMessage)
 
 			// Distribution to different Queues
 			if (type === "interactive") {

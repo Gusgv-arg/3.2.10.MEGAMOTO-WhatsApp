@@ -603,11 +603,11 @@ const flow1 = {   "version": "6.0",
 }
 
 const flow2= {
-  "version": "6.0",
+  "version": "6.3",
   "screens": [
     {
       "id": "QUESTION_ONE",
-      "title": "Atención del Lead",
+      "title": "Gestionar Lead",
       "data": {},
       "terminal": true,
       "layout": {
@@ -618,42 +618,47 @@ const flow2= {
             "name": "flow_path",
             "children": [
               {
-                "type": "RadioButtonsGroup",
-                "label": "Tomar Lead",
-                "required": false,
-                "name": "Tomar Lead",
+                "type": "Dropdown",
+                "label": "Atención del Lead",
+                "required": true,
+                "name": "Atención del Lead",
                 "data-source": [
                   {
-                    "id": "Atender",
-                    "title": "Atender"
+                    "id": "Atender ahora",
+                    "title": "Atender ahora"
                   },
                   {
                     "id": "Atender más tarde",
                     "title": "Atender más tarde"
+                  },
+                  {
+                    "id": "Derivar a Gustavo Glunz",
+                    "title": "Derivar a Gustavo Glunz"
+                  },
+                  {
+                    "id": "Derivar a Gustavo G.Villafañe",
+                    "title": "Derivar a Gustavo G.Villafañe"
+                  },
+                  {
+                    "id": "Derivar a Joana",
+                    "title": "Derivar a Joana"
                   }
                 ]
               },
               {
-                "type": "RadioButtonsGroup",
-                "label": "Derivar Lead",
+                "type": "TextInput",
+                "label": "A contactar en días",
+                "name": "A contactar en días",
                 "required": false,
-                "name": "Derivar Lead",
-                "data-source": [
-                  {
-                    "id": "Gustavo Glunz",
-                    "title": "Gustavo Glunz"
-                  },
-                  {
-                    "id": "Gustavo Gómez Villafañe",
-                    "title": "Gustavo Gómez Villafañe"
-                  }
-                ]
+                "input-type": "number",
+                "helper-text": "Si seleccionó Atender más tarde, colocar cantidad de días a partir de hoy"
               },
               {
                 "type": "TextArea",
-                "label": "Notas sobre el lead",
+                "label": "Notas",
                 "required": false,
-                "name": "Notas sobre el lead"
+                "name": "Notas",
+                "helper-text": "Información importante sobre el Lead"
               },
               {
                 "type": "Footer",
@@ -661,9 +666,9 @@ const flow2= {
                 "on-click-action": {
                   "name": "complete",
                   "payload": {
-                    "Tomar Lead": "${form.Tomar Lead}",
-                    "Derivar Lead": "${form.Derivar Lead}",
-                    "Notas sobre el lead": "${form.Notas sobre el lead}"
+                    "Atención del Lead": "${form.Atención del Lead}",
+                    "A contactar en días": "${form.A contactar en días}",
+                    "Notas": "${form.Notas}"
                   }
                 }
               }
