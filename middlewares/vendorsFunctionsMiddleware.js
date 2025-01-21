@@ -58,16 +58,13 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			
 			// Se notifica al vendedor por si no ve el Flow
 			const notification = "*Notificación automática:*\nSe te está por enviar un FLOW para asignarte un Lead. Si estas en tu pc y no lo ves entrá en WhatsApp desde tu celular.\n¡Buena suerte con tu venta!\n\nMegamoto"
-			
 			const vendorPhone = userPhone;
-			
+
 			await handleWhatsappMessage(vendorPhone, notification)
 
 			// Se envía el FLOW 2 al vendedor
-			
 			await salesFlow_2Notification( myLead, vendorPhone);
-			
-		
+					
 		} else {
 			next();
 		}

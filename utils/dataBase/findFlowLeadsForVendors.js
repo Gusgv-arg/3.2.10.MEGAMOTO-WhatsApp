@@ -70,6 +70,7 @@ export const findFlowLeadsForVendors = async () => {
 							price: lastFlow.price,
 							payment: lastFlow.payment,
 							dni: lastFlow.dni,
+							questions: lastFlow.questions,
 							messages: lastFlow.messages,
 							vendor_name: lastFlow.vendor_name,
 							vendor_phone: lastFlow.vendor_phone,

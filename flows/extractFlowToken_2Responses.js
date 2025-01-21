@@ -3,7 +3,7 @@ export const extractFlowToken_2Responses = (userMessage) => {
 
 	// Extraer la respuesta del vendedor
 	if (userMessage.message.includes("Tomar Lead")){
-		const regex = /"Tomar Lead":"([^"]+)"/;
+		const regex = /"Atención del Lead":"([^"]+)"/;
 		const atención = userMessage.message.match(regex);
 		extraction += `Respuesta del Vendedor: ${atención[1]}\n`;
 	}

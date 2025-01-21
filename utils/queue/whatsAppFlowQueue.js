@@ -33,8 +33,9 @@ export class WhatsAppFlowMessageQueue {
 				// Process the message
 				const response = await processWhatsAppFlowWithApi(userMessage);
 				console.log(`Flow de ${userMessage.name}: ${response}`);
+
 			} catch (error) {
-				console.error(`Error in whatsAppMFlowQueue.js: ${error.message}`);
+				console.error(`Error in whatsAppFlowQueue.js: ${error.message}`);
 
 				// Change flag to allow next message processing
 				queue.processing = false;

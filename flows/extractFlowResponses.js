@@ -24,6 +24,7 @@ export const extractFlowResponses = async (userMessage) => {
 			return { finalNotification, flowToken };
 		}
 	} else if (userMessage.message.includes('"flow_token":"2')) {
+		console.log("Eentreee")
 		// FLOW_TOKEN = 2
 		const responses = extractFlowToken_2Responses(userMessage.message);
 		const { extraction, flowToken } = responses;
@@ -40,9 +41,9 @@ export const extractFlowResponses = async (userMessage) => {
   name: 'gustavo gomez villafane',
   userPhone: '5491161405589',
   channel: 'whatsapp',
-  message: '{"Preguntas":"Hol","Seleccionar lo que corresponda":["Efectivo, Transferencia o Tarjeta de D\\u00e9bito"],"Motomel":"BLITZ 110 V8 START","flow_token":"1"}',
+  message: '{"Atenci\\u00f3n del Lead":"Atender ahora","flow_token":"25c80d5f2-7092-4cb4-86a7-47f5d135aa1a"}',
   type: 'interactive',
   audioId: '',
   imageId: '',
   documentId: ''
-}); */  
+});   */
