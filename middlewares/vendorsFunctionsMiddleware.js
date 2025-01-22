@@ -52,31 +52,39 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 			// Se buscan los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
-
+			console.log("allLeads", allLeads)
 			// Chequea que haya más de 1 registro
-			if (allLeads.lenght > 0) {
-				// Llama función q toma el lead más viejo entre creación y toContact
-				const oneLead = findOneLeadForVendor(allLeads);
+			if (allLeads.length > 0) {
+				// Filtra leads donde vendor_phone esté vacío o no exista
+				const availableLeads = allLeads.filter((lead) => {
+					return !lead.lastFlow.vendor_phone;
+				});
+				console.log("available leads:", availableLeads)
 
-				const { myLead, flow_2Token } = oneLead;
-				// Se notifica al vendedor por si no ve el Flow
-				const notification =
-					"*Notificación Automática:*\nSe te está por enviar un FLOW para asignarte un Lead. Si estas en tu pc y no lo ves entrá en WhatsApp desde tu celular.\n\nMegamoto";
-				const vendorPhone = userPhone;
-				
-				await handleWhatsappMessage(vendorPhone, notification);
-				
-				// Se envía el FLOW 2 al vendedor
-				await salesFlow_2Notification(myLead, vendorPhone, flow_2Token);
-			
-			} else {
-				const vendorPhone = userPhone;
-				const notification =
-					"*Notificación Automática:*\nLamentablemente no hay Leads que atender.\n\NMegamoto";
+				if (availableLeads.length>0) {
+					// Llama función q toma el lead más viejo entre creación y toContact
+					const oneLead = findOneLeadForVendor(availableLeads);
+					const { myLead, flow_2Token } = oneLead;
 
-				await handleWhatsappMessage(vendorPhone, notification);
+					// Se notifica al vendedor por si no ve el Flow
+					const notification =
+						"*Notificación Automática:*\nSe te está por enviar una Notificación para asignarte un Lead. Si estas en tu pc y no la ves entrá en WhatsApp desde tu celular.\n\nMegamoto";
+					const vendorPhone = userPhone;
 
-				// A FUTURO GENERAR UNA ALARMA AL ADMIN!!
+					await handleWhatsappMessage(vendorPhone, notification);
+
+					// Se envía el FLOW 2 al vendedor
+					await salesFlow_2Notification(myLead, vendorPhone, flow_2Token);
+
+				} else {
+					const vendorPhone = userPhone;
+					const notification =
+						"*Notificación Automática:*\nLamentablemente no hay Leads que atender.\nMegamoto";
+
+					await handleWhatsappMessage(vendorPhone, notification);
+
+					// A FUTURO GENERAR UNA ALARMA AL ADMIN!!
+				}
 			}
 		} else {
 			next();

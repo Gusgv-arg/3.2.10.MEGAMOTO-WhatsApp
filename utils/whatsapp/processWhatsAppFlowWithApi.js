@@ -4,6 +4,7 @@ import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 import { sendFlow_1ToLead } from "../../flows/sendFlow_1ToLead.js";
 import { saveNotificationInDb } from "../dataBase/saveNotificationInDb.js";
 import { findLeadWithFlowToken2 } from "../dataBase/findLeadWithFlowToken2.js";
+import { sendVendorDataToLead } from "../templates/sendVendorDataToLead.js";
 
 export const processWhatsAppFlowWithApi = async (userMessage) => {
 	const type = userMessage.type;
@@ -59,8 +60,9 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					console.log("customer:", customerData)
 
 					const {customerPhone, customerName} = customerData
+
 					// 2-Notificar cliente mediante un template (porque pueden pasar 24hs).
-					
+					await sendVendorDataToLead(customerPhone, customerName, vendorPhone, vendorName)
 
 				} else if (finalNotification.includes("Derivar a")){
 					 

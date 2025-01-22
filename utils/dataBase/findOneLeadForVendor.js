@@ -1,7 +1,7 @@
 // Función que toma el lead mas viejo o el que tiene toContact mas viejo y lo devuelve
 // A futuro hay que modificarla para que priorize x el índice entre stock, antiguedad, etc
-export const findOneLeadForVendor = (allLeads) => {
-	const lead = allLeads.reduce((oldest, current) => {
+export const findOneLeadForVendor = (availableLeads) => {
+	const lead = availableLeads.reduce((oldest, current) => {
 		if (!oldest) return current;
 
 		const currentDate = Date.parse(current.lastFlow.flowDate.replace(",", ""));

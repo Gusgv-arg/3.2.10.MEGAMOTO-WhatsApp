@@ -1,12 +1,9 @@
 import axios from "axios";
-import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppNotification.js";
-import Leads from "../models/leads.js";
-import { searchFlow_1Structure } from "./searchFlow_1Structure.js";
-import { DeviceRequestPromptManager } from "puppeteer";
+import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
+import Leads from "../../models/leads.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
-const appToken = process.env.WHATSAPP_APP_TOKEN;
 
 // Obtain current date and hour
 const currentDateTime = new Date().toLocaleString("es-AR", {
@@ -19,27 +16,43 @@ const currentDateTime = new Date().toLocaleString("es-AR", {
 	second: "2-digit",
 });
 
-export const sendFlow_1ToLead = async (userMessage) => {
+export const sendVendorDataToLead = async (
+	customerPhone,
+	customerName,
+	vendorPhone,
+	vendorName
+) => {
 	// URL where to post
 	const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
-
-	// Search Flow structure for post request
-	const flowStructure = searchFlow_1Structure(
-		process.env.FLOW_1,
-		userMessage.name
-	);
-	const { components, language } = flowStructure;
 
 	// Payload for sending a template with an integrated flow
 	const payload = {
 		messaging_product: "whatsapp",
 		recipient_type: "individual",
-		to: userMessage.userPhone,
+		to: customerPhone,
 		type: "template",
 		template: {
-			name: process.env.FLOW_1,
-			language: { code: language },
-			components: components,
+			name: process.env.TEMPLATE_DATOS_VENDEDOR_PARA_LEAD,
+			language: { code: "es" },
+			components: [
+				{
+					type: "body",
+					parameters: [
+						{
+							type: "text",
+							text: customerName,
+						},
+						{
+							type: "text",
+							text: vendorName,
+						},
+						{
+							type: "text",
+							text: vendorPhone,
+						},
+					],
+				},
+			],
 		},
 	};
 
@@ -49,13 +62,10 @@ export const sendFlow_1ToLead = async (userMessage) => {
 			headers: { "Content-Type": "application/json" },
 		});
 
-		//console.log("Id del whatsApp FLOW1 enviado:", response.data.messages[0].id)
-		const wamId = response.data.messages[0].id
-		return wamId
-		
+		//console.log("Id del whatsApp enviado:", response.data.messages[0].id)
 	} catch (error) {
 		console.error(
-			`Error en sendFlow_1ToLead.js:`,
+			`Error en sendVendorDataToLead.js:`,
 			error?.response?.data
 				? JSON.stringify(error.response.data)
 				: error.message
@@ -68,11 +78,11 @@ export const sendFlow_1ToLead = async (userMessage) => {
 		// Update existing lead
 		lead.flows[
 			lead.flows.length - 1
-		].messages += `${currentDateTime} NO se pudo enviar el Flow 1. Error: ${error.message}`;
+		].messages += `${currentDateTime} NO se pudo notificar al Lead los datos del vendedor. Error: ${error.message}`;
 		await lead.save();
 
 		// Notify Error to the Admin
-		const message = `*NOTIFICACION DE ERROR:* Hubo un error al enviar el Flow 1 al cliente ${userMessage.name}.\nError: ${error.message}`;
+		const message = `*NOTIFICACION DE ERROR:* Hubo un error al enviar los datos del vendedor al Lead ${userMessage.name}.\nError: ${error.message}`;
 		await adminWhatsAppNotification(message);
 	}
 };

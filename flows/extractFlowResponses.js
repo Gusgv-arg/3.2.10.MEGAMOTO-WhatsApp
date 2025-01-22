@@ -43,7 +43,7 @@ export const extractFlowResponses = async (userMessage) => {
   name: 'gustavo gomez villafane',
   userPhone: '5491161405589',
   channel: 'whatsapp',
-  message: '{"Atenci\\u00f3n del Lead":"Atender ahora","flow_token":"2702d1897-39c3-4422-9cf3-55cd8c2fb686"}',
+  message: '{"Atenci\\u00f3n del Lead":"Atender ahora","flow_token":"26"}',
   type: 'interactive',
   audioId: '',
   imageId: '',

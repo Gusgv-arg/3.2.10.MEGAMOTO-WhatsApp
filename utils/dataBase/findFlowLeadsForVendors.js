@@ -51,10 +51,10 @@ export const findFlowLeadsForVendors = async () => {
 
 	return leads
 		.filter((lead) => lead.botSwitch !== "OFF")
-		.filter((lead) => {
+		/* .filter((lead) => {
 			const lastFlow = lead.flows[lead.flows.length - 1];
 			return !lastFlow || !lastFlow.vendor_phone || lastFlow.vendor_phone !== "";
-		})
+		}) */
 		.map((lead) => {
 			const lastFlow =
 				lead.flows.length > 0 ? lead.flows[lead.flows.length - 1] : null;
