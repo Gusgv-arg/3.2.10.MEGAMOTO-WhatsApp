@@ -1,5 +1,4 @@
 import Leads from "../models/leads.js";
-import axios from "axios";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 
 export const saveVendorFlow_2Response = async (

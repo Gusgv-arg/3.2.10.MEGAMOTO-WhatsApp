@@ -23,11 +23,13 @@ export const extractFlowResponses = async (userMessage) => {
 			const flowToken = 1;
 			return { finalNotification, flowToken };
 		}
-	} else if (userMessage.message.includes('"flow_token":"2')) {
-		console.log("Eentreee")
+	} else if (flowMessage.includes('"flow_token":"2')) {
+		
 		// FLOW_TOKEN = 2
-		const responses = extractFlowToken_2Responses(userMessage.message);
+		const responses = extractFlowToken_2Responses(flowMessage);
 		const { extraction, flowToken } = responses;
+		//console.log("Etraction:", extraction)
+
 		finalNotification = extraction;
 		
 		return { finalNotification, flowToken };
@@ -41,9 +43,9 @@ export const extractFlowResponses = async (userMessage) => {
   name: 'gustavo gomez villafane',
   userPhone: '5491161405589',
   channel: 'whatsapp',
-  message: '{"Atenci\\u00f3n del Lead":"Atender ahora","flow_token":"25c80d5f2-7092-4cb4-86a7-47f5d135aa1a"}',
+  message: '{"Atenci\\u00f3n del Lead":"Atender ahora","flow_token":"2702d1897-39c3-4422-9cf3-55cd8c2fb686"}',
   type: 'interactive',
   audioId: '',
   imageId: '',
   documentId: ''
-});   */
+}); */

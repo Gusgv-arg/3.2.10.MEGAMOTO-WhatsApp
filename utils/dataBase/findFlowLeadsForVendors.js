@@ -51,6 +51,10 @@ export const findFlowLeadsForVendors = async () => {
 
 	return leads
 		.filter((lead) => lead.botSwitch !== "OFF")
+		.filter((lead) => {
+			const lastFlow = lead.flows[lead.flows.length - 1];
+			return !lastFlow || !lastFlow.vendor_phone || lastFlow.vendor_phone !== "";
+		})
 		.map((lead) => {
 			const lastFlow =
 				lead.flows.length > 0 ? lead.flows[lead.flows.length - 1] : null;
@@ -75,7 +79,7 @@ export const findFlowLeadsForVendors = async () => {
 							vendor_name: lastFlow.vendor_name,
 							vendor_phone: lastFlow.vendor_phone,
 							history: lastFlow.history,
-							flow_token: lastFlow.flow_token,
+							flow_2token: lastFlow.flow_2token,
 							flow_status: lastFlow.flow_status,
 							error: lastFlow.error,
 					  }

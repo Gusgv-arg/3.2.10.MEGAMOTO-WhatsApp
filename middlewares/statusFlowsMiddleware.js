@@ -9,6 +9,17 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 		? body.entry[0].changes[0].value.statuses[0]
 		: null;
 
+	// Obtain current date and hour
+	const currentDateTime = new Date().toLocaleString("es-AR", {
+		timeZone: "America/Argentina/Buenos_Aires",
+		day: "2-digit",
+		month: "2-digit",
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+	});
+
 	// Check status update && save in DB
 	if (status !== null) {
 		console.log("Id:", status.id, "Status:", status.status);
@@ -52,6 +63,7 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 
 				if (lastFlowRecord.wamId_flow1 === wab_id) {
 					lastFlowRecord.client_status = newStatus;
+					lastFlowRecord.history += `${currentDateTime} - Status: ${newStatus}. `
 					console.log(
 						`Actualizó el status de mensaje de "${lead.name}" a "${newStatus}"`
 					);

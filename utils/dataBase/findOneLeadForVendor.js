@@ -11,9 +11,9 @@ export const findOneLeadForVendor = (allLeads) => {
 	}, null);
 
 	const lastFlow = lead.lastFlow;
-	console.log("lastFlow:", lastFlow)
-	
-	const notification = `Fecha: ${
+	//console.log("lastFlow:", lastFlow);
+
+	const myLead = `Fecha: ${
 		lastFlow.toContact ? lastFlow.toContact : lastFlow.flowDate
 	}. Nombre: ${lead.name}. Celular: ${lead.id_user}. Status: ${
 		lastFlow.client_status
@@ -25,5 +25,7 @@ export const findOneLeadForVendor = (allLeads) => {
 		lastFlow.questions ? lastFlow.questions : ""
 	}`;
 
-	return notification;
+	const flow_2Token = lastFlow.flow_2token;
+	
+	return { myLead, flow_2Token };
 };

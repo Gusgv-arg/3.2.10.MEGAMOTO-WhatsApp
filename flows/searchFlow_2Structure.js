@@ -1,12 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
 
-export const searchFlow_2Structure = (myLead) => {
-	// Generate a flow token && parameters to identify the flow among others
-	let flowToken;
+export const searchFlow_2Structure = (myLead, flow_2Token) => {
 	let components;
 	let language;
-
-	flowToken = `2${uuidv4()}`;
+		
 	components = [
 		/* {
 				type: "header",
@@ -30,7 +26,7 @@ export const searchFlow_2Structure = (myLead) => {
 			type: "BUTTON",
 			sub_type: "flow",
 			index: "0",
-			parameters: [{ type: "action", action: { flow_token: flowToken } }],
+			parameters: [{ type: "action", action: { flow_token: flow_2Token } }],
 		},
 	];
 

@@ -6,13 +6,13 @@ const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 const appToken = process.env.WHATSAPP_APP_TOKEN;
 
-export const salesFlow_2Notification = async ( myLead, vendorPhone) => {
+export const salesFlow_2Notification = async ( myLead, vendorPhone, flow_2Token) => {
 	// URL where to post
 	const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 
 	try {
 		// Search Flow structure for post request
-		const flowStructure = searchFlow_2Structure(myLead);
+		const flowStructure = searchFlow_2Structure(myLead, flow_2Token);
 
 		const { components, language } = flowStructure;
 

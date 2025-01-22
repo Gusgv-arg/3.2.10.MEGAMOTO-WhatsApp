@@ -3,6 +3,7 @@ import { extractFlowResponses } from "../../flows/extractFlowResponses.js";
 import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 import { sendFlow_1ToLead } from "../../flows/sendFlow_1ToLead.js";
 import { saveNotificationInDb } from "../dataBase/saveNotificationInDb.js";
+import { findLeadWithFlowToken2 } from "../dataBase/findLeadWithFlowToken2.js";
 
 export const processWhatsAppFlowWithApi = async (userMessage) => {
 	const type = userMessage.type;
@@ -18,16 +19,16 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 			if (flowToken === 1) {
 				// Manda whatsApp al Lead con la respuesta
 				await handleWhatsappMessage(userMessage.userPhone, finalNotification);
-
+				
 				// Verificar que la respuesta esté completa
 				if (finalNotification.includes("IMPORTANTE")) {
 					
 					// Se vuelve a enviar el FLOW 1 y me hago del wamId
 					const wamId_Flow1 = await sendFlow_1ToLead(userMessage);
-
+					
 					// Agrego el wamId al objeto userMessage para traquear status FLOW1
 					userMessage.wamId_Flow1 = wamId_Flow1;
-
+					
 					// Guarda en BD
 					await saveNotificationInDb(userMessage, finalNotification);
 
@@ -36,14 +37,46 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				} else {
 					// Guarda en BD
 					await saveNotificationInDb(userMessage, finalNotification);
-
+					
 					// Actualiza el log
 					log = `1-Se extrajo la respuesta del Flow 1. 2-Se mandó whatsapp al lead de que un vendedor lo estará contactando.`;
 				}
-
+				
 				return log;
 			} else if (flowToken.startsWith("2")) {
 				console.log("entre en token 2");
+
+				// Confirmar la respuesta al vendedor
+				await handleWhatsappMessage(userMessage.userPhone, finalNotification);
+				
+				if (finalNotification.includes("Atender ahora")){
+					const vendorPhone = userMessage.userPhone
+					const vendorName = userMessage.name
+					const status = "vendedor"
+					
+					// 1-Buscar Lead x token 2 y Guardar en BD los datos del vendedor
+					const customerData = await findLeadWithFlowToken2(flowToken, vendorPhone, vendorName, status)
+					console.log("customer:", customerData)
+
+					const {customerPhone, customerName} = customerData
+					// 2-Notificar cliente mediante un template (porque pueden pasar 24hs).
+					
+
+				} else if (finalNotification.includes("Derivar a")){
+					 
+						// 1-Notificar cliente.
+						// 2-Notificar vendedor derivado.
+						// 3-Guardar en BD
+					
+				} else if (finalNotification.includes("Atender más tarde")){
+					// Si la notificación dice Atender más tarde: 2-Guardar en BD
+
+				} 				
+				
+				
+				log = `1-Se extrajo la respuesta del Flow 2. 2-Se mandó WhatsApp al lead con los datos del vendedor. 3-Se le confirmó al vendedor de su respuesta.`;
+				
+				return log
 			}
 		} else {
 			console.log(
