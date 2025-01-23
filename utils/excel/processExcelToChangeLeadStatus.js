@@ -1,7 +1,7 @@
 import axios from "axios";
 import xlsx from "xlsx";
-import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
-import Leads from "../models/leads.js";
+import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
+import Leads from "../../models/leads.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;

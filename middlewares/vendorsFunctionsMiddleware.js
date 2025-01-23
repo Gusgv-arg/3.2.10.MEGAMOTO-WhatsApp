@@ -6,6 +6,7 @@ import { exportFlowLeadsToExcel } from "../utils/excel/exportFlowLeadsToExcel.js
 import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
 import {getMediaWhatsappUrl} from "../utils/media/getMediaWhatsappUrl.js"
 import {downloadWhatsAppMedia} from "../utils/media/downloadWhatsAppMedia.js"
+import { processExcelToChangeLeadStatus } from "../utils/excel/processExcelToChangeLeadStatus.js";
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
@@ -125,18 +126,17 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			// Get the Document URL from WhatsApp
 			const document = await getMediaWhatsappUrl(documentId);
 			const documentUrl = document.data.url;
-			//console.log("Document URL:", documentUrl);
+			console.log("Document URL:", documentUrl);
 
 			// Download Document from WhatsApp
 			const documentBuffer = await downloadWhatsAppMedia(documentUrl);
 			const documentBufferData = documentBuffer.data;
-			//console.log("Document download:", documentBufferData);
+			console.log("Document download:", documentBufferData);
 
 			// Call the new function to process the campaign
-			await processCampaignExcel(
+			await processExcelToChangeLeadStatus(
 				documentBufferData,
-				templateName,
-				campaignName
+				userPhone
 			);
 
 		} else {
