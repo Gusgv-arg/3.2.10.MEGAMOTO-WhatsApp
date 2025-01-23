@@ -33,6 +33,8 @@ export const processExcelToChangeLeadStatus = async (
 
 		console.log("Total rows to process:", data.length);
 
+		const errorMessages = []; // Array para acumular mensajes de error
+
 		for (let i = 1; i < data.length; i++) {
 			// Comenzar desde la segunda fila
 			const col = data[i]; // Cada fila es un array
@@ -44,10 +46,10 @@ export const processExcelToChangeLeadStatus = async (
 			if (!validClientStatuses.includes(client_status)) {
 				client_status = transformToAccented(client_status);
 				if (!validClientStatuses.includes(client_status)) {
-					const errorMessage = `*Notificación Automática:*\n❌ El Status del lead es inválido "${col[2]}" para ${id_user}.\nStatus de Leads posibles: "compró",	"no compró", "a contactar",	"transferido al vendedor" o	"sin definición".\n\nMegamoto `;
+					const errorMessage = `❌ Status inválido "${col[2]}" para ${id_user}. Status posibles: "compró",	"no compró", "a contactar",	"transferido al vendedor" o	"sin definición".\n\nMegamoto `;
 
-					await handleWhatsappMessage(userPhone, errorMessage);
-					return;
+					errorMessages.push(errorMessage); // Acumular el mensaje de error
+					continue;
 				}
 				console.log(
 					`Transformed client_status to "${client_status}" for row ${i + 1}.`
@@ -162,10 +164,16 @@ export const processExcelToChangeLeadStatus = async (
 			console.log("Update result:", result);
 		}
 
-		await handleWhatsappMessage(
-			userPhone,
-			`*Notificación Automática:*\n✅ ¡Se actualizaron tus Leads!\n\nMegamoto`
-		);
+		// Si hay mensajes de error, enviarlos al usuario
+		if (errorMessages.length > 0) {
+			const combinedErrorMessage = errorMessages.join("\n");
+			await handleWhatsappMessage(userPhone, combinedErrorMessage);
+		} else {
+			await handleWhatsappMessage(
+				userPhone,
+				`*Notificación Automática:*\n✅ ¡Se actualizaron tus Leads!\n\nMegamoto`
+			);
+		}
 	} catch (error) {
 		console.error("Error completo:", error);
 		await adminWhatsAppNotification(
