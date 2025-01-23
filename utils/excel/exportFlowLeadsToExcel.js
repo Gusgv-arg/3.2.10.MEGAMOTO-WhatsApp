@@ -17,7 +17,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
             { header: 'Teléfono', key: 'idUsuario', width: 15 },
             { header: 'Estado', key: 'estado', width: 10 },
             { header: 'Primer Contacto', key: 'fechaFlow', width: 20 },
-            { header: 'Fecha a Contactar', key: 'fechaContactar', width: 20 },
+            { header: 'Fecha a Contactar', key: 'fechaContactar', width: 10 },
             { header: 'Marca', key: 'marca', width: 10 },
             { header: 'Modelo', key: 'modelo', width: 25 },
             { header: 'Precio informado', key: 'precio', width: 10 },
@@ -25,7 +25,9 @@ export const exportFlowLeadsToExcel = async (leads) => {
             { header: 'DNI', key: 'dni', width: 10 },
             { header: 'Preguntas', key: 'preguntas', width: 20 },
             { header: 'Vendedor', key: 'vendedor', width: 10 },
+            { header: 'Teléfono Vendedor', key: 'telefonoVendedor', width: 10 },
             { header: 'Historial', key: 'historial', width: 20 },
+            { header: 'Token Flow 2', key: 'tokenFlow2', width: 20 },
             { header: 'Error', key: 'error', width: 10 }
         ];
 
@@ -49,7 +51,8 @@ export const exportFlowLeadsToExcel = async (leads) => {
                 telefonoVendedor: lastFlow?.vendor_phone || '',
                 estadoFlow: lastFlow?.flow_status || '',
                 historial: lastFlow?.history || "",
-                error: lastFlow?.error || ''
+                error: lastFlow?.error || '',
+                tokenFlow2: lastFlow?.flow_2token || ""
             });
         });
 
