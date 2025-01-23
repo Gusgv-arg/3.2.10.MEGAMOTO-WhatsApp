@@ -57,7 +57,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 		}
 
 		// ---- Funciones disponibles para los vendedores -------------------------------
-		if (message === "leads" && typeOfWhatsappMessage === text) {
+		if (message === "leads" && typeOfWhatsappMessage === "text") {
 			// Función que envía excel con los leads en la fila del vendedor
 			res.status(200).send("EVENT_RECEIVED");
 
@@ -79,7 +79,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				// Se envía el Excel por WhatsApp
 				await sendExcelByWhatsApp(userPhone, excelFile, "Leads");
 			}
-		} else if (message === "lead" && typeOfWhatsappMessage === text) {
+		} else if (message === "lead" && typeOfWhatsappMessage === "text") {
 			// Función que envía un lead para atender
 			res.status(200).send("EVENT_RECEIVED");
 
