@@ -2,6 +2,9 @@ import { handleWhatsappMessage } from "../utils/whatsapp/handleWhatsappMessage.j
 import { findFlowLeadsForVendors } from "../utils/dataBase/findFlowLeadsForVendors.js";
 import { findOneLeadForVendor } from "../utils/dataBase/findOneLeadForVendor.js";
 import { salesFlow_2Notification } from "../flows/salesFlow_2Notification.js";
+import { exportFlowLeadsToExcel } from "../utils/excel/exportFlowLeadsToExcel.js";
+import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
+import { processPedidoYa } from "../functions/processPedidoYa.js";
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
@@ -12,17 +15,22 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const userPhone = body.entry[0].changes[0]?.value?.messages?.[0]?.from
 		? body.entry[0].changes[0].value.messages[0].from
 		: "";
+	let vendor = false;
 
 	// Teléfono de los vendedores
 	const vendor1 = process.env.PHONE_GUSTAVO_GLUNZ;
 	const vendor2 = process.env.PHONE_GUSTAVO_GOMEZ_VILLAFANE;
+	const vendor3 = process.env.JOANA;
+
+	// Determiar si es un vendedor
+	if (userPhone === vendor1 || userPhone === vendor2 || userPhone === vendor) {
+		vendor = true;
+	}
 
 	// Check de que msje sea del vendedor y de tipo texto o documento (para cuando manden excel)
 	if (
-		(typeOfWhatsappMessage === "text" && userPhone === vendor1) ||
-		(typeOfWhatsappMessage === "document" && userPhone === vendor1) ||
-		(typeOfWhatsappMessage === "text" && userPhone === vendor2) ||
-		(typeOfWhatsappMessage === "document" && userPhone === vendor2)
+		(typeOfWhatsappMessage === "text" && vendor === true) ||
+		(typeOfWhatsappMessage === "document" && vendor === true)
 	) {
 		let message;
 		let documentId;
@@ -47,21 +55,44 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 		}
 
 		// ---- Funciones disponibles para los vendedores -------------------------------
-		if (message === "lead" || message === "leads") {
+		if (message === "leads") {
+			// Función que envía excel con los leads en la fila del vendedor
+			res.status(200).send("EVENT_RECEIVED");
+
+			// Se buscan todos los leads a atender
+			const allLeads = await findFlowLeadsForVendors();
+			
+			// Chequea que haya más de 1 registro
+			if (allLeads.length > 0) {
+				// Filtra leads del vendor_phone
+				const vendorLeads = allLeads.filter((lead) => {
+					return lead.lastFlow.vendor_phone === parseInt(userPhone);
+				});
+				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads);
+
+				// Genera un Excel con los datos
+				const excelFile = await exportFlowLeadsToExcel(vendorLeads);
+				console.log("excel:", excelFile);
+
+				// Se envía el Excel por WhatsApp
+				await sendExcelByWhatsApp(userPhone, excelFile, "Leads");
+			}
+		} else if (message === "lead") {
+			// Función que envía un lead para atender
 			res.status(200).send("EVENT_RECEIVED");
 
 			// Se buscan los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
-			console.log("allLeads", allLeads)
+
 			// Chequea que haya más de 1 registro
 			if (allLeads.length > 0) {
 				// Filtra leads donde vendor_phone esté vacío o no exista
 				const availableLeads = allLeads.filter((lead) => {
 					return !lead.lastFlow.vendor_phone;
 				});
-				console.log("available leads:", availableLeads)
+				//console.log("available leads:", availableLeads)
 
-				if (availableLeads.length>0) {
+				if (availableLeads.length > 0) {
 					// Llama función q toma el lead más viejo entre creación y toContact
 					const oneLead = findOneLeadForVendor(availableLeads);
 					const { myLead, flow_2Token } = oneLead;
@@ -75,7 +106,6 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 					// Se envía el FLOW 2 al vendedor
 					await salesFlow_2Notification(myLead, vendorPhone, flow_2Token);
-
 				} else {
 					const vendorPhone = userPhone;
 					const notification =
