@@ -14,6 +14,7 @@ const flowDetailSchema = new mongoose.Schema({
 	messages: String,
 	vendor_name: String,
 	vendor_phone: Number,
+	vendor_notes: String,
 	history: String,
 	flow_2token: String,
 	flow_status: { type: String, enum: ["activo", "inactivo"] },

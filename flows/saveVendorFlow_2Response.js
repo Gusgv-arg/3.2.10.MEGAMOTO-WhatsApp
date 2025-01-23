@@ -31,7 +31,7 @@ export const saveVendorFlow_2Response = async (
 
 		// Find the specific flow to update
 		const flowToUpdate = lead.flows.find(
-			(flow) => flow.flow_token === flowToken
+			(flow) => flow.flow_2token === flowToken
 		);
 
 		let customerQuestion = [];
@@ -44,7 +44,7 @@ export const saveVendorFlow_2Response = async (
 				notification.includes("Respuesta del Vendedor: Atender") &&
 				!notification.includes("más tarde")
 			) {
-				flowToUpdate.messages += `\n${currentDateTime} - MegaBot: se envió WhatsApp al cliente que será atendido por ${name}`;
+				flowToUpdate.messages += `\n${currentDateTime} - API: se envió WhatsApp al cliente que será atendido por ${name}`;
 				flowToUpdate.client_status = "vendedor";
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
@@ -57,7 +57,7 @@ export const saveVendorFlow_2Response = async (
 			} else if (
 				notification.includes("Respuesta del Vendedor: Atender más tarde")
 			) {
-				flowToUpdate.messages += `\n${currentDateTime} - MegaBot: se envió WhatsApp al cliente que será atendido más tarde por ${name}`;
+				flowToUpdate.messages += `\n${currentDateTime} - API: se envió WhatsApp al cliente que será atendido más tarde por ${name}`;
 				flowToUpdate.client_status = "vendedor más tarde";
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
