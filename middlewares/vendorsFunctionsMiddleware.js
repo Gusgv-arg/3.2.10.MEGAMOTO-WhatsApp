@@ -61,7 +61,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 			// Se buscan todos los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
-			
+
 			// Chequea que haya más de 1 registro
 			if (allLeads.length > 0) {
 				// Filtra leads del vendor_phone
@@ -116,6 +116,11 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					// A FUTURO GENERAR UNA ALARMA AL ADMIN!!
 				}
 			}
+		} else if (message === "status" && typeOfWhatsappMessage === "document") {
+			// Función para que el vendedor envíe un Excel para cambiar estados
+			res.status(200).send("EVENT_RECEIVED");
+			console.log("entre acaaaaaaaaa");
+			
 		} else {
 			next();
 		}

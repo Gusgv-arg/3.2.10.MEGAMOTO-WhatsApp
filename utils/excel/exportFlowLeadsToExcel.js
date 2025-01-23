@@ -14,21 +14,19 @@ export const exportFlowLeadsToExcel = async (leads) => {
         // Definir las columnas
         worksheet.columns = [
             { header: 'Nombre', key: 'nombre', width: 20 },
-            { header: 'Teléfono', key: 'idUsuario', width: 20 },
-            { header: 'Estado', key: 'estado', width: 20 },
+            { header: 'Teléfono', key: 'idUsuario', width: 15 },
+            { header: 'Estado', key: 'estado', width: 10 },
             { header: 'Primer Contacto', key: 'fechaFlow', width: 20 },
-            { header: 'Marca', key: 'marca', width: 20 },
-            { header: 'Modelo', key: 'modelo', width: 20 },
-            { header: 'Precio informado', key: 'precio', width: 20 },
-            { header: 'Forma de Pago', key: 'formaPago', width: 20 },
-            { header: 'DNI', key: 'dni', width: 20 },
-            { header: 'Preguntas', key: 'preguntas', width: 20 },
-            { header: 'Vendedor', key: 'vendedor', width: 20 },
-            { header: 'Teléfono Vendedor', key: 'telefonoVendedor', width: 20 },
             { header: 'Fecha a Contactar', key: 'fechaContactar', width: 20 },
-            { header: 'Estado del Flow', key: 'estadoFlow', width: 20 },
-            { header: 'Switch', key: 'botSwitch', width: 20 },
-            { header: 'Error', key: 'error', width: 20 }
+            { header: 'Marca', key: 'marca', width: 10 },
+            { header: 'Modelo', key: 'modelo', width: 25 },
+            { header: 'Precio informado', key: 'precio', width: 10 },
+            { header: 'Forma de Pago', key: 'formaPago', width: 20 },
+            { header: 'DNI', key: 'dni', width: 10 },
+            { header: 'Preguntas', key: 'preguntas', width: 20 },
+            { header: 'Vendedor', key: 'vendedor', width: 10 },
+            { header: 'Historial', key: 'historial', width: 20 },
+            { header: 'Error', key: 'error', width: 10 }
         ];
 
         // Agregar los datos
@@ -50,6 +48,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
                 vendedor: lastFlow?.vendor_name || '',
                 telefonoVendedor: lastFlow?.vendor_phone || '',
                 estadoFlow: lastFlow?.flow_status || '',
+                historial: lastFlow?.history || "",
                 error: lastFlow?.error || ''
             });
         });
