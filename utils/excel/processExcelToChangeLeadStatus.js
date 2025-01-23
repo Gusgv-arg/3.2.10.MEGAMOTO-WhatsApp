@@ -17,9 +17,19 @@ export const processExcelToChangeLeadStatus = async (
 		const sheet = workbook.Sheets[workbook.SheetNames[0]];
 		const data = xlsx.utils.sheet_to_json(sheet);
 
+		console.log('Total rows to process:', data.length);
+
 		for (const col of data) {
 			const id_user = col['B'];
 			const flow_2token = col['O'];
+
+			console.log('Processing row:', {
+				id_user,
+				flow_2token,
+				client_status: col['C'],
+				toContact: col['E'],
+				brand: col['F']
+			});
 
 			// Create update object with only the fields that exist in the Excel
 			const updateData = {
@@ -35,14 +45,32 @@ export const processExcelToChangeLeadStatus = async (
 				'flows.$.vendor_phone': col['M']
 			};
 
+			console.log('Update data:', updateData);
+
+			// Primero verificamos si existe el documento
+			const existingLead = await Leads.findOne({
+				id_user: id_user,
+				'flows.flow_2token': flow_2token
+			});
+
+			console.log('Found lead:', existingLead ? 'Yes' : 'No');
+
+			if (!existingLead) {
+				console.log(`No lead found for id_user: ${id_user} and flow_2token: ${flow_2token}`);
+				continue;
+			}
+
 			// Update the matching flow directly using the positional $ operator
-			await Leads.updateOne(
+			const result = await Leads.updateOne(
 				{ 
 					id_user: id_user,
 					'flows.flow_2token': flow_2token 
 				},
 				{ $set: updateData }
 			);
+
+			console.log('Update result:', result);
+			
 		}
 
 		await adminWhatsAppNotification(userPhone, `*Notificación Automática:* ✅ Excel procesado exitosamente. Se actualizaron los leads correspondientes.\n\nMegamoto`);		

@@ -126,13 +126,11 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			// Get the Document URL from WhatsApp
 			const document = await getMediaWhatsappUrl(documentId);
 			const documentUrl = document.data.url;
-			console.log("Document URL:", documentUrl);
-
+			
 			// Download Document from WhatsApp
 			const documentBuffer = await downloadWhatsAppMedia(documentUrl);
 			const documentBufferData = documentBuffer.data;
-			console.log("Document download:", documentBufferData);
-
+			
 			// Call the new function to process the campaign
 			await processExcelToChangeLeadStatus(
 				documentBufferData,
