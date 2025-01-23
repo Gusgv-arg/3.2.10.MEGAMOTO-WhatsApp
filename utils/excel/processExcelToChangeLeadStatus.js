@@ -1,5 +1,6 @@
 import xlsx from "xlsx";
 import Leads from "../../models/leads.js";
+import {adminWhatsAppNotification} from "../notifications/adminWhatsAppNotification.js"
 
 export const processExcelToChangeLeadStatus = async (excelBuffer, userPhone) => {
 	try {
@@ -9,11 +10,10 @@ export const processExcelToChangeLeadStatus = async (excelBuffer, userPhone) => 
 
 		console.log('Total rows to process:', data.length);
 
-		// Comenzar desde la segunda fila (índice 1)
 		for (let i = 1; i < data.length; i++) {
-			const col = data[i]; // Cambiar a col para la fila actual
-			const id_user = col['B'];
-			const flow_2token = col['O'];
+			const col = data[i];
+			const id_user = col['B'] ? String(col['B']).trim() : null; // Convertir a string y eliminar espacios
+			const flow_2token = col['O'] ? String(col['O']).trim() : null; // Convertir a string y eliminar espacios
 
 			console.log('Processing row:', {
 				id_user,
@@ -22,6 +22,11 @@ export const processExcelToChangeLeadStatus = async (excelBuffer, userPhone) => 
 				toContact: col['E'],
 				brand: col['F']
 			});
+
+			if (!id_user) {
+				console.log(`id_user is missing for row ${i + 1}. Skipping.`);
+				continue;
+			}
 
 			// Create update object with only the fields that exist in the Excel
 			const updateData = {
@@ -47,7 +52,7 @@ export const processExcelToChangeLeadStatus = async (excelBuffer, userPhone) => 
 			// Primero verificamos si existe el documento
 			const existingLead = await Leads.findOne({
 				id_user: id_user,
-				'flows.flow_2token': flow_2token
+				...(flow_2token ? { 'flows.flow_2token': flow_2token } : {})
 			});
 
 			console.log('Found lead:', existingLead ? 'Yes' : 'No');
@@ -57,13 +62,35 @@ export const processExcelToChangeLeadStatus = async (excelBuffer, userPhone) => 
 				continue;
 			}
 
+			// Si flow_2token no existe, actualizamos el último flujo
+			const flowIndex = flow_2token ? 
+				existingLead.flows.findIndex(flow => flow.flow_2token === flow_2token) : 
+				existingLead.flows.length - 1; // Último flujo si flow_2token es vacío
+
+			if (flowIndex === -1) {
+				console.log(`No matching flow found for flow_2token: ${flow_2token}. Updating last flow instead.`);
+			}
+
 			// Update the matching flow directly using the positional $ operator
-			const result = await Leads.updateOne(
+			await Leads.updateOne(
 				{ 
 					id_user: id_user,
-					'flows.flow_2token': flow_2token 
+					...(flow_2token ? { 'flows.flow_2token': flow_2token } : {})
 				},
-				{ $set: updateData }
+				{ 
+					$set: {
+						[`flows.${flowIndex}.client_status`]: updateData['flows.$.client_status'],
+						[`flows.${flowIndex}.toContact`]: updateData['flows.$.toContact'],
+						[`flows.${flowIndex}.brand`]: updateData['flows.$.brand'],
+						[`flows.${flowIndex}.model`]: updateData['flows.$.model'],
+						[`flows.${flowIndex}.price`]: updateData['flows.$.price'],
+						[`flows.${flowIndex}.payment`]: updateData['flows.$.payment'],
+						[`flows.${flowIndex}.dni`]: updateData['flows.$.dni'],
+						[`flows.${flowIndex}.questions`]: updateData['flows.$.questions'],
+						[`flows.${flowIndex}.vendor_name`]: updateData['flows.$.vendor_name'],
+						[`flows.${flowIndex}.vendor_phone`]: updateData['flows.$.vendor_phone']
+					}
+				}
 			);
 
 			console.log('Update result:', result);
