@@ -1,25 +1,14 @@
-import axios from "axios";
-import xlsx from "xlsx";
-import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
-import Leads from "../../models/leads.js";
-
-const whatsappToken = process.env.WHATSAPP_TOKEN;
-const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
-
-export const processExcelToChangeLeadStatus = async (
-	excelBuffer,
-	userPhone
-) => {
+export const processExcelToChangeLeadStatus = async (excelBuffer, userPhone) => {
 	try {
-		
-		// Process Excel file
 		const workbook = xlsx.read(excelBuffer, { type: "buffer" });
 		const sheet = workbook.Sheets[workbook.SheetNames[0]];
 		const data = xlsx.utils.sheet_to_json(sheet);
 
 		console.log('Total rows to process:', data.length);
 
-		for (const col of data) {
+		// Comenzar desde la segunda fila (índice 1)
+		for (let i = 1; i < data.length; i++) {
+			const col = data[i]; // Cambiar a col para la fila actual
 			const id_user = col['B'];
 			const flow_2token = col['O'];
 
@@ -34,7 +23,7 @@ export const processExcelToChangeLeadStatus = async (
 			// Create update object with only the fields that exist in the Excel
 			const updateData = {
 				'flows.$.client_status': col['C'],
-				'flows.$.toContact': col['E'],
+				'flows.$.toContact': col['E'] ? new Date(col['E']) : undefined,
 				'flows.$.brand': col['F'],
 				'flows.$.model': col['G'],
 				'flows.$.price': col['H'],
@@ -44,6 +33,11 @@ export const processExcelToChangeLeadStatus = async (
 				'flows.$.vendor_name': col['L'],
 				'flows.$.vendor_phone': col['M']
 			};
+
+			// Remove undefined values
+			Object.keys(updateData).forEach(key => 
+				updateData[key] === undefined && delete updateData[key]
+			);
 
 			console.log('Update data:', updateData);
 
@@ -70,14 +64,12 @@ export const processExcelToChangeLeadStatus = async (
 			);
 
 			console.log('Update result:', result);
-			
 		}
 
-		await adminWhatsAppNotification(userPhone, `*Notificación Automática:* ✅ Excel procesado exitosamente. Se actualizaron los leads correspondientes.\n\nMegamoto`);		
-		
-		} catch (error) {
-		console.error("Error en processExcelToChangeLeadStatus.js:", error.message);
-		// Receives the throw new error
+		await adminWhatsAppNotification(userPhone, `✅ Excel procesado exitosamente. Se actualizaron los leads correspondientes.`);
+
+	} catch (error) {
+		console.error("Error completo:", error);
 		await adminWhatsAppNotification(userPhone, `*NOTIFICACION de Error procesando Excel para el cambio de Status en Leads:*\n${error.message}`);
 	}
 };
