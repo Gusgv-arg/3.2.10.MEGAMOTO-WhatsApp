@@ -121,8 +121,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 		} else if (message === "leads" && typeOfWhatsappMessage === "document" || message === "lead" && typeOfWhatsappMessage === "document") {
 			// Función para que el vendedor envíe un Excel para cambiar estados
 			res.status(200).send("EVENT_RECEIVED");
-			console.log("entre acaaaaaaaaa");
-
+			
 			// Get the Document URL from WhatsApp
 			const document = await getMediaWhatsappUrl(documentId);
 			const documentUrl = document.data.url;

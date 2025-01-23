@@ -72,7 +72,7 @@ export const processExcelToChangeLeadStatus = async (excelBuffer, userPhone) => 
 			}
 
 			// Update the matching flow directly using the positional $ operator
-			await Leads.updateOne(
+			const result = await Leads.updateOne(
 				{ 
 					id_user: id_user,
 					...(flow_2token ? { 'flows.flow_2token': flow_2token } : {})
