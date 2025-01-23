@@ -1,3 +1,6 @@
+import xlsx from "xlsx";
+import Leads from "../../models/leads.js";
+
 export const processExcelToChangeLeadStatus = async (excelBuffer, userPhone) => {
 	try {
 		const workbook = xlsx.read(excelBuffer, { type: "buffer" });
