@@ -9,6 +9,7 @@ export const processExcelToChangeLeadStatus = async (excelBuffer, userPhone) => 
 		const data = xlsx.utils.sheet_to_json(sheet);
 
 		console.log('Total rows to process:', data.length);
+console.log("data:", data)
 
 		for (let i = 1; i < data.length; i++) {
 			const col = data[i];
