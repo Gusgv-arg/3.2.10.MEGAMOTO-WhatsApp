@@ -6,22 +6,21 @@ export const processExcelToChangeLeadStatus = async (excelBuffer, userPhone) => 
 	try {
 		const workbook = xlsx.read(excelBuffer, { type: "buffer" });
 		const sheet = workbook.Sheets[workbook.SheetNames[0]];
-		const data = xlsx.utils.sheet_to_json(sheet);
+		const data = xlsx.utils.sheet_to_json(sheet, { header: 1 }); // Leer como array de arrays
 
 		console.log('Total rows to process:', data.length);
-console.log("data:", data)
 
-		for (let i = 1; i < data.length; i++) {
-			const col = data[i];
-			const id_user = col['B'] ? String(col['B']).trim() : null; // Convertir a string y eliminar espacios
-			const flow_2token = col['O'] ? String(col['O']).trim() : null; // Convertir a string y eliminar espacios
+		for (let i = 1; i < data.length; i++) { // Comenzar desde la segunda fila
+			const col = data[i]; // Cada fila es un array
+			const id_user = col[1] ? String(col[1]).trim() : null; // Columna B (índice 1)
+			const flow_2token = col[14] ? String(col[14]).trim() : null; // Columna O (índice 14)
 
 			console.log('Processing row:', {
 				id_user,
 				flow_2token,
-				client_status: col['C'],
-				toContact: col['E'],
-				brand: col['F']
+				client_status: col[2], // Columna C (índice 2)
+				toContact: col[4], // Columna E (índice 4)
+				brand: col[5] // Columna F (índice 5)
 			});
 
 			if (!id_user) {
@@ -31,16 +30,16 @@ console.log("data:", data)
 
 			// Create update object with only the fields that exist in the Excel
 			const updateData = {
-				'flows.$.client_status': col['C'],
-				'flows.$.toContact': col['E'] ? new Date(col['E']) : undefined,
-				'flows.$.brand': col['F'],
-				'flows.$.model': col['G'],
-				'flows.$.price': col['H'],
-				'flows.$.payment': col['I'],
-				'flows.$.dni': col['J'],
-				'flows.$.questions': col['K'],
-				'flows.$.vendor_name': col['L'],
-				'flows.$.vendor_phone': col['M']
+				'flows.$.client_status': col[2], // Columna C (índice 2)
+				'flows.$.toContact': col[4] ? new Date(col[4]) : undefined, // Columna E (índice 4)
+				'flows.$.brand': col[5], // Columna F (índice 5)
+				'flows.$.model': col[6], // Columna G (índice 6)
+				'flows.$.price': col[7], // Columna H (índice 7)
+				'flows.$.payment': col[8], // Columna I (índice 8)
+				'flows.$.dni': col[9], // Columna J (índice 9)
+				'flows.$.questions': col[10], // Columna K (índice 10)
+				'flows.$.vendor_name': col[11], // Columna L (índice 11)
+				'flows.$.vendor_phone': col[12] // Columna M (índice 12)
 			};
 
 			// Remove undefined values

@@ -4,8 +4,8 @@ import { findOneLeadForVendor } from "../utils/dataBase/findOneLeadForVendor.js"
 import { salesFlow_2Notification } from "../flows/salesFlow_2Notification.js";
 import { exportFlowLeadsToExcel } from "../utils/excel/exportFlowLeadsToExcel.js";
 import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
-import {getMediaWhatsappUrl} from "../utils/media/getMediaWhatsappUrl.js"
-import {downloadWhatsAppMedia} from "../utils/media/downloadWhatsAppMedia.js"
+import { getMediaWhatsappUrl } from "../utils/media/getMediaWhatsappUrl.js";
+import { downloadWhatsAppMedia } from "../utils/media/downloadWhatsAppMedia.js";
 import { processExcelToChangeLeadStatus } from "../utils/excel/processExcelToChangeLeadStatus.js";
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
@@ -57,7 +57,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 		}
 
 		// ---- Funciones disponibles para los vendedores -------------------------------
-		if (message === "leads") {
+		if (message === "leads" && typeOfWhatsappMessage === text) {
 			// Función que envía excel con los leads en la fila del vendedor
 			res.status(200).send("EVENT_RECEIVED");
 
@@ -79,7 +79,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				// Se envía el Excel por WhatsApp
 				await sendExcelByWhatsApp(userPhone, excelFile, "Leads");
 			}
-		} else if (message === "lead") {
+		} else if (message === "lead" && typeOfWhatsappMessage === text) {
 			// Función que envía un lead para atender
 			res.status(200).send("EVENT_RECEIVED");
 
@@ -118,7 +118,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					// A FUTURO GENERAR UNA ALARMA AL ADMIN!!
 				}
 			}
-		} else if (message === "status" && typeOfWhatsappMessage === "document") {
+		} else if (message === "leads" && typeOfWhatsappMessage === "document" || message === "lead" && typeOfWhatsappMessage === "document") {
 			// Función para que el vendedor envíe un Excel para cambiar estados
 			res.status(200).send("EVENT_RECEIVED");
 			console.log("entre acaaaaaaaaa");
@@ -126,17 +126,13 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			// Get the Document URL from WhatsApp
 			const document = await getMediaWhatsappUrl(documentId);
 			const documentUrl = document.data.url;
-			
+
 			// Download Document from WhatsApp
 			const documentBuffer = await downloadWhatsAppMedia(documentUrl);
 			const documentBufferData = documentBuffer.data;
-			
-			// Call the new function to process the campaign
-			await processExcelToChangeLeadStatus(
-				documentBufferData,
-				userPhone
-			);
 
+			// Call the new function to process the campaign
+			await processExcelToChangeLeadStatus(documentBufferData, userPhone);
 		} else {
 			next();
 		}
