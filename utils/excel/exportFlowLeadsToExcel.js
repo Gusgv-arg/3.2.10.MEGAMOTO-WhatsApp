@@ -11,8 +11,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		const validClientStatuses = Leads.schema.path(
 			"flows.client_status"
 		).enumValues;
-		console.log("valid status:", validClientStatuses);
-
+		
 		if (!validClientStatuses || !validClientStatuses.length) {
 			console.error("No valid client statuses found.");
 			throw new Error("No valid client statuses found.");
@@ -21,6 +20,11 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		const workbook = new ExcelJS.Workbook();
 		const worksheet = workbook.addWorksheet("Leads");
 		const statusSheet = workbook.addWorksheet("Status Válidos"); // Nueva hoja para estados válidos
+        
+        // Populate valid statuses sheet
+        validClientStatuses.forEach((status, index) => {
+            statusSheet.getCell(`A${index + 1}`).value = status;
+        });
 
 		// Definir las columnas
 		worksheet.columns = [
@@ -69,42 +73,31 @@ export const exportFlowLeadsToExcel = async (leads) => {
 			});
 		});
 
-		// Agregar los estados válidos a la nueva hoja
+		
+        /* // Agregar los estados válidos a la nueva hoja
 		validClientStatuses.forEach((status, index) => {
 			const cell = statusSheet.getCell(`A${index + 1}`);
 			cell.value = status;
-		});
+		}); */
 
 		// Asegurarse de que la hoja de estados válidos tenga un rango definido
 		statusSheet.getColumn("A").width = 30; // Ajustar el ancho de la columna para mejor visualización
 
-		// After adding the headers and before saving the workbook
-		// Create a named range for the valid statuses
-		const statusRange = `='Status Válidos'!$A$1:$A$${validClientStatuses.length}`;
-
-		// Agregar los estados válidos a la nueva hoja
-		validClientStatuses.forEach((status, index) => {
-			const cell = statusSheet.getCell(`A${index + 1}`);
-			cell.value = status;
-		});
-
-		// Agregar validación de datos para el campo de Estado
-		const stateColumn = worksheet.getColumn(3); // Columna C (Estado)
-		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
-			if (rowNumber > 1) {
-				// Ignorar la fila de encabezados
-				cell.dataValidation = {
-					type: "list",
-					allowBlank: true,
-					formulaType: "list",
-					formula1: statusRange,
-					showErrorMessage: true,
-					errorTitle: "Estado inválido",
-					errorStyle: "stop",
-					error: "Por favor, elige un estado válido de la lista.",
-				};
-			}
-		});
+        // Add data validation to Estado column
+        const stateColumn = worksheet.getColumn('estado');
+        stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
+            if (rowNumber > 1) {
+                cell.dataValidation = {
+                    type: 'list',
+                    allowBlank: true,
+                    formula1: `'Status Válidos'!$A$1:$A$${validClientStatuses.length}`,
+                    showErrorMessage: true,
+                    errorTitle: 'Estado inválido',
+                    errorStyle: 'stop',
+                    error: 'Selecciona un estado válido de la lista.'
+                };
+            }
+        });		
 
 		// Generar nombre único para el archivo
 		const fileName = `leads-${Date.now()}.xlsx`;
