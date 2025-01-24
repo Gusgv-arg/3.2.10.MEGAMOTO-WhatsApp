@@ -26,17 +26,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 			statusSheet.getCell(`A${index + 1}`).value = status;
 		}); */
 
-		// Hoja oculta
-		validClientStatuses.forEach((status, index) => {
-			worksheet.getCell(`Z${index + 1}`).value = status; // Escribir estados en columna Z
-		});
-
-		console.log("length del client status:", validClientStatuses.length);
-		console.log(
-			"formula:",
-			`'Status Válidos'!$A$1:$A$${validClientStatuses.length}`
-		);
-
+        
 		// Definir las columnas
 		worksheet.columns = [
 			{ header: "Nombre", key: "nombre", width: 20 },
@@ -60,7 +50,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 
 		// Agregar los datos
 		leads.forEach((lead) => {
-			const lastFlow = lead.lastFlow;
+            const lastFlow = lead.lastFlow;
 			worksheet.addRow({
 				nombre: lead.name,
 				idUsuario: lead.id_user,
@@ -83,6 +73,13 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				tokenFlow2: lastFlow?.flow_2token || "",
 			});
 		});
+        // Hoja oculta
+        validClientStatuses.forEach((status, index) => {
+            worksheet.getCell(`Z${index + 1}`).value = status; // Escribir estados en columna Z
+        });
+
+        console.log("length del client status:", validClientStatuses.length);
+        console.log("formula:",`=$Z$1:$Z$${validClientStatuses.length}`);
 
 		/* // Agregar los estados válidos a la nueva hoja
 		validClientStatuses.forEach((status, index) => {
@@ -96,19 +93,25 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		// Add data validation to Estado column
 		const stateColumn = worksheet.getColumn("estado");
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
-			if (rowNumber > 1) {
-				// Ignorar encabezado
-				cell.dataValidation = {
-					type: "list",
-					allowBlank: true,
-					formula1: `=$Z$1:$Z$${validClientStatuses.length}`, // Referencia a la columna Z
-					showErrorMessage: true,
-					errorTitle: "Estado inválido",
-					errorStyle: "stop",
-					error: "Selecciona un estado válido de la lista.",
-				};
-			}
-		});
+            if (rowNumber > 1) { // Ignora la primera fila (encabezado)
+                // Mantén el valor existente
+                const currentValue = cell.value;
+        
+                // Aplica la validación de datos
+                cell.dataValidation = {
+                    type: 'list',
+                    allowBlank: true,
+                    formula1: `=$Z$1:$Z$${validClientStatuses.length}`, // Rango con valores válidos
+                    showErrorMessage: true,
+                    errorTitle: 'Estado inválido',
+                    errorStyle: 'stop',
+                    error: 'Selecciona un estado válido de la lista.'
+                };
+        
+                // Reasigna el valor existente
+                cell.value = currentValue;
+            }
+        });
 
 		// Generar nombre único para el archivo
 		const fileName = `leads-${Date.now()}.xlsx`;
