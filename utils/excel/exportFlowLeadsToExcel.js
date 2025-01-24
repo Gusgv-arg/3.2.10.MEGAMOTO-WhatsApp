@@ -8,14 +8,15 @@ const __dirname = path.dirname(__filename);
 
 export const exportFlowLeadsToExcel = async (leads) => {
 	try {
-		
-        const validClientStatuses = Leads.schema.path('flows.client_status').enumValues;
-        console.log("valid status:", validClientStatuses)
-        
-        if (!validClientStatuses || !validClientStatuses.length) {
-            console.error("No valid client statuses found.");
-            throw new Error("No valid client statuses found.");
-        }
+		const validClientStatuses = Leads.schema.path(
+			"flows.client_status"
+		).enumValues;
+		console.log("valid status:", validClientStatuses);
+
+		if (!validClientStatuses || !validClientStatuses.length) {
+			console.error("No valid client statuses found.");
+			throw new Error("No valid client statuses found.");
+		}
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
 		const worksheet = workbook.addWorksheet("Leads");
@@ -70,23 +71,22 @@ export const exportFlowLeadsToExcel = async (leads) => {
 
 		// Agregar los estados válidos a la nueva hoja
 		validClientStatuses.forEach((status, index) => {
-			const cell = statusSheet.getCell(`A${index + 1}`); // Colocar cada estado en una celda
-			cell.value = status; // Asignar el valor
-			cell.style = { alignment: { vertical: "middle", horizontal: "left" } }; // Alinear el texto
+			const cell = statusSheet.getCell(`A${index + 1}`);
+			cell.value = status;
 		});
 
 		// Asegurarse de que la hoja de estados válidos tenga un rango definido
 		statusSheet.getColumn("A").width = 30; // Ajustar el ancho de la columna para mejor visualización
 
-		// Agregar validación de datos para el campo de Estado en la hoja de Leads
-		const stateColumn = worksheet.getColumn("estado");
+		// Agregar validación de datos para el campo de Estado
+		const stateColumn = worksheet.getColumn(3); // Columna C (Estado)
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
 			if (rowNumber > 1) {
-				// Evitar la cabecera
+				// Ignorar la fila de encabezados
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formula1: `Valid Client Statuses!$A$1:$A$${validClientStatuses.length}`, // Referencia al rango de estados válidos
+					formula1: `'Status Válidos'!$A$1:$A$${validClientStatuses.length}`,
 					showErrorMessage: true,
 					errorTitle: "Estado inválido",
 					error: "Por favor, elige un estado válido de la lista.",
