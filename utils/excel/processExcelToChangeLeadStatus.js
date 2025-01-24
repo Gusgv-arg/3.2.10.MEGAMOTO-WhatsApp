@@ -3,21 +3,17 @@ import Leads from "../../models/leads.js";
 import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
 import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 
-const validClientStatuses = [
-	"compró",
-	"no compró",
-	"a contactar",
-	"transferido al vendedor",
-	"sin definición",
-];
+
+// Importar los enums desde el esquema de Leads
+const validClientStatuses = Leads.schema.paths.flows.schema.paths.client_status.enum;
 
 // Función para transformar strings sin acento a con acento
 const transformToAccented = (status) => {
 	const transformations = {
+		"compro": "compró",
 		"no compro": "no compró",
 		"sin definicion": "sin definición",
-		"a contactar": "a contactar",
-		"transferido al vendedor": "transferido al vendedor",
+		"sin definir" : "sin definición"		
 	};
 	return transformations[status.toLowerCase()] || status;
 };
@@ -44,9 +40,11 @@ export const processExcelToChangeLeadStatus = async (
 			// Validar client_status y sino cortar ejecución
 			let client_status = col[2]; // Columna C (índice 2)
 			if (!validClientStatuses.includes(client_status)) {
-				client_status = transformToAccented(client_status);
+				if (Object.keys(transformations).includes(client_status.toLowerCase())) {
+					client_status = transformToAccented(client_status);
+				}
 				if (!validClientStatuses.includes(client_status)) {
-					const errorMessage = `❌ Status inválido "${col[2]}" para ${id_user}. Status posibles: "compró",	"no compró", "a contactar",	"transferido al vendedor" o	"sin definición".\n\nMegamoto `;
+					const errorMessage = `❌ Status inválido "${col[2]}" para ${id_user}. `;
 
 					errorMessages.push(errorMessage); // Acumular el mensaje de error
 					continue;
@@ -167,7 +165,10 @@ export const processExcelToChangeLeadStatus = async (
 		// Si hay mensajes de error, enviarlos al usuario
 		if (errorMessages.length > 0) {
 			const combinedErrorMessage = errorMessages.join("\n");
-			await handleWhatsappMessage(userPhone, combinedErrorMessage);
+			const finalMessage = `*Notificación Automática de Error al actualizar los Leads:*\n${combinedErrorMessage}\nStatus posibles: "compró", "no compró", "a contactar", "transferido al vendedor" o "sin definición".\n\nMegamoto`
+
+			await handleWhatsappMessage(userPhone, finalMessage);
+		
 		} else {
 			await handleWhatsappMessage(
 				userPhone,

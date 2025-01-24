@@ -25,7 +25,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
             { header: 'DNI', key: 'dni', width: 10 },
             { header: 'Preguntas Lead', key: 'preguntas', width: 20 },
             { header: 'Vendedor', key: 'vendedor', width: 20 },
-            { header: 'Teléfono Vendedor', key: 'telefonoVendedor', width: 20 },
+            { header: 'Teléfono Vendedor', key: 'telefonoVendedor', width: 25 },
             { header: 'Notas del Vendedor', key: 'notas', width: 20 },
             { header: 'Historial', key: 'historial', width: 20 },
             { header: 'Token Flow 2', key: 'tokenFlow2', width: 20 },

@@ -7,7 +7,7 @@ export const findFlowLeadsForVendors = async () => {
 
 	const leads = await Leads.find({
 		$or: [
-			// Casos que entran directamente
+			// Entran directamente
 			{
 				"flows.client_status": {
 					$in: [
@@ -26,7 +26,7 @@ export const findFlowLeadsForVendors = async () => {
 					{ "flows.toContact": { $lte: currentDate } },
 				],
 			},
-			// Casos que requieren 24 horas desde flowDate
+			// Casos que despues de 24 horas del contacto se pasan a la Fila
 			{
 				$and: [
 					{
