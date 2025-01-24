@@ -10,9 +10,9 @@ const __dirname = path.dirname(__filename);
 const validClientStatuses = Object.values(
 	Leads.schema.paths.flows.schema.paths.client_status.enum
 );
-console.log("Status validos:", validClientStatuses)
 
 export const exportFlowLeadsToExcel = async (leads) => {
+    console.log("Status validos:", validClientStatuses)
 	try {
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
