@@ -61,6 +61,10 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			// Función que envía excel con los leads en la fila del vendedor
 			res.status(200).send("EVENT_RECEIVED");
 
+			// Notificar al vendedor del proceso
+			const message = "*Notificación Automática:*\n✅ Vas a recibir tus Leads en un Excel.\n\nMegamoto"
+			await handleWhatsappMessage(userPhone, message)
+
 			// Se buscan todos los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
 

@@ -70,6 +70,9 @@ export const exportFlowLeadsToExcel = async (leads) => {
 			statusSheet.getCell(`A${index + 1}`).value = status; // Colocar cada estado en una celda
 		});
 
+        // Asegurarse de que la hoja de estados válidos tenga un rango definido
+        statusSheet.getColumn('A').width = 30; // Ajustar el ancho de la columna para mejor visualización
+
 		// Agregar validación de datos para el campo de Estado en la hoja de Leads
 		const stateColumn = worksheet.getColumn("estado");
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
