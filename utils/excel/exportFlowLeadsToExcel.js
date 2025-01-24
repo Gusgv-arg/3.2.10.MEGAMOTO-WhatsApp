@@ -13,7 +13,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 
 	// Asegurarse de que el enum existe antes de acceder a él
 	if (flowDetailSchema && flowDetailSchema.paths.client_status) {
-		validClientStatuses = flowDetailSchema.paths.client_status.enum[1]; // Acceder a los valores del enum
+		validClientStatuses = flowDetailSchema.paths.client_status.enum; // Acceder a los valores del enum
 	} else {
 		console.error("El enum client_status no está definido.");
 		throw new Error("El enum client_status no está definido.");
