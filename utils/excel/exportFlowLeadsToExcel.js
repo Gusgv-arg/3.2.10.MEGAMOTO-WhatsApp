@@ -1,9 +1,13 @@
 import ExcelJS from 'exceljs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import Leads from '../../models/leads.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Lista de estados válidos
+const validClientStatuses = Object.values(Leads.schema.paths.flows.schema.paths.client_status.enum);
 
 export const exportFlowLeadsToExcel = async (leads) => {
     try {
