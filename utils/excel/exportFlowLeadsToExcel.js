@@ -58,6 +58,21 @@ export const exportFlowLeadsToExcel = async (leads) => {
             });
         });
 
+        // Agregar validación de datos para el campo de Estado
+        const stateColumn = worksheet.getColumn('estado');
+        stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
+            if (rowNumber > 1) { // Evitar la cabecera
+                cell.dataValidation = {
+                    type: 'list',
+                    allowBlank: true,
+                    formula1: `"${validClientStatuses.join(',')}"`, // Lista de estados válidos
+                    showErrorMessage: true,
+                    errorTitle: 'Estado inválido',
+                    error: 'Por favor, elige un estado válido de la lista.'
+                };
+            }
+        });
+
         // Generar nombre único para el archivo
         const fileName = `leads-${Date.now()}.xlsx`;
         const outputPath = path.join(__dirname, '../../public', fileName);
