@@ -93,25 +93,18 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		// Add data validation to Estado column
 		const stateColumn = worksheet.getColumn("estado");
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
-            if (rowNumber > 1) { // Ignora la primera fila (encabezado)
-                // Mantén el valor existente
-                const currentValue = cell.value;
-        
-                // Aplica la validación de datos
+            if (rowNumber > 1) { // Ignorar encabezado
                 cell.dataValidation = {
                     type: 'list',
                     allowBlank: true,
-                    formula1: `=$Z$1:$Z$${validClientStatuses.length}`, // Rango con valores válidos
+                    formula1: `=$Z$1:$Z$${validClientStatuses.length}`,
                     showErrorMessage: true,
                     errorTitle: 'Estado inválido',
                     errorStyle: 'stop',
                     error: 'Selecciona un estado válido de la lista.'
                 };
-        
-                // Reasigna el valor existente
-                cell.value = currentValue;
             }
-        });
+        });       
 
 		// Generar nombre único para el archivo
 		const fileName = `leads-${Date.now()}.xlsx`;
