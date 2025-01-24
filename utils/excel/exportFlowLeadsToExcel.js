@@ -8,8 +8,10 @@ const __dirname = path.dirname(__filename);
 
 export const exportFlowLeadsToExcel = async (leads) => {
 	try {
-		const validClientStatuses = leadsSchema.path('flows.client_status').enumValues;
-
+		
+        const validClientStatuses = Leads.schema.path('flows.client_status').enumValues;
+        console.log("valid status:", validClientStatuses)
+        
         if (!validClientStatuses || !validClientStatuses.length) {
             console.error("No valid client statuses found.");
             throw new Error("No valid client statuses found.");
