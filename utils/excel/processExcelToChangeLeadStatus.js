@@ -22,6 +22,8 @@ export const processExcelToChangeLeadStatus = async (
 	excelBuffer,
 	userPhone
 ) => {
+	console.log("validClientStatuses:", validClientStatuses)
+	
 	try {
 		const workbook = xlsx.read(excelBuffer, { type: "buffer" });
 		const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -37,8 +39,10 @@ export const processExcelToChangeLeadStatus = async (
 			const id_user = col[1] ? String(col[1]).trim() : null; // Columna B (índice 1)
 			const flow_2token = col[14] ? String(col[14]).trim() : null; // Columna O (índice 14)
 
-			// Validar client_status y sino cortar ejecución
+			// Validar client_status e ir acumulando errores posibles
 			let client_status = col[2]; // Columna C (índice 2)
+			const originalClientStatus = client_status; // Guardar el estado original
+			
 			if (!validClientStatuses.includes(client_status)) {
 				// Verificar si el client_status está en las transformaciones
 				const transformedStatus = transformToAccented(client_status);
@@ -48,15 +52,12 @@ export const processExcelToChangeLeadStatus = async (
 						`Transformed client_status to "${client_status}" for row ${i + 1}.`
 					);
 				}
+				// Validar nuevamente después de la transformación
 				if (!validClientStatuses.includes(client_status)) {
-					const errorMessage = `❌ Status inválido "${col[2]}" para ${id_user}. `;
-
+					const errorMessage = `❌ Status inválido "${originalClientStatus}" para ${id_user}. `;
 					errorMessages.push(errorMessage); // Acumular el mensaje de error
 					continue;
 				}
-				console.log(
-					`Transformed client_status to "${client_status}" for row ${i + 1}.`
-				);
 			}
 
 			console.log("Processing row:", {
