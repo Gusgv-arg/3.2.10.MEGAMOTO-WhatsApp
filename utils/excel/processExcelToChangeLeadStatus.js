@@ -40,7 +40,7 @@ export const processExcelToChangeLeadStatus = async (
 			// Validar client_status y sino cortar ejecución
 			let client_status = col[2]; // Columna C (índice 2)
 			if (!validClientStatuses.includes(client_status)) {
-				if (Object.keys(transformations).includes(client_status.toLowerCase())) {
+				if (Object.keys(transformToAccented('').transformations).includes(client_status.toLowerCase())) {
 					client_status = transformToAccented(client_status);
 				}
 				if (!validClientStatuses.includes(client_status)) {
