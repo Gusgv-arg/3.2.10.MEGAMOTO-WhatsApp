@@ -64,7 +64,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			// Notificar al vendedor del proceso
 			const message = "*Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. El proceso a veces puede tardar.\n\nMegamoto"
 			await handleWhatsappMessage(userPhone, message)
-
+			
 			// Se buscan todos los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
 
