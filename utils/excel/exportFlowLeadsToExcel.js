@@ -7,21 +7,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const exportFlowLeadsToExcel = async (leads) => {
-	// Verificar si el enum client_status existe
-	const flowDetailSchema = Leads.schema.paths.flows.schema;
-	let validClientStatuses = [];
-
-	// Asegurarse de que el enum existe antes de acceder a él
-	if (flowDetailSchema && flowDetailSchema.paths.client_status) {
-		validClientStatuses = flowDetailSchema.paths.client_status.enum; // Acceder a los valores del enum
-	} else {
-		console.error("El enum client_status no está definido.");
-		throw new Error("El enum client_status no está definido.");
-	}
-
-	console.log("Valid Client Statuses:", validClientStatuses); // Para depuración
-
+	
 	try {
+        // Verificar si el enum client_status existe
+        const flowDetailSchema = Leads.schema.paths.flows.schema;
+        let validClientStatuses = [];
+
+        // Asegurarse de que el enum existe antes de acceder a él
+        if (flowDetailSchema && flowDetailSchema.paths.client_status) {
+            validClientStatuses = flowDetailSchema.paths.client_status.enum[1]; // Acceder a los valores del enum
+        } else {
+            console.error("El enum client_status no está definido.");
+            throw new Error("El enum client_status no está definido.");
+        }
+
+        console.log('Valid Client Statuses:', validClientStatuses); // Para depuración
+
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
 		const worksheet = workbook.addWorksheet("Leads");
@@ -75,30 +76,29 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		});
 
 		// Agregar los estados válidos a la nueva hoja
-		validClientStatuses.forEach((status, index) => {
-			const cell = statusSheet.getCell(`A${index + 1}`); // Colocar cada estado en una celda
-			cell.value = status; // Asignar el valor
-			cell.style = { alignment: { vertical: "middle", horizontal: "left" } }; // Alinear el texto
-		});
+        validClientStatuses.forEach((status, index) => {
+            const cell = statusSheet.getCell(`A${index + 1}`); // Colocar cada estado en una celda
+            cell.value = status; // Asignar el valor
+            cell.style = { alignment: { vertical: 'middle', horizontal: 'left' } }; // Alinear el texto
+        });
 
-		// Asegurarse de que la hoja de estados válidos tenga un rango definido
-		statusSheet.getColumn("A").width = 30; // Ajustar el ancho de la columna para mejor visualización
+        // Asegurarse de que la hoja de estados válidos tenga un rango definido
+        statusSheet.getColumn('A').width = 30; // Ajustar el ancho de la columna para mejor visualización
 
-		// Agregar validación de datos para el campo de Estado en la hoja de Leads
-		const stateColumn = worksheet.getColumn("estado");
-		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
-			if (rowNumber > 1) {
-				// Evitar la cabecera
-				cell.dataValidation = {
-					type: "list",
-					allowBlank: true,
-					formula1: `Valid Client Statuses!$A$1:$A$${validClientStatuses.length}`, // Referencia al rango de estados válidos
-					showErrorMessage: true,
-					errorTitle: "Estado inválido",
-					error: "Por favor, elige un estado válido de la lista.",
-				};
-			}
-		});
+        // Agregar validación de datos para el campo de Estado en la hoja de Leads
+        const stateColumn = worksheet.getColumn('estado');
+        stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
+            if (rowNumber > 1) { // Evitar la cabecera
+                cell.dataValidation = {
+                    type: 'list',
+                    allowBlank: true,
+                    formula1: `Valid Client Statuses!$A$1:$A$${validClientStatuses.length}`, // Referencia al rango de estados válidos
+                    showErrorMessage: true,
+                    errorTitle: 'Estado inválido',
+                    error: 'Por favor, elige un estado válido de la lista.'
+                };
+            }
+        });
 
 		// Generar nombre único para el archivo
 		const fileName = `leads-${Date.now()}.xlsx`;
