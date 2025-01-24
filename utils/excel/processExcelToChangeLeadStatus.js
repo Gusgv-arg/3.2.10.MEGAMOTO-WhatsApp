@@ -5,7 +5,7 @@ import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 
 
 // Importar los enums desde el esquema de Leads
-const validClientStatuses = Leads.schema.paths.flows.schema.paths.client_status.enum;
+const validClientStatuses = Object.values(Leads.schema.paths.flows.schema.paths.client_status.enum);
 
 // Función para transformar strings sin acento a con acento
 const transformToAccented = (status) => {
