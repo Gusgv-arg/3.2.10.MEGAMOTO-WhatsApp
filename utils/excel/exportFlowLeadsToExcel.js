@@ -75,7 +75,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
                     error: 'Por favor, elige un estado válido de la lista.'
                 };
             }
-        });
+        });        
 
         // Generar nombre único para el archivo
         const fileName = `leads-${Date.now()}.xlsx`;
@@ -89,7 +89,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
         return fileUrl;
 
     } catch (error) {
-        console.error('Error al exportar a Excel:', error);
-        throw error;
+        console.error('Error en exportFlowLeadsToExcel.js:', error.message);
+        throw error.message;
     }
 };
