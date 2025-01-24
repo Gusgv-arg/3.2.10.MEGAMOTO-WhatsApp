@@ -96,7 +96,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formula1: `=Status Válidos!$A$1:$A$${validClientStatuses.length}`,
+					formula1: `=Status Válidos!$A$1:$A$${validClientStatuses.length}`, // Fórmula sin comillas
 					showErrorMessage: true,
 					errorTitle: "Estado inválido",
 					errorStyle: "stop",
