@@ -9,19 +9,25 @@ const __dirname = path.dirname(__filename);
 export const exportFlowLeadsToExcel = async (leads) => {
 	
 	try {
-        // Verificar si el enum client_status existe
-        const flowDetailSchema = Leads.schema.paths.flows.schema;
-        let validClientStatuses = [];
+       // Verificar si el enum client_status existe
+       const flowDetailSchema = Leads.schema.paths.flows.schema;
+       let validClientStatuses = [];
 
-        // Asegurarse de que el enum existe antes de acceder a él
-        if (flowDetailSchema && flowDetailSchema.paths.client_status) {
-            validClientStatuses = flowDetailSchema.paths.client_status.enum[1]; // Acceder a los valores del enum
-        } else {
-            console.error("El enum client_status no está definido.");
-            throw new Error("El enum client_status no está definido.");
-        }
+       // Asegurarse de que el enum existe antes de acceder a él
+       if (flowDetailSchema && flowDetailSchema.paths.client_status) {
+           validClientStatuses = flowDetailSchema.paths.client_status.enum; // Acceder a los valores del enum
+       } else {
+           console.error("El enum client_status no está definido.");
+           throw new Error("El enum client_status no está definido.");
+       }
 
-        console.log('Valid Client Statuses:', validClientStatuses); // Para depuración
+       // Verificar si validClientStatuses es un array
+       if (!Array.isArray(validClientStatuses)) {
+           console.error("El enum client_status no es un array.");
+           throw new Error("El enum client_status no es un array.");
+       }
+
+       console.log('Valid Client Statuses:', validClientStatuses); // Para depuración
 
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
