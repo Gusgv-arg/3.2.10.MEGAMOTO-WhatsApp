@@ -31,7 +31,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 			"formula:",
 			`'Status Válidos'!$A$1:$A$${validClientStatuses.length}`
 		);
-        
+
 		// Definir las columnas
 		worksheet.columns = [
 			{ header: "Nombre", key: "nombre", width: 20 },
@@ -92,10 +92,11 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		const stateColumn = worksheet.getColumn("estado");
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
 			if (rowNumber > 1) {
+				// Ignorar encabezado
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formula1: `'Status Válidos'!$A$1:$A$${validClientStatuses.length}`,
+					formula1: `=Status Válidos!$A$1:$A$${validClientStatuses.length}`,
 					showErrorMessage: true,
 					errorTitle: "Estado inválido",
 					errorStyle: "stop",
