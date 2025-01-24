@@ -67,11 +67,13 @@ export const exportFlowLeadsToExcel = async (leads) => {
 
 		// Agregar los estados válidos a la nueva hoja
 		validClientStatuses.forEach((status, index) => {
-			statusSheet.getCell(`A${index + 1}`).value = status; // Colocar cada estado en una celda
+			const cell = statusSheet.getCell(`A${index + 1}`); // Colocar cada estado en una celda
+			cell.value = status; // Asignar el valor
+			cell.style = { alignment: { vertical: "middle", horizontal: "left" } }; // Alinear el texto
 		});
 
-        // Asegurarse de que la hoja de estados válidos tenga un rango definido
-        statusSheet.getColumn('A').width = 30; // Ajustar el ancho de la columna para mejor visualización
+		// Asegurarse de que la hoja de estados válidos tenga un rango definido
+		statusSheet.getColumn("A").width = 30; // Ajustar el ancho de la columna para mejor visualización
 
 		// Agregar validación de datos para el campo de Estado en la hoja de Leads
 		const stateColumn = worksheet.getColumn("estado");
@@ -81,7 +83,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formula1: `Status Válidos!$A$1:$A$${validClientStatuses.length}`, // Referencia al rango de estados válidos
+					formula1: `Valid Client Statuses!$A$1:$A$${validClientStatuses.length}`, // Referencia al rango de estados válidos
 					showErrorMessage: true,
 					errorTitle: "Estado inválido",
 					error: "Por favor, elige un estado válido de la lista.",
