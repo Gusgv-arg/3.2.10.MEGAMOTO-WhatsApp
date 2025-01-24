@@ -6,15 +6,22 @@ import Leads from "../../models/leads.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Lista de estados válidos
-const validClientStatuses = Object.values(
-    Leads.schema.paths.flows.schema.paths.client_status.enum[1]);
-
 export const exportFlowLeadsToExcel = async (leads) => {
-    console.log("Status validos:", validClientStatuses)
-    console.log("Client Status Enum:", Leads.schema.paths.flows.schema.paths.client_status.enum);
+	// Verificar si el enum client_status existe
+	const flowDetailSchema = Leads.schema.paths.flows.schema;
+	let validClientStatuses = [];
 
-    try {
+	// Asegurarse de que el enum existe antes de acceder a él
+	if (flowDetailSchema && flowDetailSchema.paths.client_status) {
+		validClientStatuses = flowDetailSchema.paths.client_status.enum[1]; // Acceder a los valores del enum
+	} else {
+		console.error("El enum client_status no está definido.");
+		throw new Error("El enum client_status no está definido.");
+	}
+
+	console.log("Valid Client Statuses:", validClientStatuses); // Para depuración
+
+	try {
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
 		const worksheet = workbook.addWorksheet("Leads");
