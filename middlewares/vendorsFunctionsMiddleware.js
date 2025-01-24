@@ -70,7 +70,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				const vendorLeads = allLeads.filter((lead) => {
 					return lead.lastFlow.vendor_phone === parseInt(userPhone);
 				});
-				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads);
+				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
 
 				// Genera un Excel con los datos
 				const excelFile = await exportFlowLeadsToExcel(vendorLeads);
