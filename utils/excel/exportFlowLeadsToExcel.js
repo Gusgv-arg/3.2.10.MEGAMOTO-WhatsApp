@@ -79,12 +79,6 @@ export const exportFlowLeadsToExcel = async (leads) => {
 			cell.value = status;
 		});
 
-		// Definir un rango de nombres para la lista desplegable
-		workbook.addNamedRange({
-			name: "ValidClientStatuses",
-			refersTo: `Status Válidos!$A$1:$A$${validClientStatuses.length}`,
-		});
-
 		// Asegurarse de que la hoja de estados válidos tenga un rango definido
 		statusSheet.getColumn("A").width = 30; // Ajustar el ancho de la columna para mejor visualización
 
@@ -96,7 +90,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formula1: "ValidClientStatuses", // Usar el rango nombrado
+					formula1: `Status Válidos!$A$1:$A$${validClientStatuses.length}`, // Usar el rango nombrado
 					showErrorMessage: true,
 					errorTitle: "Estado inválido",
 					errorStyle: "stop",
