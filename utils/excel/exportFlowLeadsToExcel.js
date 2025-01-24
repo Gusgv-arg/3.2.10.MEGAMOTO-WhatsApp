@@ -26,7 +26,6 @@ export const exportFlowLeadsToExcel = async (leads) => {
 			statusSheet.getCell(`A${index + 1}`).value = status;
 		}); */
 
-        
 		// Definir las columnas
 		worksheet.columns = [
 			{ header: "Nombre", key: "nombre", width: 20 },
@@ -50,7 +49,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 
 		// Agregar los datos
 		leads.forEach((lead) => {
-            const lastFlow = lead.lastFlow;
+			const lastFlow = lead.lastFlow;
 			worksheet.addRow({
 				nombre: lead.name,
 				idUsuario: lead.id_user,
@@ -73,19 +72,18 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				tokenFlow2: lastFlow?.flow_2token || "",
 			});
 		});
-        // Hoja oculta
-        validClientStatuses.forEach((status, index) => {
-            worksheet.getCell(`Z${index + 1}`).value = status; // Escribir estados en columna Z
-        });
 
-        console.log("length del client status:", validClientStatuses.length);
-        console.log("formula:",`=$Z$1:$Z$${validClientStatuses.length}`);
-
-		/* // Agregar los estados válidos a la nueva hoja
+		// Agregar los estados válidos a la nueva hoja
 		validClientStatuses.forEach((status, index) => {
 			const cell = statusSheet.getCell(`A${index + 1}`);
 			cell.value = status;
-		}); */
+		});
+
+		// Definir un rango de nombres para la lista desplegable
+		workbook.addNamedRange({
+			name: "ValidClientStatuses",
+			refersTo: `Status Válidos!$A$1:$A$${validClientStatuses.length}`,
+		});
 
 		// Asegurarse de que la hoja de estados válidos tenga un rango definido
 		statusSheet.getColumn("A").width = 30; // Ajustar el ancho de la columna para mejor visualización
@@ -93,18 +91,19 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		// Add data validation to Estado column
 		const stateColumn = worksheet.getColumn("estado");
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
-            if (rowNumber > 1) { // Ignorar encabezado
-                cell.dataValidation = {
-                    type: 'list',
-                    allowBlank: true,
-                    formula1: `$Z$1:$Z$${validClientStatuses.length}`,
-                    showErrorMessage: true,
-                    errorTitle: 'Estado inválido',
-                    errorStyle: 'stop',
-                    error: 'Selecciona un estado válido de la lista.'
-                };
-            }
-        });       
+			if (rowNumber > 1) {
+				// Ignorar encabezado
+				cell.dataValidation = {
+					type: "list",
+					allowBlank: true,
+					formula1: "ValidClientStatuses", // Usar el rango nombrado
+					showErrorMessage: true,
+					errorTitle: "Estado inválido",
+					errorStyle: "stop",
+					error: "Selecciona un estado válido de la lista.",
+				};
+			}
+		});
 
 		// Generar nombre único para el archivo
 		const fileName = `leads-${Date.now()}.xlsx`;
