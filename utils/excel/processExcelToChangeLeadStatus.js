@@ -40,8 +40,13 @@ export const processExcelToChangeLeadStatus = async (
 			// Validar client_status y sino cortar ejecución
 			let client_status = col[2]; // Columna C (índice 2)
 			if (!validClientStatuses.includes(client_status)) {
-				if (Object.keys(transformToAccented('').transformations).includes(client_status.toLowerCase())) {
-					client_status = transformToAccented(client_status);
+				// Verificar si el client_status está en las transformaciones
+				const transformedStatus = transformToAccented(client_status);
+				if (transformedStatus !== client_status) {
+					client_status = transformedStatus;
+					console.log(
+						`Transformed client_status to "${client_status}" for row ${i + 1}.`
+					);
 				}
 				if (!validClientStatuses.includes(client_status)) {
 					const errorMessage = `❌ Status inválido "${col[2]}" para ${id_user}. `;
@@ -179,7 +184,7 @@ export const processExcelToChangeLeadStatus = async (
 		console.error("Error completo:", error);
 		await adminWhatsAppNotification(
 			userPhone,
-			`*NOTIFICACION de Error procesando Excel para el cambio de Status en Leads:*\n${error.message}`
+			`*NOTIFICACION de Error procesando Excel para el cambio de Status en Leads:*\n${error.message}\nMegamoto`
 		);
 	}
 };
