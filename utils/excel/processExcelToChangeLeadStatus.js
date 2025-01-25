@@ -5,7 +5,10 @@ import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 
 
 // Importar los enums desde el esquema de Leads
-const validClientStatuses = Object.values(Leads.schema.paths.flows.schema.paths.client_status.enum);
+//const validClientStatuses = Object.values(Leads.schema.paths.flows.schema.paths.client_status.enum);
+const validClientStatuses = Leads.schema.path(
+	"flows.client_status"
+).enumValues
 
 // Función para transformar strings sin acento a con acento
 const transformToAccented = (status) => {
@@ -42,7 +45,7 @@ export const processExcelToChangeLeadStatus = async (
 			// Validar client_status e ir acumulando errores posibles
 			let client_status = col[2]; // Columna C (índice 2)
 			const originalClientStatus = client_status; // Guardar el estado original
-			
+
 			if (!validClientStatuses.includes(client_status)) {
 				// Verificar si el client_status está en las transformaciones
 				const transformedStatus = transformToAccented(client_status);
