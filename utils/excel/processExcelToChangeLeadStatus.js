@@ -40,7 +40,7 @@ export const processExcelToChangeLeadStatus = async (
 			// Comenzar desde la segunda fila
 			const col = data[i]; // Cada fila es un array
 			const id_user = col[1] ? String(col[1]).trim() : null; // Columna B (índice 1)
-			const flow_2token = col[14] ? String(col[14]).trim() : null; // Columna O (índice 14)
+			const flow_2token = col[15] ? String(col[15]).trim() : null; // Columna O (índice 14)
 
 			// Validar client_status e ir acumulando errores posibles
 			let client_status = col[2]; // Columna C (índice 2)
