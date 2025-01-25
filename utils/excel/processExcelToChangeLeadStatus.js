@@ -181,7 +181,7 @@ export const processExcelToChangeLeadStatus = async (
 		} else {
 			await handleWhatsappMessage(
 				userPhone,
-				`*Notificación Automática:*\n✅ ¡Se actualizaron tus Leads!\n\nMegamoto`
+				`*Notificación Automática:*\n\n✅ ¡Se actualizaron tus Leads!\n\nMegamoto`
 			);
 		}
 	} catch (error) {
