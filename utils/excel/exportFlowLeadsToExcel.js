@@ -21,11 +21,6 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		const worksheet = workbook.addWorksheet("Leads");
 		const statusSheet = workbook.addWorksheet("Status Válidos"); // Nueva hoja para estados válidos
 
-		/* // Populate valid statuses sheet
-		validClientStatuses.forEach((status, index) => {
-			statusSheet.getCell(`A${index + 1}`).value = status;
-		}); */
-
 		// Definir las columnas
 		worksheet.columns = [
 			{ header: "Nombre", key: "nombre", width: 20 },
@@ -90,7 +85,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formula1: `Status Válidos!$A$1:$A$${validClientStatuses.length}`, // Usar el rango nombrado
+					formula1: `='Status Válidos'!$A$1:$A$${validClientStatuses.length}`, // Usar el rango nombrado
 					showErrorMessage: true,
 					errorTitle: "Estado inválido",
 					errorStyle: "stop",
