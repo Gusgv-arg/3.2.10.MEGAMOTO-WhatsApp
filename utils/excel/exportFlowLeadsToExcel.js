@@ -81,7 +81,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		const opciones = ["Opción1", "Opción2", "Opción3"];
 
 		// Convertir las opciones en una cadena separada por comas y entre comillas
-		const listaDesplegable = `"${opciones.join(",")}"`;
+		const listaDesplegable = `"${validClientStatuses.join(",")}"`;
 
 		// Aplicar la validación de datos a las celdas deseadas
 		const rangoCeldas = ["A5", "A6", "A7"]; // Especifica las celdas donde deseas la lista desplegable
@@ -105,7 +105,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formula1: listaDesplegable,
+					formulae: [listaDesplegable],
 					showErrorMessage: true,
 					errorTitle: "Estado inválido",
 					errorStyle: "stop",
