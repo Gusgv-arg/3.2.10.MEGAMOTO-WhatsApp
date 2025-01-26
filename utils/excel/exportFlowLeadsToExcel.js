@@ -128,7 +128,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		});
 
 		// Add data validation to Modelo column
-		const modelColumn = worksheet.getColumn("modelo");
+		/* const modelColumn = worksheet.getColumn("modelo");
 		modelColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
 			if (rowNumber > 1) {
 				cell.dataValidation = {
@@ -141,10 +141,9 @@ export const exportFlowLeadsToExcel = async (leads) => {
 					error: "Selecciona un modelo válido de la lista.",
 				};
 			}
-		});
+		}); */
 
-		// Generar nombre único para el archivo
-		//const fileName = `leads-${Date.now()}.xlsx`;
+		// Generar nombre para el archivo
 		const fileName = `leads.xlsx`;
 		const outputPath = path.join(__dirname, "../../public", fileName);
 
