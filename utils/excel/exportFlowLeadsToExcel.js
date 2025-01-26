@@ -20,12 +20,12 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		console.log("Modelos:", validModels);
 
 		// Limpiar las marcas y modelos
-		const cleanedModels = validModels.map((model) =>
+		/* const cleanedModels = validModels.map((model) =>
 			model.trim().replace(/[^a-zA-Z0-9\s]/g, "")
-		);
+		); */
 		// Limitar la cantidad de marcas y modelos (por ejemplo, a 50)
 
-		const limitedModels = cleanedModels.slice(0, 30);
+		//const limitedModels = cleanedModels.slice(0, 30);
 
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
@@ -87,12 +87,12 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		// Convertir las opciones en una cadena separada por comas y entre comillas
 		const listaDesplegableStatus = `"${validClientStatuses.join(",")}"`;
 		const listaDesplegableBrands = `"${validBrands.join(",")}"`;
-		const listaDesplegableModels = `"${cleanedModels.join(",")}"`;
+		//const listaDesplegableModels = `"${cleanedModels.join(",")}"`;
 
 		// Log para verificar las listas de validación
 		console.log("Dropdown Status List:", listaDesplegableStatus);
 		console.log("Dropdown Brands List:", listaDesplegableBrands);
-		console.log("Dropdown Models List:", listaDesplegableModels);
+		//console.log("Dropdown Models List:", listaDesplegableModels);
 
 		// Add data validation to Estado column
 		const stateColumn = worksheet.getColumn("estado");

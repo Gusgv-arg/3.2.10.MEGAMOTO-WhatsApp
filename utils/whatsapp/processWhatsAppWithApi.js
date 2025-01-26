@@ -20,7 +20,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			existingLead = await createLeadInDb(userMessage);
 
 			// Envía un mensaje previo de bienvenida x si no se ve el Flow
-			const greeting = `¡Hola, gracias por contactarte con Megamoto! Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\nImportante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+			const greeting = `¡Hola, gracias por contactarte con Megamoto! Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n❗ Importante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 			await handleWhatsappMessage(userMessage.userPhone, greeting);
 
@@ -53,13 +53,13 @@ export const processWhatsAppWithApi = async (userMessage) => {
                 if (lastFlowVendor) {
 					// El lead ya tiene un vendedor asignado
 
-					notification = `*Notificación automática*\nEstimado ${userMessage.name}; le enviaremos tu consulta a tu vendedor asignado que te recordamos es ${lastFlowVendor} con el celular ${lastFlowPhone}. Agendalo para identificarlo cuando te contacte. Te pedimos un poco de paciencia.\n¡Haremos lo posible para atenderte cuanto antes!\n\n*MEGAMOTO* `;
+					notification = `*🔔 Notificación Automática:*\n📣 Estimado ${userMessage.name}; le enviaremos tu consulta a tu vendedor asignado que te recordamos es ${lastFlowVendor} con el celular ${lastFlowPhone}. Agendalo para identificarlo cuando te contacte. Te pedimos un poco de paciencia.\n¡Haremos lo posible para atenderte cuanto antes!\n\n*MEGAMOTO* `;
 
 					// Envía notificación de recordatorio al Lead
 					await handleWhatsappMessage(userMessage.userPhone, notification);
                     
 					// Envía alarma al vendedor con la pregunta del cliente
-                    const alarm = `*NOTIFICACION DEL SISTEMA:*\nEl cliente ${userMessage.name} cel: ${userMessage.userPhone} envió el siguiente mensaje: ${userMessage.message}.\n¡Suerte con tu venta!`
+                    const alarm = `*🔔 Notificación Automática:*\n📣 El cliente ${userMessage.name} cel: ${userMessage.userPhone} envió el siguiente mensaje: ${userMessage.message}.\n¡Suerte con tu venta!`
                     
 					await handleWhatsappMessage(lastFlowPhone, alarm);
                     
@@ -73,7 +73,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
                     
 				} else {
                     // El Lead NO tiene un vendedor asignado
-					notification = `*Notificación automática*\nEstimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+					notification = `*🔔 Notificación automática*\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
                     
 					// Envía notificación al Lead
 					await handleWhatsappMessage(userMessage.userPhone, notification);
@@ -92,7 +92,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
                 // Lead ya existe y NO tiene un Flow abierto arranca el proceso de 0.
 				
                 // Envía un mensaje previo de bienvenida x si no se ve el Flow
-				const greeting2 = `¡Hola nuevamente, gracias por seguir confiando en Megamoto!\nPara atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n*Importante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular*. \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+				const greeting2 = `¡Hola nuevamente, gracias por seguir confiando en Megamoto!\n📣 Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n*❗ Importante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular*. \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
                 
 				await handleWhatsappMessage(userMessage.userPhone, greeting2);
                 
