@@ -80,14 +80,14 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		});
 
 		// Agregar los Modelos a la hoja 'Modelos'
-		validModels.forEach((modelo, index) => {
+		cleanedModels.forEach((modelo, index) => {
 			modelosSheet.getCell(`A${index + 1}`).value = modelo;
 		});
 
 		// Convertir las opciones en una cadena separada por comas y entre comillas
 		const listaDesplegableStatus = `"${validClientStatuses.join(",")}"`;
 		const listaDesplegableBrands = `"${validBrands.join(",")}"`;
-		const listaDesplegableModels = `"${limitedModels.join(",")}"`;
+		const listaDesplegableModels = `"${cleanedModels.join(",")}"`;
 
 		// Log para verificar las listas de validación
 		console.log("Dropdown Status List:", listaDesplegableStatus);
@@ -128,20 +128,20 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		});
 
 		// Add data validation to Modelo column
-		/* const modelColumn = worksheet.getColumn("modelo");
+		const modelColumn = worksheet.getColumn("modelo");
 		modelColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
 			if (rowNumber > 1) {
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formula1: 'Marcas!$A$1:$A$50',
+					formulae: [listaDesplegableModels],
 					showErrorMessage: true,
 					errorTitle: "Modelo inválido",
 					errorStyle: "stop",
 					error: "Selecciona un modelo válido de la lista.",
 				};
 			}
-		}); */
+		});
 
 		// Generar nombre para el archivo
 		const fileName = `leads.xlsx`;
