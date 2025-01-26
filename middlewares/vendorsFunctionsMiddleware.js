@@ -62,7 +62,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 
 			// Notificar al vendedor del proceso
-			const message = `*Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. El proceso a veces puede tardar pero volvé a enviar la palabra leads si ves que no llega.\n\nMegamoto`
+			const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. El proceso a veces puede tardar pero volvé a enviar la palabra leads si ves que no llega.\n\nMegamoto`
 			await handleWhatsappMessage(userPhone, message)
 			
 			// Se buscan todos los leads a atender
