@@ -13,14 +13,16 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		const validClientStatuses = Leads.schema.path(
 			"flows.client_status"
 		).enumValues;
-		console.log("Status:", validClientStatuses)
+		console.log("Status:", validClientStatuses);
 		const validBrands = await Prices.distinct("marca").exec();
-		console.log("Marcas:", validBrands)
+		console.log("Marcas:", validBrands);
 		const validModels = await Prices.distinct("modelo").exec();
-		console.log("Modelos:", validModels)
+		console.log("Modelos:", validModels);
 
 		// Limpiar las marcas y modelos
-		const cleanedModels = validModels.map(model => model.trim().replace(/[^a-zA-Z0-9\s]/g, ''));
+		const cleanedModels = validModels.map((model) =>
+			model.trim().replace(/[^a-zA-Z0-9\s]/g, "")
+		);
 		// Limitar la cantidad de marcas y modelos (por ejemplo, a 50)
 
 		const limitedModels = cleanedModels.slice(0, 30);
@@ -28,6 +30,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
 		const worksheet = workbook.addWorksheet("Leads");
+		const modelosSheet = workbook.addWorksheet("Modelos");
 
 		// Definir las columnas
 		worksheet.columns = [
@@ -76,6 +79,11 @@ export const exportFlowLeadsToExcel = async (leads) => {
 			});
 		});
 
+		// Agregar los Modelos a la hoja 'Modelos'
+		validModels.forEach((modelo, index) => {
+			modelosSheet.getCell(`A${index + 1}`).value = modelo;
+		});
+
 		// Convertir las opciones en una cadena separada por comas y entre comillas
 		const listaDesplegableStatus = `"${validClientStatuses.join(",")}"`;
 		const listaDesplegableBrands = `"${validBrands.join(",")}"`;
@@ -85,7 +93,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		console.log("Dropdown Status List:", listaDesplegableStatus);
 		console.log("Dropdown Brands List:", listaDesplegableBrands);
 		console.log("Dropdown Models List:", listaDesplegableModels);
-		
+
 		// Add data validation to Estado column
 		const stateColumn = worksheet.getColumn("estado");
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
@@ -126,7 +134,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formulae: [listaDesplegableModels],
+					formula1: 'Marcas!$A$1:$A$50',
 					showErrorMessage: true,
 					errorTitle: "Modelo inválido",
 					errorStyle: "stop",
