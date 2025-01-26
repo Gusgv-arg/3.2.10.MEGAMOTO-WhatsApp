@@ -77,6 +77,12 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		// Asegurarse de que la hoja de estados válidos tenga un rango definido
 		statusSheet.getColumn("A").width = 30; // Ajustar el ancho de la columna para mejor visualización
 
+		// Definir las opciones de la lista desplegable
+		const opciones = ["Opción1", "Opción2", "Opción3"];
+
+		// Convertir las opciones en una cadena separada por comas y entre comillas
+		const listaDesplegable = `"${opciones.join(",")}"`;
+
 		// Add data validation to Estado column
 		const stateColumn = worksheet.getColumn("estado");
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
@@ -85,7 +91,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formula1: `='Status Válidos'!$A$1:$A$16`, 
+					formula1: listaDesplegable,
 					showErrorMessage: true,
 					errorTitle: "Estado inválido",
 					errorStyle: "stop",
