@@ -23,7 +23,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		const cleanedModels = validModels.map(model => model.trim().replace(/[^a-zA-Z0-9\s]/g, ''));
 		// Limitar la cantidad de marcas y modelos (por ejemplo, a 50)
 
-		const limitedModels = cleanedModels.slice(0, 50);
+		const limitedModels = cleanedModels.slice(0, 30);
 
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
