@@ -13,8 +13,11 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		const validClientStatuses = Leads.schema.path(
 			"flows.client_status"
 		).enumValues;
-		const validBrands = await Prices.distinct("marca");
-		const validModels = await Prices.distinct("modelo");
+		console.log("Status:", validClientStatuses)
+		const validBrands = await Prices.distinct("marca").exec();
+		console.log("Marcas:", validBrands)
+		const validModels = await Prices.distinct("modelo").exec();
+		console.log("Modelos:", validModels)
 
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
@@ -136,3 +139,4 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		throw error.message;
 	}
 };
+exportFlowLeadsToExcel()
