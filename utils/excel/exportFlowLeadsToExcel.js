@@ -75,6 +75,11 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		const listaDesplegableBrands = `"${validBrands.join(",")}"`;
 		const listaDesplegableModels = `"${validModels.join(",")}"`;
 
+		// Log para verificar las listas de validación
+		console.log("Dropdown Status List:", listaDesplegableStatus);
+		console.log("Dropdown Brands List:", listaDesplegableBrands);
+		console.log("Dropdown Models List:", listaDesplegableModels);
+		
 		// Add data validation to Estado column
 		const stateColumn = worksheet.getColumn("estado");
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
