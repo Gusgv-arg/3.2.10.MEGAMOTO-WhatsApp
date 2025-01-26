@@ -83,6 +83,20 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		// Convertir las opciones en una cadena separada por comas y entre comillas
 		const listaDesplegable = `"${opciones.join(",")}"`;
 
+		// Aplicar la validación de datos a las celdas deseadas
+		const rangoCeldas = ["A5", "A6", "A7"]; // Especifica las celdas donde deseas la lista desplegable
+		rangoCeldas.forEach((direccion) => {
+			const celda = worksheet.getCell(direccion);
+			celda.dataValidation = {
+				type: "list",
+				allowBlank: true,
+				formulae: [listaDesplegable],
+				showErrorMessage: true,
+				errorTitle: "Valor no válido",
+				error: "Seleccione un valor de la lista.",
+			};
+		});
+
 		// Add data validation to Estado column
 		const stateColumn = worksheet.getColumn("estado");
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
