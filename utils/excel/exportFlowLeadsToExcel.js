@@ -95,7 +95,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		//console.log("Dropdown Models List:", listaDesplegableModels);
 
 		// Add data validation to Estado column
-		const stateColumn = worksheet.getColumn("estado");
+		/* const stateColumn = worksheet.getColumn("estado");
 		stateColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
 			if (rowNumber > 1) {
 				// Ignorar encabezado
@@ -109,10 +109,10 @@ export const exportFlowLeadsToExcel = async (leads) => {
 					error: "Selecciona un estado válido de la lista.",
 				};
 			}
-		});
+		}); */
 
 		// Add data validation to Marca column
-		/* const brandColumn = worksheet.getColumn("marca");
+		const brandColumn = worksheet.getColumn("marca");
 		brandColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
 			if (rowNumber > 1) {
 				cell.dataValidation = {
@@ -125,7 +125,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 					error: "Selecciona una marca válida de la lista.",
 				};
 			}
-		}); */
+		});
 
 		// Add data validation to Modelo column
 		/* const modelColumn = worksheet.getColumn("modelo");
