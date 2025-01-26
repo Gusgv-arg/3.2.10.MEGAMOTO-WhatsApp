@@ -51,7 +51,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			// Si vendedor manda algo que no sea texto, documento o Flow lo rebota
 			res.status(200).send("EVENT_RECEIVED");
 
-			const notification = `*Notificación automática:*\nLos vendedores solo pueden enviar mensajes de Texto, responder a un Flow para tomar un lead o enviar un Excel para cambiar el estado.`;
+			const notification = `*🔔 Notificación automática:*\n❌ Los vendedores solo pueden enviar mensajes de Texto, responder a un Flow para tomar un lead o enviar un Excel para cambiar el estado.`;
 
 			await handleWhatsappMessage(userPhone, notification);
 		}
@@ -90,6 +90,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				await handleWhatsappMessage(userPhone, message)
 
 			}
+		
 		} else if (message === "lead" && typeOfWhatsappMessage === "text") {
 			// Función que envía un lead para atender
 			res.status(200).send("EVENT_RECEIVED");
@@ -112,7 +113,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 					// Se notifica al vendedor por si no ve el Flow
 					const notification =
-						"*Notificación Automática:*\nSe te está por enviar una Notificación para asignarte un Lead. Si estas en tu pc y no la ves entrá en WhatsApp desde tu celular.\n\nMegamoto";
+						"*🔔 Notificación Automática:*\n✅ Se te está por enviar una Notificación para asignarte un Lead. Si estas en tu pc y no la ves entrá en WhatsApp desde tu celular.\n\nMegamoto";
 					const vendorPhone = userPhone;
 
 					await handleWhatsappMessage(vendorPhone, notification);
@@ -122,7 +123,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				} else {
 					const vendorPhone = userPhone;
 					const notification =
-						"*Notificación Automática:*\nLamentablemente no hay Leads que atender.\nMegamoto";
+						"*🔔 Notificación Automática:*\n⚠️ Lamentablemente no hay Leads que atender.\nMegamoto";
 
 					await handleWhatsappMessage(vendorPhone, notification);
 
