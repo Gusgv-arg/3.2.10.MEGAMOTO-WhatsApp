@@ -30,7 +30,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
 		const worksheet = workbook.addWorksheet("Leads");
-		const modelosSheet = workbook.addWorksheet("Modelos");
+		//const modelosSheet = workbook.addWorksheet("Modelos");
 
 		// Definir las columnas
 		worksheet.columns = [
@@ -80,9 +80,9 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		});
 
 		// Agregar los Modelos a la hoja 'Modelos'
-		cleanedModels.forEach((modelo, index) => {
+		/* cleanedModels.forEach((modelo, index) => {
 			modelosSheet.getCell(`A${index + 1}`).value = modelo;
-		});
+		}); */
 
 		// Convertir las opciones en una cadena separada por comas y entre comillas
 		const listaDesplegableStatus = `"${validClientStatuses.join(",")}"`;
@@ -128,7 +128,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		});
 
 		// Add data validation to Modelo column
-		const modelColumn = worksheet.getColumn("modelo");
+		/* const modelColumn = worksheet.getColumn("modelo");
 		modelColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
 			if (rowNumber > 1) {
 				cell.dataValidation = {
@@ -141,7 +141,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 					error: "Selecciona un modelo válido de la lista.",
 				};
 			}
-		});
+		}); */
 
 		// Generar nombre para el archivo
 		const fileName = `leads.xlsx`;
