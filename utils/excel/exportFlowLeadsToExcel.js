@@ -2,24 +2,23 @@ import ExcelJS from "exceljs";
 import path from "path";
 import { fileURLToPath } from "url";
 import Leads from "../../models/leads.js";
+import Prices from "../../models/prices.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const exportFlowLeadsToExcel = async (leads) => {
 	try {
+		// Lista de Status, Marcas y Modelos válidos
 		const validClientStatuses = Leads.schema.path(
 			"flows.client_status"
 		).enumValues;
+		const validBrands = await Prices.distinct("marca");
+		const validModels = await Prices.distinct("modelo");
 
-		if (!validClientStatuses || !validClientStatuses.length) {
-			console.error("No valid client statuses found.");
-			throw new Error("No valid client statuses found.");
-		}
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
 		const worksheet = workbook.addWorksheet("Leads");
-		const statusSheet = workbook.addWorksheet("Status Válidos"); // Nueva hoja para estados válidos
 
 		// Definir las columnas
 		worksheet.columns = [
@@ -68,34 +67,10 @@ export const exportFlowLeadsToExcel = async (leads) => {
 			});
 		});
 
-		// Agregar los estados válidos a la nueva hoja
-		validClientStatuses.forEach((status, index) => {
-			const cell = statusSheet.getCell(`A${index + 1}`);
-			cell.value = status;
-		});
-
-		// Asegurarse de que la hoja de estados válidos tenga un rango definido
-		statusSheet.getColumn("A").width = 30; // Ajustar el ancho de la columna para mejor visualización
-
-		// Definir las opciones de la lista desplegable
-		const opciones = ["Opción1", "Opción2", "Opción3"];
-
 		// Convertir las opciones en una cadena separada por comas y entre comillas
-		const listaDesplegable = `"${validClientStatuses.join(",")}"`;
-
-		// Aplicar la validación de datos a las celdas deseadas
-		const rangoCeldas = ["A5", "A6", "A7"]; // Especifica las celdas donde deseas la lista desplegable
-		rangoCeldas.forEach((direccion) => {
-			const celda = worksheet.getCell(direccion);
-			celda.dataValidation = {
-				type: "list",
-				allowBlank: true,
-				formulae: [listaDesplegable],
-				showErrorMessage: true,
-				errorTitle: "Valor no válido",
-				error: "Seleccione un valor de la lista.",
-			};
-		});
+		const listaDesplegableStatus = `"${validClientStatuses.join(",")}"`;
+		const listaDesplegableBrands = `"${validBrands.join(",")}"`;
+		const listaDesplegableModels = `"${validModels.join(",")}"`;
 
 		// Add data validation to Estado column
 		const stateColumn = worksheet.getColumn("estado");
@@ -105,11 +80,43 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				cell.dataValidation = {
 					type: "list",
 					allowBlank: true,
-					formulae: [listaDesplegable],
+					formulae: [listaDesplegableStatus],
 					showErrorMessage: true,
 					errorTitle: "Estado inválido",
 					errorStyle: "stop",
 					error: "Selecciona un estado válido de la lista.",
+				};
+			}
+		});
+
+		// Add data validation to Marca column
+		const brandColumn = worksheet.getColumn("marca");
+		brandColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
+			if (rowNumber > 1) {
+				cell.dataValidation = {
+					type: "list",
+					allowBlank: true,
+					formulae: [listaDesplegableBrands],
+					showErrorMessage: true,
+					errorTitle: "Marca inválida",
+					errorStyle: "stop",
+					error: "Selecciona una marca válida de la lista.",
+				};
+			}
+		});
+
+		// Add data validation to Modelo column
+		const modelColumn = worksheet.getColumn("modelo");
+		modelColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
+			if (rowNumber > 1) {
+				cell.dataValidation = {
+					type: "list",
+					allowBlank: true,
+					formulae: [listaDesplegableModels],
+					showErrorMessage: true,
+					errorTitle: "Modelo inválido",
+					errorStyle: "stop",
+					error: "Selecciona un modelo válido de la lista.",
 				};
 			}
 		});
