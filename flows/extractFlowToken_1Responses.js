@@ -76,15 +76,15 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		
 	// Send different messages depending customer responses
 	if (model === false && DNI === false){
-		extraction = "*IMPORTANTE:* Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para esto te volvemos a enviar el Formulario.¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves un segundo mensaje entrá en tu celular.*";
+		extraction = "*❗ IMPORTANTE:* Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para esto te volvemos a enviar el Formulario.¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves un segundo mensaje entrá en tu celular.*";
 		return extraction
 		
 	} else if (model === false){
-		extraction = "*IMPORTANTE:* Por favor informanos tu *modelo de interes*. Para esto te volvemos a enviar el Formulario.\n¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves un segundo mensaje entrá en tu celular.*";
+		extraction = "*❗ IMPORTANTE:* Por favor informanos tu *modelo de interes*. Para esto te volvemos a enviar el Formulario.\n¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves un segundo mensaje entrá en tu celular.*";
 		return extraction
 		
 	} else if (DNI === false){
-		extraction = "*IMPORTANTE:* Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves el un segundo mensaje entrá en tu celular.*";
+		extraction = "*❗ IMPORTANTE:* Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves el un segundo mensaje entrá en tu celular.*";
 		return extraction
 		
 	} else {

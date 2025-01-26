@@ -1,6 +1,6 @@
 export const extractFlowToken_2Responses = (userMessage) => {
 	let extraction =
-		"*Notificación Automática:*\nTus respuestas fueron registradas.\n\n";
+		"*🔔 Notificación Automática:*\n✅ Tus respuestas fueron registradas.\n\n";
 
 	// Validar que userMessage existe
 	if (!userMessage) {

@@ -112,7 +112,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		});
 
 		// Add data validation to Marca column
-		const brandColumn = worksheet.getColumn("marca");
+		/* const brandColumn = worksheet.getColumn("marca");
 		brandColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
 			if (rowNumber > 1) {
 				cell.dataValidation = {
@@ -125,7 +125,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 					error: "Selecciona una marca válida de la lista.",
 				};
 			}
-		});
+		}); */
 
 		// Add data validation to Modelo column
 		/* const modelColumn = worksheet.getColumn("modelo");
