@@ -67,7 +67,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			
 			// Se buscan todos los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
-
+			
 			// Chequea que haya más de 1 registro
 			if (allLeads.length > 0) {
 				// Filtra leads del vendor_phone
@@ -75,13 +75,18 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					return lead.lastFlow.vendor_phone === parseInt(userPhone);
 				});
 				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
-
+				
 				// Genera un Excel con los datos
 				const excelFile = await exportFlowLeadsToExcel(vendorLeads);
-				console.log("excel:", excelFile);
-
+				console.log("excel:", excelFile); 
+				
 				// Se envía el Excel por WhatsApp
 				await sendExcelByWhatsApp(userPhone, excelFile, "Leads");
+
+			} else {
+				// Como no hay Leads en la fila notificar al vendedor
+				const message = `*🔔 Notificación Automática:*\n\n⚠️ Lamentablemente no hay Leads para atender.\n\nMegamoto`
+
 			}
 		} else if (message === "lead" && typeOfWhatsappMessage === "text") {
 			// Función que envía un lead para atender
