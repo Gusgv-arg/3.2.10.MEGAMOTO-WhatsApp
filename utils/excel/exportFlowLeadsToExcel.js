@@ -19,6 +19,9 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		const validModels = await Prices.distinct("modelo").exec();
 		console.log("Modelos:", validModels)
 
+		// Limpiar las marcas y modelos
+		const cleanedModels = validModels.map(model => model.trim().replace(/[^a-zA-Z0-9\s]/g, ''));
+
 		// Crear un nuevo workbook
 		const workbook = new ExcelJS.Workbook();
 		const worksheet = workbook.addWorksheet("Leads");
@@ -73,7 +76,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		// Convertir las opciones en una cadena separada por comas y entre comillas
 		const listaDesplegableStatus = `"${validClientStatuses.join(",")}"`;
 		const listaDesplegableBrands = `"${validBrands.join(",")}"`;
-		const listaDesplegableModels = `"${validModels.join(",")}"`;
+		const listaDesplegableModels = `"${cleanedModels.join(",")}"`;
 
 		// Log para verificar las listas de validación
 		console.log("Dropdown Status List:", listaDesplegableStatus);
@@ -114,7 +117,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		});
 
 		// Add data validation to Modelo column
-		/* const modelColumn = worksheet.getColumn("modelo");
+		const modelColumn = worksheet.getColumn("modelo");
 		modelColumn.eachCell({ includeEmpty: true }, (cell, rowNumber) => {
 			if (rowNumber > 1) {
 				cell.dataValidation = {
@@ -127,10 +130,11 @@ export const exportFlowLeadsToExcel = async (leads) => {
 					error: "Selecciona un modelo válido de la lista.",
 				};
 			}
-		}); */
+		});
 
 		// Generar nombre único para el archivo
-		const fileName = `leads-${Date.now()}.xlsx`;
+		//const fileName = `leads-${Date.now()}.xlsx`;
+		const fileName = `leads.xlsx`;
 		const outputPath = path.join(__dirname, "../../public", fileName);
 
 		// Guardar el archivo
