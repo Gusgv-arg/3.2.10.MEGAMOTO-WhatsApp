@@ -20,7 +20,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			existingLead = await createLeadInDb(userMessage);
 
 			// Envía un mensaje previo de bienvenida x si no se ve el Flow
-			const greeting = `¡Hola, gracias por contactarte con Megamoto! Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n❗ Importante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+			const greeting = `👋 Hola, gracias por contactarte con Megamoto! Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n❗ Importante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 			await handleWhatsappMessage(userMessage.userPhone, greeting);
 
@@ -92,7 +92,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
                 // Lead ya existe y NO tiene un Flow abierto arranca el proceso de 0.
 				
                 // Envía un mensaje previo de bienvenida x si no se ve el Flow
-				const greeting2 = `¡Hola nuevamente, gracias por seguir confiando en Megamoto!\n📣 Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n*❗ Importante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular*. \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+				const greeting2 = `👋 Hola nuevamente, gracias por seguir confiando en Megamoto!\n📣 Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n*❗ Importante: si estas en tu pc y no ves un segundo mensaje entrá en tu celular*. \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
                 
 				await handleWhatsappMessage(userMessage.userPhone, greeting2);
                 

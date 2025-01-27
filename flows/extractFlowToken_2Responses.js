@@ -1,19 +1,23 @@
-export const extractFlowToken_2Responses = (userMessage) => {
+export const extractFlowToken_2Responses = (flowMessage) => {
 	let extraction =
 		"*🔔 Notificación Automática:*\n✅ Tus respuestas fueron registradas.\n\n";
 
 	// Validar que userMessage existe
-	if (!userMessage) {
-		console.error("Invalid userMessage:", userMessage);
+	if (!flowMessage) {
+		console.error("Invalid userMessage:", flowMessage);
 		return { extraction: "", flowToken: "" };
 	}
 
 	// Asegurarnos de trabajar con el objeto JSON correctamente
 	let decodedMessage;
+	let days;
+	let delegate;
+	let notes;
 	try {
 		// Intentar parsear si es string
 		decodedMessage =
-			typeof userMessage === "string" ? JSON.parse(userMessage) : userMessage;
+			typeof flowMessage === "string" ? JSON.parse(flowMessage) : flowMessage;
+		console.log(`decodedMessage: ${JSON.stringify(decodedMessage, null, 2)}`);
 	} catch (error) {
 		console.error("Error parsing message:", error);
 		return { extraction: "", flowToken: "" };
@@ -23,28 +27,35 @@ export const extractFlowToken_2Responses = (userMessage) => {
 	if ("Atención del Lead" in decodedMessage) {
 		extraction += `Atención Lead: ${decodedMessage["Atención del Lead"]}\n`;
 
-		// Si es "Atender más tarde" pero no especificó días, establecer 1 día por defecto
 		if (
 			decodedMessage["Atención del Lead"] === "Atender más tarde" &&
 			!("A contactar en días" in decodedMessage)
 		) {
-			extraction += `Contactar en: 1 día (por defecto al no responder)\n`;
+			// Si es "Atender más tarde" pero no especificó días, establecer 1 día por defecto
+			days = 1;
+			extraction += `Contactar en: ${days} día (por defecto al no responder)\n`;
+		
+		} else if (
+			decodedMessage["Atención del Lead"] === "Atender más tarde" &&
+			"A contactar en días" in decodedMessage
+		) {
+			extraction += `Contactar en: ${decodedMessage["A contactar en días"]} días\n`;
+			days = decodedMessage["A contactar en días"];
+					
+		} else if (
+			decodedMessage["Atención del Lead"] === "Derivar a Gustavo Glunz" ||
+			decodedMessage["Atención del Lead"] === "Derivar a Gustavo G.Villafañe" ||
+			decodedMessage["Atención del Lead"] === "Joana"
+		) {
+			extraction += `Derivación a otro Vendedor: ${decodedMessage["Derivar Lead"]}\n`;
+			delegate = decodedMessage["Derivar Lead"];
 		}
-	}
-
-	// Contactar en días
-	if ("A contactar en días" in decodedMessage) {
-		extraction += `Contactar en: ${decodedMessage["A contactar en días"]} días\n`;
-	}
-
-	// Derivación del vendedor
-	if ("Derivar Lead" in decodedMessage) {
-		extraction += `Derivación a otro Vendedor: ${decodedMessage["Derivar Lead"]}\n`;
-	}
+	}	
 
 	// Extraer notas del vendedor
 	if ("Notas" in decodedMessage) {
 		extraction += `Notas: ${decodedMessage["Notas"]}\n`;
+		notes = decodedMessage["Notas"];
 	}
 
 	extraction += `\n*¡Mucha suerte con tu venta!*`;
@@ -52,15 +63,11 @@ export const extractFlowToken_2Responses = (userMessage) => {
 	// Extraer flow token
 	const flowToken = decodedMessage.flow_token;
 
-	return { extraction, flowToken };
+	console.log(
+		`Log desde extractFlowToken_2Responses.js:\nextraction: ${extraction}\nflowToken: ${flowToken}\ndays: ${days}\ndelegate: ${delegate}\nnotes: ${notes}`
+	);
+
+	return { extraction, flowToken, days, delegate, notes };
 };
-/* extractFlowToken_2Responses2({
-  name: 'gustavo gomez villafane',
-  userPhone: '5491161405589',
-  channel: 'whatsapp',
-  message: '{"Atenci\\u00f3n del Lead":"Atender ahora","flow_token":"2ca170e3b-9734-48e8-9fcf-5d6793516a4d"}',
-  type: 'interactive',
-  audioId: '',
-  imageId: '',
-  documentId: ''
-}); */
+/* extractFlowToken_2Responses('{"Atenci\\u00f3n del Lead":"Atender m\\u00e1s tarde","Notas":"Notas mias. No puse dias","flow_token":"2a06e7722-394e-48b8-ad2b-c5e22c19cd44"}');
+ */

@@ -27,12 +27,12 @@ export const extractFlowResponses = async (userMessage) => {
 		
 		// FLOW_TOKEN = 2
 		const responses = extractFlowToken_2Responses(flowMessage);
-		const { extraction, flowToken } = responses;
-		//console.log("Etraction:", extraction)
+		const { extraction, flowToken, days, delegate, notes } = responses;
+		console.log("Etraction:", extraction)
 
 		finalNotification = extraction;
 		
-		return { finalNotification, flowToken };
+		return { finalNotification, flowToken, days, delegate, notes };
 	} else {
 		console.log("No se encontró el Flow Token");
 		return;
