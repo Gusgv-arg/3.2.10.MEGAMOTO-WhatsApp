@@ -51,7 +51,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			// Si vendedor manda algo que no sea texto, documento o Flow lo rebota
 			res.status(200).send("EVENT_RECEIVED");
 
-			const notification = `*🔔 Notificación automática:*\n❌ Los vendedores solo pueden enviar mensajes de Texto, responder a un Flow para tomar un lead o enviar un Excel para cambiar el estado.`;
+			const notification = `*🔔 Notificación automática:*\n\n❌ Los vendedores solo pueden enviar mensajes de Texto, responder a un Flow para tomar un lead o enviar un Excel para cambiar el estado.\n\nMegamoto`;
 
 			await handleWhatsappMessage(userPhone, notification);
 		}
@@ -62,7 +62,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 
 			// Notificar al vendedor del proceso
-			const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. El proceso a veces puede tardar pero volvé a enviar la palabra leads si ves que no llega.\n\nMegamoto`
+			const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\nMegamoto`
 			await handleWhatsappMessage(userPhone, message)
 			
 			// Se buscan todos los leads a atender
@@ -113,7 +113,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 					// Se notifica al vendedor por si no ve el Flow
 					const notification =
-						"*🔔 Notificación Automática:*\n✅ Se te está por enviar una Notificación para asignarte un Lead. Si estas en tu pc y no la ves entrá en WhatsApp desde tu celular.\n\nMegamoto";
+						"*🔔 Notificación Automática:*\n\n✅ Entrá en tu celular para tomar un Lead.\n\nMegamoto";
 					const vendorPhone = userPhone;
 
 					await handleWhatsappMessage(vendorPhone, notification);
@@ -123,7 +123,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				} else {
 					const vendorPhone = userPhone;
 					const notification =
-						"*🔔 Notificación Automática:*\n⚠️ Lamentablemente no hay Leads que atender.\nMegamoto";
+						"*🔔 Notificación Automática:*\n\n⚠️ Lamentablemente no hay Leads que atender.\n\nMegamoto";
 
 					await handleWhatsappMessage(vendorPhone, notification);
 

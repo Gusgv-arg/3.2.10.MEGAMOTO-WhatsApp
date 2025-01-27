@@ -1,6 +1,6 @@
 export const extractFlowToken_2Responses = (flowMessage) => {
 	let extraction =
-		"*🔔 Notificación Automática:*\n✅ Tus respuestas fueron registradas.\n\n";
+		"*🔔 Notificación Automática:*\n\n✅ Tus respuestas fueron registradas.\n\n";
 
 	// Validar que userMessage existe
 	if (!flowMessage) {
@@ -57,7 +57,7 @@ export const extractFlowToken_2Responses = (flowMessage) => {
 		notes = decodedMessage["Notas"];
 	}
 
-	extraction += `\n*¡Mucha suerte con tu venta!*`;
+	extraction += `\n\n*¡Mucha suerte con tu venta!*`;
 
 	// Extraer flow token
 	const flowToken = decodedMessage.flow_token;
