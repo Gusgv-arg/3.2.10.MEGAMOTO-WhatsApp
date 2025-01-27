@@ -22,12 +22,13 @@ export const findLeadWithFlowToken2 = async (
 
 	try {
 		const lead = await Leads.findOne({
-			"flows.flow_2token": flowToken,
+            "flows.flow_2token": flowToken,
 		});
-
+        
 		const flow = lead.flows.find((flow) => flow.flow_2token === flowToken);
 		flow.vendor_name = vendorName;
 		flow.vendor_phone = vendorPhone;
+        flow.vendor_notes = notes;
 
 		if (days) {
 			// Si es a contactar más tarde
@@ -47,15 +48,18 @@ export const findLeadWithFlowToken2 = async (
 			flow.client_status = "vendedor derivado";
 		}
 
-		// Registra las notas del vendedor
-		flow.vendor_notes = notes;
-
 		await lead.save();
 
 		const customerPhone = lead.id_user;
 		const customerName = lead.name;
-
-		return { customerPhone, customerName };
+        const brand = flow.brand
+        const model = flow.model
+        const price = flow.price
+        const payment = flow.payment
+        const dni = flow.dni
+        const questions = flow.questions
+        
+		return { customerPhone, customerName, brand, model, price, payment, dni, questions };
 	} catch (error) {
 		console.log(
 			"error en findLeadWithFlowToken2.js:",

@@ -88,7 +88,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		return extraction
 		
 	} else {
-		extraction = extraction + `\n\n*¡Gracias por confiar en Megamoto!* 🏍️`;
+		extraction = extraction + `\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
 		return extraction;
 	}
 };

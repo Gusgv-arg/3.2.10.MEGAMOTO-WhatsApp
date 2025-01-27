@@ -4,7 +4,6 @@ import axios from "axios"
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
-const appToken = process.env.WHATSAPP_APP_TOKEN;
 
 export const salesFlow_2Notification = async ( myLead, vendorPhone, flow_2Token) => {
 	// URL where to post

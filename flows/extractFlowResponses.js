@@ -12,11 +12,11 @@ export const extractFlowResponses = async (userMessage) => {
 		// Verificar si extraction comienza con "¡IMPORTANTE!"
 		if (extraction.includes("IMPORTANTE:")) {
 			const flowToken = 1;
-			finalNotification = `*¡Hola ${userMessage.name} 👋!*\n${extraction}`;
+			finalNotification = `*👋 Hola ${userMessage.name}!*\n${extraction}`;
 			console.log("FinalNotification:", finalNotification)
 			return {finalNotification, flowToken};
 		} else {
-			const greet = `*¡Hola ${userMessage.name} 👋, gracias por tu respuesta!* En breve vas a recibir una notificación con los datos del vendedor que te estará contactando:\n\n`;
+			const greet = `*👋 Hola ${userMessage.name}*, gracias por tu respuesta! En breve vas a recibir una notificación con los datos del vendedor que te estará contactando:\n\n`;
 			
 			finalNotification = greet + extraction;
 			console.log("FinalNotification:", finalNotification)

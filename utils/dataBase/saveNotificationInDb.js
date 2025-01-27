@@ -43,7 +43,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 					lastFlow.client_status = "falta modelo";
 					lastFlow.history += `${currentDateTime} - Status: falta modelo. `;
 				}
-			} else if (notification.includes("¡Gracias por confiar en Megamoto!")) {
+			} else if (notification.includes("¡Gracias por confiar en MEGAMOTO!")) {
 				// Envío completo del FLOW 1
 
 				// Extraer informacion de la notificacion

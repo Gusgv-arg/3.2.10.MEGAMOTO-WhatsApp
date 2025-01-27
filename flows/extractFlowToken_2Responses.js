@@ -47,8 +47,7 @@ export const extractFlowToken_2Responses = (flowMessage) => {
 			decodedMessage["Atención del Lead"] === "Derivar a Gustavo G.Villafañe" ||
 			decodedMessage["Atención del Lead"] === "Joana"
 		) {
-			extraction += `Derivación a otro Vendedor: ${decodedMessage["Derivar Lead"]}\n`;
-			delegate = decodedMessage["Derivar Lead"];
+			delegate = decodedMessage["Atención del Lead"];
 		}
 	}	
 
@@ -63,11 +62,11 @@ export const extractFlowToken_2Responses = (flowMessage) => {
 	// Extraer flow token
 	const flowToken = decodedMessage.flow_token;
 
-	console.log(
+	/* console.log(
 		`Log desde extractFlowToken_2Responses.js:\nextraction: ${extraction}\nflowToken: ${flowToken}\ndays: ${days}\ndelegate: ${delegate}\nnotes: ${notes}`
-	);
+	); */
 
 	return { extraction, flowToken, days, delegate, notes };
 };
-/* extractFlowToken_2Responses('{"Atenci\\u00f3n del Lead":"Atender m\\u00e1s tarde","Notas":"Notas mias. No puse dias","flow_token":"2a06e7722-394e-48b8-ad2b-c5e22c19cd44"}');
- */
+/* extractFlowToken_2Responses('{"Atenci\\u00f3n del Lead":"Derivar a Gustavo Glunz","Notas":"Deriva a gg","flow_token":"2b772b929-c67d-4a6a-9d52-b9db009404c9"}');
+ */ 
