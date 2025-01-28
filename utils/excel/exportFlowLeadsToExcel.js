@@ -62,7 +62,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 		});		
 		
 		// Generar nombre para el archivo
-		const fileName = `leads.xlsx`;
+		const fileName = `Leads.xlsx`;
 		const outputPath = path.join(__dirname, "../../public", fileName);
 
 		// Guardar el archivo
