@@ -56,7 +56,7 @@ export const exportFlowLeadsToTemplate2 = async (leads) => {
         });
 
         // Generar nombre para el archivo
-        const fileName = `Leads.xlsx`;
+        const fileName = `Leads_Megamoto.xlsx`;
         const outputPath = path.join(__dirname, "../../public", fileName);
 
         // Guardar el archivo
