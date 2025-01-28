@@ -7,6 +7,7 @@ import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
 import { getMediaWhatsappUrl } from "../utils/media/getMediaWhatsappUrl.js";
 import { downloadWhatsAppMedia } from "../utils/media/downloadWhatsAppMedia.js";
 import { processExcelToChangeLeadStatus } from "../utils/excel/processExcelToChangeLeadStatus.js";
+import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTemplate.js";
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
@@ -77,7 +78,8 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
 				
 				// Genera un Excel con los datos
-				const excelFile = await exportFlowLeadsToExcel(vendorLeads);
+				//const excelFile = await exportFlowLeadsToExcel(vendorLeads);
+				const excelFile = await exportFlowLeadsToTemplate(vendorLeads);
 				console.log("excel:", excelFile); 
 				
 				// Se envía el Excel por WhatsApp

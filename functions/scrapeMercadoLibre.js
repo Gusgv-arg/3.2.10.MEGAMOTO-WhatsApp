@@ -71,7 +71,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			__dirname,
 			"../public/precios_template.xlsx"
 		); */
-
+		
 		const templatePath =
 			"https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/precios_template.xlsx";
 		const outputPath = path.join(

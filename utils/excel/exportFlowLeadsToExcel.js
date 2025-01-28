@@ -1,8 +1,6 @@
 import ExcelJS from "exceljs";
 import path from "path";
 import { fileURLToPath } from "url";
-import Leads from "../../models/leads.js";
-import Prices from "../../models/prices.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
