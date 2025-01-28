@@ -20,7 +20,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			existingLead = await createLeadInDb(userMessage);
 
 			// Envía un mensaje previo de bienvenida x si no se ve el Flow
-			const greeting = `👋 Hola, gracias por contactarte con Megamoto! Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n❗ Importante: entrá en tu celular para poder ver el segundo mensaje.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+			const greeting = `👋 Hola, gracias por contactarte con Megamoto! Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n❗ Importante: entrá en tu celular para ver el segundo mensaje.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 			await handleWhatsappMessage(userMessage.userPhone, greeting);
 

@@ -76,19 +76,21 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		
 	// Send different messages depending customer responses
 	if (model === false && DNI === false){
-		extraction = "*❗ IMPORTANTE:* Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para esto te volvemos a enviar el Formulario.¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves un segundo mensaje entrá en tu celular.*";
+		extraction = "\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 		return extraction
 		
 	} else if (model === false){
-		extraction = "*❗ IMPORTANTE:* Por favor informanos tu *modelo de interes*. Para esto te volvemos a enviar el Formulario.\n¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves un segundo mensaje entrá en tu celular.*";
+		extraction = "\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 		return extraction
 		
 	} else if (DNI === false){
-		extraction = "*❗ IMPORTANTE:* Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\n*PD: Si estas en tu PC y no ves el un segundo mensaje entrá en tu celular.*";
+		extraction = "\n*❗ IMPORTANTE:* 🙏 Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 		return extraction
 		
 	} else {
 		extraction = extraction + `\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
+		console.log(extraction)
 		return extraction;
 	}
 };
+//extractFlowToken_1Responses('{"Seleccionar lo que corresponda":["Efectivo, Transferencia o Tarjeta de D\\u00e9bito"],"Motomel":"BLITZ 110 V8 START","Suzuki":"AX100","flow_token":"1"}')

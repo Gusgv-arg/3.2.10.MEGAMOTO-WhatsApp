@@ -46,32 +46,45 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 			} else if (notification.includes("¡Gracias por confiar en MEGAMOTO!")) {
 				// Envío completo del FLOW 1
 
-				// Extraer informacion de la notificacion
-				const brandMatch = notification.match(/Marca: ([^\n]+)/);
-				const modelMatch = notification.match(/Modelo: ([^\n]+)/);
+				// Extraer y guardar marca, modelo, precio y otros productos (en un string)
+				const brandModelPriceMatches = notification.match(/Marca: ([^\n]+)\s*Modelo: ([^\n]+)\s*Precio: \$\s*([0-9.,]+)/g);
+				if (brandModelPriceMatches) {
+					// Guardar los primeros tres productos
+					const firstProduct = brandModelPriceMatches[0].match(/Marca: ([^\n]+)\s*Modelo: ([^\n]+)\s*Precio: \$\s*([0-9.,]+)/);
+					if (firstProduct) {
+						lastFlow.brand = firstProduct[1].trim();
+						lastFlow.model = firstProduct[2].trim();
+						lastFlow.price = firstProduct[3].trim();
+					}
+
+					// Guardar otros productos
+					if (brandModelPriceMatches.length > 1) {
+						const otherProducts = brandModelPriceMatches.slice(1).join(', ').replace(/\n/g, ' ');
+						lastFlow.otherProducts = otherProducts; // Guardar productos adicionales
+					}
+				}
+
+				// Extraer informacion de otros campos
 				const paymentMatch = notification.match(
 					/Método de pago: (.*?)(?=\s*DNI:)/
 				);
 				const dniMatch = notification.match(/DNI: (\d+)/);
-				const priceMatch = notification.match(/Precio: \$\s*([0-9.,]+)/);
-				const questionsMatch = notification.match(/Preguntas o comentarios: ([^\n]+)/);
+				const questionsMatch = notification.match(
+					/Preguntas o comentarios: ([^\n]+)/
+				);
 
-				// Actualiza marca, modelo, método de pago y DNI
-				if (brandMatch) lastFlow.brand = brandMatch[1].trim();
-				if (modelMatch) lastFlow.model = modelMatch[1].trim();
+				// Actualiza otros campos
 				if (paymentMatch) lastFlow.payment = paymentMatch[1].trim();
 				if (dniMatch) lastFlow.dni = parseInt(dniMatch[1]);
-				if (priceMatch) lastFlow.price = priceMatch[1].trim();
 				if (questionsMatch) lastFlow.questions = questionsMatch[1].trim();
 
 				// Cambio del status del lead
 				lastFlow.client_status = "esperando";
 				lastFlow.history += `${currentDateTime} - Status: esperando. `;
-				
-			} else if (userMessage.wamId_Flow1){
+			} else if (userMessage.wamId_Flow1) {
 				// Grabo el wamId
 				lastFlow.wamId_flow1 = userMessage.wamId_Flow1;
-			}			
+			}
 
 			// Update lead
 			await lead.save();

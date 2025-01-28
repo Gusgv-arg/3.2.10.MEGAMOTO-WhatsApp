@@ -35,7 +35,7 @@ export const findLeadWithFlowToken2 = async (
 			flow.client_status = "a contactar";
 			const futureDate = new Date();
 			futureDate.setDate(futureDate.getDate() + days); // Sumar días a la fecha actual
-			flow.toContact = futureDate; // Formatear la fecha
+			flow.toContact = futureDate;
 			flow.history += `${currentDateTime} - Status: a contactar. `;
 		        
         } else if (!days && !delegate) {
@@ -46,6 +46,7 @@ export const findLeadWithFlowToken2 = async (
         } else if (delegate) {
 			// Se derivó a otro vendedor
 			flow.client_status = "vendedor derivado";
+			flow.history += `${currentDateTime} - Status: ${status}.` ;
 		}
 
 		await lead.save();

@@ -9,6 +9,7 @@ const flowDetailSchema = new mongoose.Schema({
 	model: String,
 	price: String,
 	payment: String,
+	otherProducts: String,
 	dni: Number,
 	questions: String,
 	messages: String,

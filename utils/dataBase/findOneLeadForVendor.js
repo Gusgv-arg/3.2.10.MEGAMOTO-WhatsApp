@@ -11,7 +11,9 @@ export const findOneLeadForVendor = (availableLeads) => {
 	}, null);
 
 	const lastFlow = lead.lastFlow;
-	//console.log("lastFlow:", lastFlow);
+	console.log("led:", lead);
+	console.log("lastFlow:", lastFlow);
+	console.log("lastFlowOtherproducts:", lastFlow.otherProducts);
 
 	const myLead = `Fecha: ${
 		lastFlow.toContact ? lastFlow.toContact : lastFlow.flowDate
@@ -21,7 +23,7 @@ export const findOneLeadForVendor = (availableLeads) => {
 		lastFlow.model ? lastFlow.model : "No sabe"
 	}. Precio Informado: ${
 		lastFlow.price ? lastFlow.price : "No informado"
-	} (sin patentar y a confirmar). Preguntas: ${
+	} (sin patentar y a confirmar).${lastFlow.otherProducts && lastFlow.otherProducts.trim() !== "" ? lastFlow.otherProducts : ""} Preguntas: ${
 		lastFlow.questions ? lastFlow.questions : ""
 	}`;
 
