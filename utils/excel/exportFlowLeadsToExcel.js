@@ -47,6 +47,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				marca: lastFlow?.brand || "",
 				modelo: lastFlow?.model || "",
 				precio: lastFlow?.price || "",
+				otrosModelos: lastFlow?.otherProducts || "",
 				formaPago: lastFlow?.payment || "",
 				dni: lastFlow?.dni || "",
 				preguntas: lastFlow?.questions || "",
@@ -57,12 +58,11 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				error: lastFlow?.error || "",
 				tokenFlow2: lastFlow?.flow_2token || "",
 				orígen: lastFlow?.origin || "",
-				otrosModelos: lastFlow?.otherProducts || ""
 			});
 		});		
 		
 		// Generar nombre para el archivo
-		const fileName = `Leads.xlsx`;
+		const fileName = `Leads_Megamoto.xlsx`;
 		const outputPath = path.join(__dirname, "../../public", fileName);
 
 		// Guardar el archivo
