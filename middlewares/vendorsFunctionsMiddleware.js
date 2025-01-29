@@ -25,10 +25,19 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const vendor1 = process.env.PHONE_GUSTAVO_GLUNZ;
 	const vendor2 = process.env.PHONE_GUSTAVO_GOMEZ_VILLAFANE;
 	const vendor3 = process.env.JOANA;
+	let vendorName;
 
 	// Determiar si es un vendedor
 	if (userPhone === vendor1 || userPhone === vendor2 || userPhone === vendor) {
 		vendor = true;
+		// Nombre del vendedor
+		vendorName = vendor1
+			? "G. Glunz"
+			: vendor2
+			? "G. G.Villafañe"
+			: vendor3
+			? "Joana"
+			: "";
 	}
 
 	// Check de que msje sea del vendedor y de tipo texto o documento (para cuando manden excel)
@@ -53,7 +62,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			// Si vendedor manda algo que no sea texto, documento o Flow lo rebota
 			res.status(200).send("EVENT_RECEIVED");
 
-			const notification = `*🔔 Notificación automática:*\n\n❌ Los vendedores solo pueden enviar mensajes de Texto, responder a un Flow para tomar un lead o enviar un Excel para cambiar el estado.\n\nMegamoto`;
+			const notification = `*🔔 Notificación automática:*\n\n❌ Los vendedores solo pueden:\n 1. Enviar palabra "lead" para recibir un Lead.\n2. Enviar palabra "leads" para recibir un excel con sus leads.\n3. Adjuntar el mismo excel recibido más la palabra "leads" para modificar información (estado, etc).\n4.Rsponder al Formulario recibido para tomar un lead.\n\nMegamoto`;
 
 			await handleWhatsappMessage(userPhone, notification);
 		}
@@ -64,36 +73,41 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 
 			// Notificar al vendedor del proceso
-			const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\nMegamoto`
-			await handleWhatsappMessage(userPhone, message)
-			
+			const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\nMegamoto`;
+			await handleWhatsappMessage(userPhone, message);
+
 			// Se buscan todos los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
-			
+
 			// Chequea que haya más de 1 registro
 			if (allLeads.length > 0) {
-				// Filtra leads del vendor_phone
-				const vendorLeads = allLeads.filter((lead) => {
-					return lead.lastFlow.vendor_phone === parseInt(userPhone);
-				});
+				// Filtra leads del vendor_phone salvo G.Glunz que ve todos los Leads
+				let vendorLeads;
+
+				if (vendorName !== "G. Glunz") {
+					vendorLeads = allLeads.filter((lead) => {
+						return lead.lastFlow.vendor_phone === parseInt(userPhone);
+					});
+				} else {
+					vendorLeads = allLeads;
+				}
+
 				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
-				
+
 				// Genera un Excel con los datos
 				//const excelFile = await exportFlowLeadsToExcel(vendorLeads);
 				const excelFile = await exportFlowLeadsToTemplate2(vendorLeads);
-				console.log("excel:", excelFile); 
-				
+				console.log("excel:", excelFile);
+
 				// Se envía el Excel por WhatsApp
-				await sendExcelByWhatsApp(userPhone, excelFile, "Leads");
-				
+				const fileName = `Leads ${vendorName}`;
+				await sendExcelByWhatsApp(userPhone, excelFile, fileName);
 			} else {
 				// Como no hay Leads en la fila notificar al vendedor
-				const message = `*🔔 Notificación Automática:*\n\n⚠️ Lamentablemente no hay Leads para atender.\n\nMegamoto`
-				
-				await handleWhatsappMessage(userPhone, message)
+				const message = `*🔔 Notificación Automática:*\n\n⚠️ Lamentablemente no hay Leads para atender.\n\nMegamoto`;
 
+				await handleWhatsappMessage(userPhone, message);
 			}
-		
 		} else if (message === "lead" && typeOfWhatsappMessage === "text") {
 			// Función que envía un lead para atender
 			res.status(200).send("EVENT_RECEIVED");
@@ -133,10 +147,13 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					// A FUTURO GENERAR UNA ALARMA AL ADMIN!!
 				}
 			}
-		} else if (message === "leads" && typeOfWhatsappMessage === "document" || message === "lead" && typeOfWhatsappMessage === "document") {
+		} else if (
+			(message === "leads" && typeOfWhatsappMessage === "document") ||
+			(message === "lead" && typeOfWhatsappMessage === "document")
+		) {
 			// Función para que el vendedor envíe un Excel para cambiar estados
 			res.status(200).send("EVENT_RECEIVED");
-			
+
 			// Get the Document URL from WhatsApp
 			const document = await getMediaWhatsappUrl(documentId);
 			const documentUrl = document.data.url;

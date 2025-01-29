@@ -42,7 +42,8 @@ export const exportFlowLeadsToTemplate = async (leads) => {
                 historial: lastFlow?.history || "",
                 error: lastFlow?.error || "",
                 tokenFlow2: lastFlow?.flow_2token || "",
-                orígen: lastFlow?.origin || ""
+                orígen: lastFlow?.origin || "",
+                otrosModelos: lastFlow?.otherProducts || ""
             });
         });
         

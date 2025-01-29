@@ -22,6 +22,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 			{ header: "Marca", key: "marca", width: 10 },
 			{ header: "Modelo", key: "modelo", width: 25 },
 			{ header: "Precio informado", key: "precio", width: 10 },
+			{ header: "Otros Modelos", key: "otrosModelos", width: 15 },
 			{ header: "Forma de Pago", key: "formaPago", width: 20 },
 			{ header: "DNI", key: "dni", width: 10 },
 			{ header: "Preguntas Lead", key: "preguntas", width: 20 },
@@ -55,7 +56,8 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				historial: lastFlow?.history || "",
 				error: lastFlow?.error || "",
 				tokenFlow2: lastFlow?.flow_2token || "",
-				orígen: lastFlow?.origin || ""
+				orígen: lastFlow?.origin || "",
+				otrosModelos: lastFlow?.otherProducts || ""
 			});
 		});		
 		
