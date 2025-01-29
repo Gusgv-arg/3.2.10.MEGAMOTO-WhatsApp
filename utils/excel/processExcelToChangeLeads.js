@@ -17,7 +17,9 @@ const transformToAccented = (status) => {
 		"sin definicion": "sin definición",
 		"sin definir" : "sin definición"		
 	};
-	return transformations[status.toLowerCase()] || status;
+	// Si el vendedor manda en blanco retorna "vendedor" como status
+	// CREO QUE ACA DEBERIA HACER LA VALIDACION DE QUE SI MANDA FRUTA Q DEVUELVA A VENDEDOR
+	return transformations[status.toLowerCase()] || status || "vendedor";
 };
 
 export const processExcelToChangeLeads = async (

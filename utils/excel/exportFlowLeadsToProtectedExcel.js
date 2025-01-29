@@ -85,7 +85,7 @@ export const exportFlowLeadsToProtectedExcel = async (leads) => {
       insertRows: true,
       insertColumns: false,
       insertHyperlinks: false,
-      deleteRows: false,
+      deleteRows: true,
       deleteColumns: false,
       sort: true,
       autoFilter: true,
