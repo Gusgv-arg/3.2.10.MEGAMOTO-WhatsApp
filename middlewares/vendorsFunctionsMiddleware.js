@@ -6,7 +6,7 @@ import { exportFlowLeadsToExcel } from "../utils/excel/exportFlowLeadsToExcel.js
 import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
 import { getMediaWhatsappUrl } from "../utils/media/getMediaWhatsappUrl.js";
 import { downloadWhatsAppMedia } from "../utils/media/downloadWhatsAppMedia.js";
-import { processExcelToChangeLeadStatus } from "../utils/excel/processExcelToChangeLeadStatus.js";
+import { processExcelToChangeLeads } from "../utils/excel/processExcelToChangeLeads.js";
 import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTemplate.js";
 import { exportFlowLeadsToTemplate2 } from "../utils/excel/exportFlowLeadsToTemplate2.js";
 
@@ -79,7 +79,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			// Se buscan todos los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
 			console.log("allLeads:", allLeads)
-			
+
 			// Chequea que haya más de 1 registro
 			if (allLeads.length > 0) {
 				// Filtra leads del vendor_phone salvo G.Glunz que ve todos los Leads
@@ -164,7 +164,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			const documentBufferData = documentBuffer.data;
 
 			// Call the new function to process the campaign
-			await processExcelToChangeLeadStatus(documentBufferData, userPhone);
+			await processExcelToChangeLeads(documentBufferData, userPhone);
 		} else {
 			next();
 		}

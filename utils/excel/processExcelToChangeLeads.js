@@ -21,7 +21,7 @@ const transformToAccented = (status) => {
 	return transformations[status.toLowerCase()] || status;
 };
 
-export const processExcelToChangeLeadStatus = async (
+export const processExcelToChangeLeads = async (
 	excelBuffer,
 	userPhone
 ) => {
@@ -40,7 +40,7 @@ export const processExcelToChangeLeadStatus = async (
 			// Comenzar desde la segunda fila
 			const col = data[i]; // Cada fila es un array
 			const id_user = col[1] ? String(col[1]).trim() : null; // Columna B (índice 1)
-			const flow_2token = col[15] ? String(col[15]).trim() : null; // Columna O (índice 14)
+			const flow_2token = col[16] ? String(col[16]).trim() : null; // Columna Q (índice 16)
 
 			// Validar client_status e ir acumulando errores posibles
 			let client_status = col[2]; // Columna C (índice 2)
@@ -76,19 +76,20 @@ export const processExcelToChangeLeadStatus = async (
 				continue;
 			}
 
-			// Create update object with only the fields that exist in the Excel
+			// Crear objeto con los campos modificables
 			const updateData = {
 				"flows.$.client_status": client_status, // Usar el client_status validado
 				"flows.$.toContact": col[4] ? new Date(col[4]) : undefined, // Columna E (índice 4)
 				"flows.$.brand": col[5], // Columna F (índice 5)
 				"flows.$.model": col[6], // Columna G (índice 6)
 				"flows.$.price": col[7], // Columna H (índice 7)
-				"flows.$.payment": col[8], // Columna I (índice 8)
-				"flows.$.dni": col[9], // Columna J (índice 9)
-				"flows.$.questions": col[10], // Columna K (índice 10)
-				"flows.$.vendor_name": col[11], // Columna L (índice 11)
-				"flows.$.vendor_phone": col[12], // Columna M (índice 12)
+				"flows.$.otherProducts": col[8], // Columna I (índice 8)
+				"flows.$.payment": col[9], // Columna J (índice 9)
+				"flows.$.dni": col[10], // Columna K (índice 10)
+				"flows.$.questions": col[11], // Columna L (índice 11)
+				"flows.$.vendor_name": col[12], // Columna M (índice 12)
 				"flows.$.vendor_notes": col[13], // Columna N (índice 13)
+				"flows.$.origin": col[15], // Columna P (índice 15)
 			};
 
 			// Remove undefined values
@@ -154,6 +155,7 @@ export const processExcelToChangeLeadStatus = async (
 						[`flows.${flowIndex}.brand`]: updateData["flows.$.brand"],
 						[`flows.${flowIndex}.model`]: updateData["flows.$.model"],
 						[`flows.${flowIndex}.price`]: updateData["flows.$.price"],
+						[`flows.${flowIndex}.otherProducts`]: updateData["flows.$.otherProducts"],
 						[`flows.${flowIndex}.payment`]: updateData["flows.$.payment"],
 						[`flows.${flowIndex}.dni`]: updateData["flows.$.dni"],
 						[`flows.${flowIndex}.questions`]: updateData["flows.$.questions"],
