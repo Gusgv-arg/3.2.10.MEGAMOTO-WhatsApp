@@ -3,7 +3,6 @@ import Leads from "../../models/leads.js";
 import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
 import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 
-
 // Importar los enums desde el esquema de Leads
 //const validClientStatuses = Object.values(Leads.schema.paths.flows.schema.paths.client_status.enum);
 const validClientStatuses = Leads.schema.path(
@@ -86,7 +85,6 @@ export const processExcelToChangeLeads = async (
 				"flows.$.otherProducts": col[8], // Columna I (índice 8)
 				"flows.$.payment": col[9], // Columna J (índice 9)
 				"flows.$.dni": col[10], // Columna K (índice 10)
-				"flows.$.questions": col[11], // Columna L (índice 11)
 				"flows.$.vendor_name": col[12], // Columna M (índice 12)
 				"flows.$.vendor_notes": col[13], // Columna N (índice 13)
 				"flows.$.origin": col[15], // Columna P (índice 15)
@@ -158,14 +156,12 @@ export const processExcelToChangeLeads = async (
 						[`flows.${flowIndex}.otherProducts`]: updateData["flows.$.otherProducts"],
 						[`flows.${flowIndex}.payment`]: updateData["flows.$.payment"],
 						[`flows.${flowIndex}.dni`]: updateData["flows.$.dni"],
-						[`flows.${flowIndex}.questions`]: updateData["flows.$.questions"],
 						[`flows.${flowIndex}.vendor_name`]:
 							updateData["flows.$.vendor_name"],
-						[`flows.${flowIndex}.vendor_phone`]:
-							updateData["flows.$.vendor_phone"],
 						[`flows.${flowIndex}.vendor_notes`]:
-							updateData["flows.$.vendor_notes"],
-						[`flows.${flowIndex}.history`]: historyUpdate,
+							updateData["flows.$.vendor_notes"],						
+						[`flows.${flowIndex}.origin`]:
+							updateData["flows.$.origin"],						
 					},
 				}
 			);
