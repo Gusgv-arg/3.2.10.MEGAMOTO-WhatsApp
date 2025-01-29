@@ -11,15 +11,17 @@ const validClientStatuses = Leads.schema.path(
 
 // Función para transformar strings sin acento a con acento
 const transformToAccented = (status) => {
+	if (status === "" || status === undefined || status === null){
+		status = "vendedor"
+	}
 	const transformations = {
 		"compro": "compró",
 		"no compro": "no compró",
 		"sin definicion": "sin definición",
 		"sin definir" : "sin definición"		
 	};
-	// Si el vendedor manda en blanco retorna "vendedor" como status
-	// CREO QUE ACA DEBERIA HACER LA VALIDACION DE QUE SI MANDA FRUTA Q DEVUELVA A VENDEDOR
-	return transformations[status.toLowerCase()] || status || "vendedor";
+		
+	return transformations[status.toLowerCase()] || status;
 };
 
 export const processExcelToChangeLeads = async (
