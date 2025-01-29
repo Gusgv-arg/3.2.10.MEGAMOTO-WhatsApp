@@ -163,6 +163,15 @@ export const processExcelToChangeLeads = async (
 						[`flows.${flowIndex}.origin`]:
 							updateData["flows.$.origin"],						
 					},
+					$setOnInsert: {
+						// Agregar campos que no existan en el registro
+						...Object.keys(updateData).reduce((acc, key) => {
+							if (!existingLead.flows[flowIndex][key.split('.')[1]]) {
+								acc[`flows.${flowIndex}.${key.split('.')[1]}`] = updateData[key];
+							}
+							return acc;
+						}, {})
+					}
 				}
 			);
 
