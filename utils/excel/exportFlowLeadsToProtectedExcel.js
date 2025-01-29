@@ -60,7 +60,14 @@ export const exportFlowLeadsToProtectedExcel = async (leads) => {
       });
     });
 
-    // Proteger celdas específicas (Teléfono, Primer Contacto, Preguntas Lead, Historial, Token Flow 2, Error)
+    // Desbloquear todas las celdas por defecto
+    worksheet.eachRow((row) => {
+      row.eachCell((cell) => {
+        cell.protection = { locked: false };
+      });
+    });
+
+    // Bloquear celdas específicas (Teléfono, Primer Contacto, Preguntas Lead, Historial, Token Flow 2, Error)
     const columnsToProtect = ['B', 'D', 'L', 'O', 'Q', 'R'];
     columnsToProtect.forEach((col) => {
       worksheet.getColumn(col).eachCell((cell) => {
