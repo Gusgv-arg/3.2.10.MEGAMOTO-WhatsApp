@@ -68,7 +68,7 @@ export const exportFlowLeadsToProtectedExcel = async (leads) => {
     });
 
     // Bloquear celdas específicas (Teléfono, Primer Contacto, Preguntas Lead, Historial, Token Flow 2, Error)
-    const columnsToProtect = ['B', 'D', 'L', 'O', 'Q', 'R'];
+    const columnsToProtect = ['A','B', 'D', 'L', 'O', 'Q', 'R'];
     columnsToProtect.forEach((col) => {
       worksheet.getColumn(col).eachCell((cell) => {
         cell.protection = { locked: true };
