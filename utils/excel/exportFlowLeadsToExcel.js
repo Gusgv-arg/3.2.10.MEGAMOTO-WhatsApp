@@ -60,6 +60,14 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				orígen: lastFlow?.origin || "",
 			});
 		});		
+
+		// Proteger celdas específicas (teléfono, primer contacto, preguntas, historial, flowToken2, error)
+		worksheet.getColumn('B').eachCell({ includeEmpty: true }).forEach(cell => cell.protect()); // idUsuario
+		worksheet.getColumn('D').eachCell({ includeEmpty: true }).forEach(cell => cell.protect()); // fechaFlow
+		worksheet.getColumn('L').eachCell({ includeEmpty: true }).forEach(cell => cell.protect()); // preguntas
+		worksheet.getColumn('O').eachCell({ includeEmpty: true }).forEach(cell => cell.protect()); // historial
+		worksheet.getColumn('Q').eachCell({ includeEmpty: true }).forEach(cell => cell.protect()); // tokenFlow2
+		worksheet.getColumn('R').eachCell({ includeEmpty: true }).forEach(cell => cell.protect()); // error
 		
 		// Generar nombre para el archivo
 		const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
