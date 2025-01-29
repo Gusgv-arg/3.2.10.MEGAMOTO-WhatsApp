@@ -9,6 +9,7 @@ import { downloadWhatsAppMedia } from "../utils/media/downloadWhatsAppMedia.js";
 import { processExcelToChangeLeads } from "../utils/excel/processExcelToChangeLeads.js";
 import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTemplate.js";
 import { exportFlowLeadsToTemplate2 } from "../utils/excel/exportFlowLeadsToTemplate2.js";
+import { exportFlowLeadsToProtectedExcel } from "../utils/excel/exportFlowLeadsToProtectedExcel.js";
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
@@ -96,7 +97,8 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
 
 				// Genera un Excel con los datos
-				const excelFile = await exportFlowLeadsToExcel(vendorLeads);
+				const excelFile = await exportFlowLeadsToProtectedExcel(vendorLeads);
+				//const excelFile = await exportFlowLeadsToExcel(vendorLeads);
 				//const excelFile = await exportFlowLeadsToTemplate2(vendorLeads);
 				console.log("excel:", excelFile);
 
