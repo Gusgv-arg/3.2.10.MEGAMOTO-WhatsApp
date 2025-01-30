@@ -146,26 +146,27 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		response.message += preguntasMatch[1].replace(/\\u00e9/g, "é")
 		response.questions = preguntasMatch[1].replace(/\\u00e9/g, "é");
 		console.log("response despues de preguntas", response)
+	} else {
+		console.log("No se encontraron preguntas en el mensaje.");
 	}
 
 	// Send different messages depending customer responses
 	if (model === false && DNI === false) {
-		let extraction =
+		response.message =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
-		response.message = extraction;
+		 
 		return response;
 	
 	} else if (model === false) {
-		let extraction =
+		response.message =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
-		response.message = extraction;
+		
 		return response;
 	
 	} else if (DNI === false) {
-		let extraction =
+		response.message =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 
-		response.message = extraction;
 		return response;
 	
 	} else {
