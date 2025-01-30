@@ -2,7 +2,7 @@ import Prices from "../models/prices.js";
 
 export const extractFlowToken_1Responses = async (flowMessage) => {
 	// Paso del formato json a string
-	flowMessage = JSON.stringify(flowMessage)
+	//flowMessage = JSON.stringify(flowMessage) // descomentar en localhost
 	
 	// Función que retorna este objeto
 	let response = {
