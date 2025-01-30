@@ -1,6 +1,8 @@
 import Prices from "../models/prices.js";
 
 export const extractFlowToken_1Responses = async (flowMessage) => {
+	// Paso del formato json a string
+	flowMessage = JSON.stringify(flowMessage)
 	
 	// Función que retorna este objeto
 	let response = {
@@ -18,7 +20,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	let model = true;
 	let DNI = true;
 
-	console.log("Lo que viene del Flow:", flowMessage);
+	//console.log("Lo que viene del Flow:", flowMessage);
 
 	// Definir las marcas a buscar
 	const marcas = [
@@ -37,7 +39,9 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 
 	// Buscar la marca y el modelo en el string
 	marcas.forEach((m) => {
+		
 		const regex = new RegExp(`"${m}":"([^"]+)"`, "g");
+		
 		let match;
 		while ((match = regex.exec(flowMessage)) !== null) {
 			marcasEncontradas.push(m);
@@ -57,21 +61,23 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		// Toma el 1 registro y guarda marca, modelo y precio
 		response.brand = marcasEncontradas[0];
 		response.model = modelosEncontrados[0];
-		const precio = await buscarPrecios(modelosEncontrados[0]); // Obtener el precio
-		response.price = precio; // Guardar el primer precio
+		//const precio = await buscarPrecios(modelosEncontrados[0]); // Obtener el precio
+		//response.price = precio; // Guardar el primer precio
+		response.price = 111; // Guardar el primer precio
 
 		// Guardar los otros productos
 		let otrosProductos = [];
 		for (let i = 1; i < modelosEncontrados.length; i++) {
-			const precioOtro = await buscarPrecios(modelosEncontrados[i]); // Obtener el precio
-			const precioFormateado =
+			//const precioOtro = await buscarPrecios(modelosEncontrados[i]); // Obtener el precio
+			/* const precioFormateado =
 				typeof precioOtro === "number"
 					? precioOtro.toLocaleString("es-AR", {
 							style: "decimal",
 							minimumFractionDigits: 0,
 					  })
-					: precioOtro; // Formatear el precio
-			otrosProductos.push(
+					: precioOtro; */ // Formatear el precio
+			const precioFormateado=1111
+					otrosProductos.push(
 				`Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio: $ ${precioFormateado}\n`
 			);
 		}
@@ -148,7 +154,9 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 			`\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
 		console.log(extraction);
 		response.message = extraction;
+		console.log("Response desde extractFlowToken_1Responses.js", response)
+		
 		return response;
 	}
 };
-//extractFlowToken_1Responses({"Seleccionar lo que corresponda":["Tarjeta de Cr\u00e9dito"],"Motomel":"BLITZ 110 V8 START","Suzuki":"AX100","flow_token":"1"})
+/* extractFlowToken_1Responses({"Seleccionar lo que corresponda":["Tarjeta de Cr\u00e9dito"],"Motomel":"BLITZ 110 V8 START","Suzuki":"AX100","flow_token":"1"}) */
