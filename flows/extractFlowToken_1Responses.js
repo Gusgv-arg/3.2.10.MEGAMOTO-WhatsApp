@@ -16,7 +16,6 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		questions: "",
 	};
 
-	let extraction = "";
 	let model = true;
 	let DNI = true;
 
@@ -110,7 +109,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 			.split(",")
 			.map((item) => item.trim().replace(/"/g, ""))
 			.map((item) => item.replace(/\\u00e9/g, "é")); // Decodifica caracteres Unicode si es necesario
-		extraction += `Método de pago: ${metodoPagoArray.join(", ")}\n`;
+		response.message += `Método de pago: ${metodoPagoArray.join(", ")}\n`;
 		response.payment = metodoPagoArray.join(", ");
 	}
 
@@ -118,7 +117,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	const dniRegex = /"DNI":"([^"]+)"/;
 	const dniMatch = flowMessage.match(dniRegex);
 	if (dniMatch && dniMatch[1]) {
-		extraction += `DNI: ${dniMatch[1]}\n`;
+		response.message += `DNI: ${dniMatch[1]}\n`;
 		response.dni = dniMatch[1];
 	}
 
@@ -140,33 +139,30 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 			/\\u00e9/g,
 			"é"
 		)}`;
-
+		response.message += preguntasMatch[1].replace(/\\u00e9/g, "é")
 		response.questions = preguntasMatch[1].replace(/\\u00e9/g, "é");
 	}
 
 	// Send different messages depending customer responses
 	if (model === false && DNI === false) {
-		extraction =
+		let extraction =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 		response.message = extraction;
 		return response;
 	} else if (model === false) {
-		extraction =
+		let extraction =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 		response.message = extraction;
 		return response;
 	} else if (DNI === false) {
-		extraction =
+		let extraction =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 
 		response.message = extraction;
 		return response;
 	} else {
-		extraction =
-			extraction +
-			`\n\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
-		console.log(extraction);
-		response.message = extraction;
+		response.message +=	`\n\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
+		
 		console.log("Response desde extractFlowToken_1Responses.js", response)
 		
 		return response;
