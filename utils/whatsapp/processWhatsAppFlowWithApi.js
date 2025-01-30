@@ -18,7 +18,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				const flowToken = 1;
 
 				const extraction = await extractFlowToken_1Responses(userMessage.message);
-
+				
 				console.log("Extraction desde processWhatsAppFlowWithApi.js:", extraction);
 
 				// Verificar si extraction comienza con "¡IMPORTANTE!"

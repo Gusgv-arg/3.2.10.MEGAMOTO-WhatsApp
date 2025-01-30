@@ -67,60 +67,64 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		
 		// Formatear el precio del primer registro
 		const precioFormateado =
-			typeof precio === "number"
-				? precio.toLocaleString("es-AR", {
-						style: "decimal",
-						minimumFractionDigits: 0,
-				  })
-				: precio; // Formatear el precio
-
+		typeof precio === "number"
+		? precio.toLocaleString("es-AR", {
+			style: "decimal",
+			minimumFractionDigits: 0,
+		})
+		: precio; // Formatear el precio
+		
 		// Guardar el primer registro en response.message
 		response.message = `Marca: ${response.brand}\nModelo: ${response.model}\nPrecio: $ ${precioFormateado}\n`;
-
+		console.log("response despues de precio", response)
+		
 		// Guardar los otros productos
 		let otrosProductos = [];
 		for (let i = 1; i < modelosEncontrados.length; i++) {
 			const precioOtro = await buscarPrecios(modelosEncontrados[i]); // Obtener el precio
 			const precioFormateado =
-				typeof precioOtro === "number"
-					? precioOtro.toLocaleString("es-AR", {
-							style: "decimal",
-							minimumFractionDigits: 0,
-					  })
-					: precioOtro; // Formatear el precio
+			typeof precioOtro === "number"
+			? precioOtro.toLocaleString("es-AR", {
+				style: "decimal",
+				minimumFractionDigits: 0,
+			})
+			: precioOtro; // Formatear el precio
 			//const precioFormateado=1111
-					otrosProductos.push(
+			otrosProductos.push(
 				`Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio: $ ${precioFormateado}\n`
 			);
 		}
 		response.otherProducts = otrosProductos.join(""); // Unir otros productos en un solo string
+		console.log("response despues de otros pro", response)
 	} else {
 		// Caso que el cliente no informa marca y modelo. Se lo notifica y se le vuelve a enviar el flow
 		model = false;
 	}
-
+	
 	// Extraer el método de pago
 	const metodoPagoRegex = /"Seleccionar lo que corresponda":\[(.*?)\]/;
 	const metodoPagoMatch = flowMessage.match(metodoPagoRegex);
 	let metodoPagoArray = [];
-
+	
 	if (metodoPagoMatch) {
 		metodoPagoArray = metodoPagoMatch[1]
-			.split(",")
-			.map((item) => item.trim().replace(/"/g, ""))
-			.map((item) => item.replace(/\\u00e9/g, "é")); // Decodifica caracteres Unicode si es necesario
+		.split(",")
+		.map((item) => item.trim().replace(/"/g, ""))
+		.map((item) => item.replace(/\\u00e9/g, "é")); // Decodifica caracteres Unicode si es necesario
 		response.message += `Método de pago: ${metodoPagoArray.join(", ")}\n`;
 		response.payment = metodoPagoArray.join(", ");
+		console.log("response despues de metodo de pago", response)
 	}
-
+	
 	// Extraer el DNI
 	const dniRegex = /"DNI":"([^"]+)"/;
 	const dniMatch = flowMessage.match(dniRegex);
 	if (dniMatch && dniMatch[1]) {
 		response.message += `DNI: ${dniMatch[1]}\n`;
 		response.dni = dniMatch[1];
+		console.log("response despues de dni", response)
 	}
-
+	
 	// Verificar si hay un préstamo y el DNI está vacío para volver a enviar el Flow
 	if (
 		metodoPagoArray.includes("Préstamo Personal") ||
@@ -130,7 +134,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 			DNI = false;
 		}
 	}
-
+	
 	// Extraer las preguntas o comentarios
 	const preguntasRegex = /"Preguntas":"([^"]+)"/;
 	const preguntasMatch = flowMessage.match(preguntasRegex);
@@ -141,6 +145,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		)}`;
 		response.message += preguntasMatch[1].replace(/\\u00e9/g, "é")
 		response.questions = preguntasMatch[1].replace(/\\u00e9/g, "é");
+		console.log("response despues de preguntas", response)
 	}
 
 	// Send different messages depending customer responses
@@ -149,17 +154,20 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 			"\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 		response.message = extraction;
 		return response;
+	
 	} else if (model === false) {
 		let extraction =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 		response.message = extraction;
 		return response;
+	
 	} else if (DNI === false) {
 		let extraction =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 
 		response.message = extraction;
 		return response;
+	
 	} else {
 		response.message +=	`\n\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
 		
