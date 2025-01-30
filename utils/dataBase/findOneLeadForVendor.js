@@ -11,10 +11,8 @@ export const findOneLeadForVendor = (availableLeads) => {
 	}, null);
 
 	const lastFlow = lead.lastFlow;
-	console.log("lead:", lead);
 	console.log("lastFlow:", lastFlow);
-	console.log("lastFlowOtherproducts:", lastFlow.otherProducts);
-
+	
 	const myLead = `Fecha: ${
 		lastFlow.toContact ? lastFlow.toContact : lastFlow.flowDate
 	}. Nombre: ${lead.name}. Celular: ${lead.id_user}. Status: ${

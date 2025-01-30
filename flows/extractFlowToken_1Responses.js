@@ -5,6 +5,8 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	let model = true;
 	let DNI = true;
 
+	console.log("Lo que viene del Flow:", flowMessage)
+	
 	// Definir las marcas a buscar
 	const marcas = ["Benelli", "Suzuki", "Sym", "Motomel", "Keeway", "Tarpan", "Teknial eléctricas", "TVS", "No sé"];
 	let marcasEncontradas = [];
