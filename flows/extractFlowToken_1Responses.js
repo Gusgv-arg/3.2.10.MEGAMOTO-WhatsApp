@@ -65,7 +65,18 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		response.model = modelosEncontrados[0];
 		const precio = await buscarPrecios(modelosEncontrados[0]); // Obtener el precio
 		response.price = precio; // Guardar el primer precio
-		//response.price = 111; 
+		
+		// Formatear el precio del primer registro
+		const precioFormateado =
+			typeof precio === "number"
+				? precio.toLocaleString("es-AR", {
+						style: "decimal",
+						minimumFractionDigits: 0,
+				  })
+				: precio; // Formatear el precio
+
+		// Guardar el primer registro en response.message
+		response.message = `Marca: ${response.brand}\nModelo: ${response.model}\nPrecio: $ ${precioFormateado}\n`;
 
 		// Guardar los otros productos
 		let otrosProductos = [];
@@ -153,7 +164,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	} else {
 		extraction =
 			extraction +
-			`\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
+			`\n\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
 		console.log(extraction);
 		response.message = extraction;
 		console.log("Response desde extractFlowToken_1Responses.js", response)
