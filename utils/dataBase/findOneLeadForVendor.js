@@ -11,7 +11,7 @@ export const findOneLeadForVendor = (availableLeads) => {
 	}, null);
 
 	const lastFlow = lead.lastFlow;
-	console.log("led:", lead);
+	console.log("lead:", lead);
 	console.log("lastFlow:", lastFlow);
 	console.log("lastFlowOtherproducts:", lastFlow.otherProducts);
 
@@ -23,9 +23,9 @@ export const findOneLeadForVendor = (availableLeads) => {
 		lastFlow.model ? lastFlow.model : "No sabe"
 	}. Precio Informado: ${
 		lastFlow.price ? lastFlow.price : "No informado"
-	} (sin patentar y a confirmar).${lastFlow.otherProducts && lastFlow.otherProducts.trim() !== "" ? lastFlow.otherProducts : ""} Preguntas: ${
+	}.${lastFlow.otherProducts && lastFlow.otherProducts.trim() !== "" ? lastFlow.otherProducts : ""} Preguntas: ${
 		lastFlow.questions ? lastFlow.questions : ""
-	}`;
+	}. Método de Pago: ${lastFlow.payment}. ${lastFlow.questions ? "Preguntas: " `${lastFlow.questions}` : ""}`;
 
 	const flow_2Token = lastFlow.flow_2token;
 	
