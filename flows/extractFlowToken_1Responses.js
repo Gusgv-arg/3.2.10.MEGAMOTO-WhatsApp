@@ -20,7 +20,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	let model = true;
 	let DNI = true;
 
-	//console.log("Lo que viene del Flow:", flowMessage);
+	console.log("Lo que viene del Flow:", flowMessage);
 
 	// Definir las marcas a buscar
 	const marcas = [
@@ -48,6 +48,8 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 			modelosEncontrados.push(match[1]);
 		}
 	});
+	console.log("marcas",marcasEncontradas)
+	console.log("modelos",modelosEncontrados)
 
 	// Función que busca los precios del modelo buscado x el lead
 	const buscarPrecios = async (modelo) => {
@@ -61,22 +63,22 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		// Toma el 1 registro y guarda marca, modelo y precio
 		response.brand = marcasEncontradas[0];
 		response.model = modelosEncontrados[0];
-		//const precio = await buscarPrecios(modelosEncontrados[0]); // Obtener el precio
-		//response.price = precio; // Guardar el primer precio
-		response.price = 111; // Guardar el primer precio
+		const precio = await buscarPrecios(modelosEncontrados[0]); // Obtener el precio
+		response.price = precio; // Guardar el primer precio
+		//response.price = 111; 
 
 		// Guardar los otros productos
 		let otrosProductos = [];
 		for (let i = 1; i < modelosEncontrados.length; i++) {
-			//const precioOtro = await buscarPrecios(modelosEncontrados[i]); // Obtener el precio
-			/* const precioFormateado =
+			const precioOtro = await buscarPrecios(modelosEncontrados[i]); // Obtener el precio
+			const precioFormateado =
 				typeof precioOtro === "number"
 					? precioOtro.toLocaleString("es-AR", {
 							style: "decimal",
 							minimumFractionDigits: 0,
 					  })
-					: precioOtro; */ // Formatear el precio
-			const precioFormateado=1111
+					: precioOtro; // Formatear el precio
+			//const precioFormateado=1111
 					otrosProductos.push(
 				`Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio: $ ${precioFormateado}\n`
 			);
