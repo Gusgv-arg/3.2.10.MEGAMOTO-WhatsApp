@@ -107,7 +107,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				await sendExcelByWhatsApp(userPhone, excelFile, fileName);
 			} else {
 				// Como no hay Leads en la fila notificar al vendedor
-				const message = `*🔔 Notificación Automática:*\n\n⚠️ Lamentablemente no hay Leads para atender.\n\nMegamoto`;
+				const message = `*🔔 Notificación Automática:*\n\n⚠️ Por el momento no hay Leads para atender.\n\nMegamoto`;
 
 				await handleWhatsappMessage(userPhone, message);
 			}

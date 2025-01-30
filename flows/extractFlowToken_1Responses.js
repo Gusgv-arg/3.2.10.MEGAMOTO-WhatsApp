@@ -32,7 +32,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 			const precio = await buscarPrecios(modelo); // Obtener el precio
 			const precioFormateado = typeof precio === 'number' ? precio.toLocaleString('es-AR', { style: 'decimal', minimumFractionDigits: 0 }) : precio; // Formatear el precio
 			//const precioFormateado = 1111 // descomentar cuando hago pruebas en local
-		extraction += `Marca: ${marcasEncontradas[modelosEncontrados.indexOf(modelo)]}\nModelo: ${modelo}\nPrecio: $ ${precioFormateado} - No incluye patentamiento y es a reconfirmar por el vendedor\n`;
+		extraction += `Marca: ${marcasEncontradas[modelosEncontrados.indexOf(modelo)]}\nModelo: ${modelo}\nPrecio: $ ${precioFormateado}`;
 	}
 
 	} else {
@@ -88,7 +88,8 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		return extraction
 		
 	} else {
-		extraction = extraction + `\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
+
+		extraction = extraction + `\n❗ Los precios informados no incluyen patentamiento ni sellados, están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
 		console.log(extraction)
 		return extraction;
 	}

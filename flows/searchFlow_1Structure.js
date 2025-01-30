@@ -1,6 +1,6 @@
 
 // Searches Flow structure to return format por post request
-export const searchFlow_1Structure = (templateName, name) => {
+export const searchFlow_1Structure = (templateName) => {
 	
 	// Generate a flow token && parameters to identify the flow among others
 	const flowToken = 1;
@@ -14,15 +14,6 @@ export const searchFlow_1Structure = (templateName, name) => {
 					image: {
 						link: "https://github.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/blob/main/assets/foto_campa%C3%B1a_pedidosya.jpg?raw=true",
 					},
-				},
-			],
-		},
-		{
-			type: "body",
-			parameters: [
-				{
-					type: "text",
-					text: name,
 				},
 			],
 		},
