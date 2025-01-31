@@ -12,20 +12,24 @@ export const findOneLeadForVendor = (availableLeads) => {
 
 	const lastFlow = lead.lastFlow;
 	console.log("lastFlow:", lastFlow);
-	
+
 	const myLead = `Fecha: ${
 		lastFlow.toContact ? lastFlow.toContact : lastFlow.flowDate
-	}. Nombre: ${lead.name}. Celular: ${lead.id_user}. Status: ${
+	}Nombre: ${lead.name}. Celular: ${lead.id_user}. Status: ${
 		lastFlow.client_status
 	}. Marca: ${lastFlow.brand ? lastFlow.brand : "No sabe"}. Modelo: ${
 		lastFlow.model ? lastFlow.model : "No sabe"
-	}. Precio Informado: ${
-		lastFlow.price ? lastFlow.price : "No informado"
-	}.${lastFlow.otherProducts && lastFlow.otherProducts.trim() !== "" ? lastFlow.otherProducts : ""} Preguntas: ${
-		lastFlow.questions ? lastFlow.questions : ""
-	}. Método de Pago: ${lastFlow.payment}. ${lastFlow.questions ? "Preguntas: " `${lastFlow.questions}` : ""}`;
+	}. Precio Informado: ${lastFlow.price ? lastFlow.price : "No informado"}. ${
+		lastFlow.otherProducts && lastFlow.otherProducts.trim() !== ""
+			? lastFlow.otherProducts
+			: ""
+	} Método de Pago: ${lastFlow.payment}. DNI: ${lastFlow.dni}. Preguntas: ${
+		lastFlow.questions
+	}.`
+		.replace(/\n/g, " ")
+		.replace(/ {2,}/g, " ");
 
 	const flow_2Token = lastFlow.flow_2token;
-	
+
 	return { myLead, flow_2Token };
 };

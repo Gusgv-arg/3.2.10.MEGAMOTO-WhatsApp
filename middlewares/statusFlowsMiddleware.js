@@ -22,7 +22,7 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 
 	// Check status update && save in DB
 	if (status !== null) {
-		console.log("Id:", status.id, "Status:", status.status);
+		//console.log("Id:", status.id, "Status:", status.status);
 		const recipient_id =
 			body.entry[0].changes[0].value.statuses[0].recipient_id;
 		const wab_id = body.entry[0].changes[0].value.statuses[0].id;
@@ -51,9 +51,9 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 
 			// Return if there are no Campaigns
 			if (!lead.flows || lead.flows.length === 0) {
-				console.log(
+				/* console.log(
 					`Exiting process of status updating for "${lead.name}" that has no Flows registrated.`
-				);
+				); */
 				res.status(200).send("EVENT_RECEIVED");
 				return;
 			} else {
@@ -64,14 +64,14 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 				if (lastFlowRecord.wamId_flow1 === wab_id) {
 					lastFlowRecord.client_status = newStatus;
 					lastFlowRecord.history += `${currentDateTime} - Status: ${newStatus}. `
-					console.log(
+					/* console.log(
 						`Actualizó el status de mensaje de "${lead.name}" a "${newStatus}"`
-					);
+					); */
 					await lead.save();
 				} else {
-					console.log(
+					/* console.log(
 						`Encontró a "${lead.name}" con un Flow pero NO se hace nada actualiza status de otro msje.`
-					);
+					); */
 				}
 
 				res.status(200).send("EVENT_RECEIVED");

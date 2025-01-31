@@ -31,16 +31,16 @@ export const statusMiddleware = async (req, res, next) => {
 
 			// Return if there is no lead in DB
 			if (!lead) {
-				console.log(`No se encontró lead con id_user: ${recipient_id}`);
+				//console.log(`No se encontró lead con id_user: ${recipient_id}`);
 				res.status(200).send("EVENT_RECEIVED");
 				return;
 			}
 
 			// Return if there are no Campaigns
 			if (!lead.campaigns || lead.campaigns.length === 0) {
-				console.log(
+				/* console.log(
 					`Exiting process of status updating for "${lead.name}" that has no Campaigns registrated.`
-				);
+				); */
 				res.status(200).send("EVENT_RECEIVED");
 				return;
 			} else {
@@ -50,14 +50,14 @@ export const statusMiddleware = async (req, res, next) => {
 
 				if (lastCampaignRecord.wamId === wab_id) {
 					lastCampaignRecord.client_status = newStatus;
-					console.log(
+					/* console.log(
 						`Actualizó el status de mensaje de "${lead.name}" a "${newStatus}"`
-					);
+					); */
 					await lead.save();
 				} else {
-					console.log(
+					/* console.log(
 						`Encontró el lead "${lead.name}" y hay Campaña pero actualiza status de otro msje.`
-					);
+					); */
 				}
 
 				res.status(200).send("EVENT_RECEIVED");
