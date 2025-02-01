@@ -1,15 +1,25 @@
 // Función que toma el lead mas viejo o el que tiene toContact mas viejo y lo devuelve
 // A futuro hay que modificarla para que priorize x el índice entre stock, antiguedad, etc
 export const findOneLeadForVendor = (availableLeads) => {
-	const lead = availableLeads.reduce((oldest, current) => {
-		if (!oldest) return current;
+	const lead = availableLeads.reduce((selectedLead, current) => {
+		if (!selectedLead) return current;
+
+		// Verificar si el modelo actual tiene prioridad
+		if (current.prioridad && typeof current.prioridad === 'number') {
+			// Si el lead seleccionado no tiene prioridad, seleccionamos el actual
+			if (!selectedLead.prioridad || typeof selectedLead.prioridad !== 'number') {
+				return current;
+			}
+			// Comparar prioridades
+			return current.prioridad < selectedLead.prioridad ? current : selectedLead;
+		}
 
 		const currentDate = Date.parse(current.lastFlow.flowDate.replace(",", ""));
-		const oldestDate = Date.parse(oldest.lastFlow.flowDate.replace(",", ""));
+		const oldestDate = Date.parse(selectedLead.lastFlow.flowDate.replace(",", ""));
 
-		return currentDate < oldestDate ? current : oldest;
+		return currentDate < oldestDate ? current : selectedLead;
 	}, null);
-
+	
 	const lastFlow = lead.lastFlow;
 	console.log("lastFlow:", lastFlow);
 

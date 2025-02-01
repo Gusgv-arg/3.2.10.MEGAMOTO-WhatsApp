@@ -130,7 +130,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					// Llama función q toma el lead más viejo entre creación y toContact
 					const oneLead = findOneLeadForVendor(availableLeads);
 					const { myLead, flow_2Token } = oneLead;
-					console.log("myLead:", myLead)
+					//console.log("myLead:", myLead)
 					
 					// Se notifica al vendedor por si no ve el Flow
 					const notification =

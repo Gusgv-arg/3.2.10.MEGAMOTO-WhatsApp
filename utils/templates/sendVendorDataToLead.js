@@ -78,7 +78,8 @@ export const sendVendorDataToLead = async (
 		// Update existing lead
 		lead.flows[
 			lead.flows.length - 1
-		].messages += `${currentDateTime} NO se pudo notificar al Lead los datos del vendedor. Error: ${error.message}`;
+		].error += `${currentDateTime} NO se pudo notificar al Lead los datos del vendedor. Error: ${error.message}`;
+
 		await lead.save();
 
 		// Notify Error to the Admin

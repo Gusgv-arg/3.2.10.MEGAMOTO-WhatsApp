@@ -190,7 +190,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		return response;
 	
 	} else {
-		response.message +=	`\n\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
+		response.message +=	`\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
 		
 		console.log("Response desde extractFlowToken_1Responses.js", response)
 		

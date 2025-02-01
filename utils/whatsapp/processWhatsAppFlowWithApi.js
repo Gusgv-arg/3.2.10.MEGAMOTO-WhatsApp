@@ -5,8 +5,8 @@ import { saveNotificationInDb } from "../dataBase/saveNotificationInDb.js";
 import { findLeadWithFlowToken2 } from "../dataBase/findLeadWithFlowToken2.js";
 import { sendVendorDataToLead } from "../templates/sendVendorDataToLead.js";
 import { salesFlow_2Notification } from "../../flows/salesFlow_2Notification.js";
-import {extractFlowToken_1Responses} from "../../flows/extractFlowToken_1Responses.js"
-import {extractFlowToken_2Responses} from "../../flows/extractFlowToken_2Responses.js"
+import { extractFlowToken_1Responses } from "../../flows/extractFlowToken_1Responses.js";
+import { extractFlowToken_2Responses } from "../../flows/extractFlowToken_2Responses.js";
 
 export const processWhatsAppFlowWithApi = async (userMessage) => {
 	const type = userMessage.type;
@@ -18,25 +18,28 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 			if (userMessage.message.includes('"flow_token":"1"')) {
 				const flowToken = 1;
 
-				const notification = await extractFlowToken_1Responses(userMessage.message);
-				
+				const notification = await extractFlowToken_1Responses(
+					userMessage.message
+				);
+
 				//console.log("notification desde processWhatsAppFlowWithApi.js:", notification);
-				
+
 				// Verificar si extraction comienza con "¡IMPORTANTE!"
 				if (notification.message.includes("IMPORTANTE:")) {
 					const finalMessage = `*👋 Hola ${userMessage.name}!*\n${notification.message}`;
 					notification.message = finalMessage;
 					//console.log("FinalMessage:", finalMessage);
-					
 				} else {
 					const greet = `*👋 Hola ${userMessage.name}*, gracias por tu respuesta! En breve vas a recibir una notificación con los datos del vendedor que te estará contactando:\n\n${notification.message}`;
 					notification.message = greet;
 					//console.log("FinalMessage:", greet);
-										
 				}
 
 				// Manda whatsApp al Lead con la respuesta
-				await handleWhatsappMessage(userMessage.userPhone, notification.message);
+				await handleWhatsappMessage(
+					userMessage.userPhone,
+					notification.message
+				);
 
 				// Verificar que la respuesta esté completa
 				if (notification.message.includes("IMPORTANTE")) {
@@ -64,11 +67,14 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				// ---- TOKEN 2 -------------------------------------//
 				let vendorPhone;
 				let vendorName;
-								
+
 				const notification = extractFlowToken_2Responses(userMessage.message);
-				
+
 				// Confirmar la respuesta al vendedor que envió la respuesta
-				await handleWhatsappMessage(userMessage.userPhone, notification.message);
+				await handleWhatsappMessage(
+					userMessage.userPhone,
+					notification.message
+				);
 
 				if (
 					notification.message.includes("Atender ahora") ||
@@ -76,16 +82,15 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				) {
 					vendorPhone = userMessage.userPhone;
 					vendorName = userMessage.name;
-					
 				} else if (notification.message.includes("Derivar a")) {
 					if (notification.delegate === "Derivar a Gustavo Glunz") {
 						vendorPhone = process.env.PHONE_GUSTAVO_GLUNZ;
 						vendorName = "Gustavo Glunz";
-
-					} else if (notification.delegate === "Derivar a Gustavo G.Villafañe") {
+					} else if (
+						notification.delegate === "Derivar a Gustavo G.Villafañe"
+					) {
 						vendorPhone = process.env.PHONE_GUSTAVO_GOMEZ_VILLAFANE;
 						vendorName = "Gustavo Gómez Villafañe";
-					
 					} else if (notification.delegate === "Derivar a Joana") {
 						vendorPhone = process.env.PHONE_JOANA;
 						vendorName = "Joana";
@@ -93,7 +98,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				}
 
 				// Buscar Lead x token 2 y Guardar en BD los datos
-				const senderName = userMessage.name
+				const senderName = userMessage.name;
 
 				const customerData = await findLeadWithFlowToken2(
 					notification,
@@ -112,7 +117,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					dni,
 					questions,
 				} = customerData;
-				console.log("customer:", customerData);
+				//console.log("customer:", customerData);
 
 				if (notification.delegate) {
 					// Notificar al vendedor derivado
@@ -121,10 +126,14 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					await handleWhatsappMessage(vendorPhone, message);
 
 					// Enviar el FLOW 2 al vendedor derivado
-					const myLead = `Nombre: ${customerName}. Teléfono: ${customerPhone}. Marca: ${brand}. Modelo: ${model}. Precio: ${price}. ${otherProducts} Método de Pago: ${payment}. DNI: ${dni}. Preguntas: ${questions}. Notas del vendedor: ${notes}.`;
+					const myLead = `Nombre: ${customerName}. Teléfono: ${customerPhone}. Marca: ${brand}. Modelo: ${model}. Precio: ${price}. ${otherProducts} Método de Pago: ${payment}. DNI: ${dni}. Preguntas: ${questions}. Notas del vendedor: ${notification.notes}.`;
 
-					await salesFlow_2Notification(myLead, vendorPhone, notification.flowToken);
-
+					await salesFlow_2Notification(
+						myLead,
+						vendorPhone,
+						notification.flowToken
+					);
+				
 				} else if (!notification.delegate) {
 					// Notificar datos del vendedor al cliente con template (pueden pasar +24hs)
 					await sendVendorDataToLead(
@@ -133,6 +142,15 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 						vendorPhone,
 						vendorName
 					);
+
+					// Grabar en BD la notificación al cliente
+					const message = `*🔔 Notificación de Megamoto:*\n\n👋 Hola ${customerName}, tenemos buenas noticias! Tu consulta fue tomada por un vendedor:
+					Nombre: ${vendorName}. Celular: ${vendorPhone}\n❗ Te recomendamos agendar sus datos así lo reconoces cuando te contacte.\n¡Mucha suerte con tu compra!`;
+					
+					const notification = {message: message}
+					const userMessage = {userPhone: customerPhone}
+
+					await saveNotificationInDb(userMessage, notification)
 				}
 
 				log = `1-Se extrajo la respuesta del Flow 2. 2-Se mandó WhatsApp al lead con los datos del vendedor. 3-Se le confirmó al vendedor de su respuesta.`;

@@ -27,7 +27,13 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 
 			// Actualizar mensajes
 			let lastFlow = lead.flows[lead.flows.length - 1];
-			lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message}`;
+
+			if (userMessage.message){
+				lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message}`;
+			
+			} else {
+				lastFlow.messages += `\n$${currentDateTime} - API: ${notification.message}`;
+			}
 
 			// Actualizar estado y history del lead
 			if (notification.message.includes("IMPORTANTE")) {
