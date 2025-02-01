@@ -188,6 +188,11 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 			await adminWhatsAppNotification(userPhone, notification);
 		
+		} else if (message === "crear precios") {
+			res.status(200).send("EVENT_RECEIVED");
+
+			const notification = await pricesModelCreation();
+					
 		} else if (message === "leads1") {
 			res.status(200).send("EVENT_RECEIVED");
 			

@@ -6,13 +6,13 @@ const pricesSchema = new mongoose.Schema(
 		familia: { type: String, required: true },
 		marca: { type: String, required: true },
 		precio: { type: Number, required: true },
+		prioridad: Number,
 		sinonimos: {
 			type: [String],
-			required: true,
-			default: ["n/d"]
+			default: [""]
 		  },
 		cilindradas: { type: Number, required: true, default: 0 },	
-		url: {type: String, required: true, default: "n/d"},	
+		url: {type: String, default: "n/d"},	
 		vigencia: {type: String, required: true},
 		isActive: {type: Boolean, required: true, default: true}		
 	},

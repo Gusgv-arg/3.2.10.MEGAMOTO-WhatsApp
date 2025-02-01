@@ -1,7 +1,7 @@
 import Prices from '../../models/prices.js';
-import { precios } from '../../excel/listaDePrecios.js';
+import { precios } from '../../excel/listaPreciosFlow1.js';
 
-// Función para crear la base de datos - se una una sola vez!!!!!
+// Función para crear la base de datos - se usa una sola vez!!!!!
 export const pricesModelCreation = async (req, res) => {
   try {
     // Elimina todos los documentos existentes en la colección Prices
@@ -11,11 +11,12 @@ export const pricesModelCreation = async (req, res) => {
     for (const precio of precios) {
       await Prices.create(precio);
     }
-    console.log('Modelo Prices creado en MongoDB');
+    console.log('Modelo Prices creado en MongoDB.');
     res.status(200).send("Modelo Prices creado en MongoDB")
   } catch (error) {
     console.error('Error al crear el modelo Prices:', error);
     res.status(500).send({error: error.message})
   }
 };
+
 

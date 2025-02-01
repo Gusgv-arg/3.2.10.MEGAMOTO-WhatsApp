@@ -25,11 +25,12 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	const marcas = [
 		"Benelli",
 		"Suzuki",
-		"Sym",
+		"SYM",
 		"Motomel",
 		"Keeway",
 		"Tarpan",
 		"Teknial eléctricas",
+		"Teknial",
 		"TVS",
 		"No sé",
 	];
@@ -53,11 +54,21 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	// Función que busca los precios del modelo buscado x el lead
 	const buscarPrecios = async (modelo) => {
 		// Intentar encontrar el precio por el modelo principal
-		let precioData = await Prices.findOne({ modelo: { $regex: new RegExp(`^${modelo.toLowerCase()}$`, 'i') } });
+		let precioData = await Prices.findOne({ 
+			$expr: { 
+				$eq: [{ $toLower: "$modelo" }, modelo.toLowerCase()] 
+			} 
+		});
 		
 		// Si no se encuentra, buscar en el campo de sinónimos
 		if (!precioData) {
-			precioData = await Prices.findOne({ sinónimos: { $elemMatch: { $regex: new RegExp(`^${modelo.toLowerCase()}$`, 'i') } } });
+			precioData = await Prices.findOne({ 
+				sinónimos: { 
+					$elemMatch: { 
+						$eq: modelo.toLowerCase() 
+					} 
+				} 
+			});
 		}
 		
 		return precioData ? precioData.precio : "No disponible";
