@@ -117,7 +117,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 
 			// Notificar al vendedor del proceso
-			const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\nMegamoto`;
+			const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\n*Megamoto*`;
 			await handleWhatsappMessage(userPhone, message);
 
 			// Se buscan todos los leads a atender
@@ -142,7 +142,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				// Genera un Excel con los datos
 				//const excelFile = await exportFlowLeadsToProtectedExcel(vendorLeads);
 				//const excelFile = await exportFlowLeadsToExcel(vendorLeads);
-				const excelFile = await exportFlowLeadsToTemplate2(vendorLeads);
+				const excelFile = await exportFlowLeadsToTemplate(vendorLeads);
 				console.log("excel:", excelFile);
 
 				// Se envía el Excel por WhatsApp
