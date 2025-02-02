@@ -58,17 +58,16 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 		const notification = `*🔔 Notificación Automática:*\n\n❗ Estimado /a ${name}, esta es una línea de WhatsApp que *solo procesa mensajes de texto* y sirve para que los vendedores puedan atenderte más rápido.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 		await handleWhatsappMessage(userPhone, notification);
-	
 	} else if (
 		typeOfWhatsappMessage !== "text" &&
 		typeOfWhatsappMessage !== "document" &&
 		typeOfWhatsappMessage !== "interactive" &&
-		vendor === true 
+		vendor === true
 	) {
 		res.status(200).send("EVENT_RECEIVED");
-		
+
 		const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1. Enviar palabra "lead" para recibir un Lead.\n2. Enviar palabra "leads" para recibir un excel con sus leads.\n3. Adjuntar el mismo excel recibido más la palabra "leads" para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
-		
+
 		await handleWhatsappMessage(userPhone, notification);
 	} else if (
 		(typeOfWhatsappMessage === "text" && vendor === true) ||
@@ -77,35 +76,38 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	) {
 		let message;
 		let documentId;
-		
+
 		if (typeOfWhatsappMessage === "text") {
 			message =
-			body.entry[0].changes[0].value.messages[0].text.body.toLowerCase();
-			
-			if (message !=="lead" && message !== "leads" && userPhone !== vendor1 && userPhone !== vendor2){
+				body.entry[0].changes[0].value.messages[0].text.body.toLowerCase();
+
+			if (
+				message !== "lead" &&
+				message !== "leads" &&
+				userPhone !== vendor1 &&
+				userPhone !== vendor2
+			) {
 				// Caso que el vendedor manda un texto con algo que la API no procesa
 				res.status(200).send("EVENT_RECEIVED");
-				
+
 				const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido más la palabra "leads" para modificar información (estado, etc).\n\n*Megamoto*`;
-				
+
 				await handleWhatsappMessage(userPhone, notification);
 			}
-			
 		} else if (typeOfWhatsappMessage === "document") {
 			message =
 				body.entry[0].changes[0].value.messages[0].document.caption.toLowerCase();
 			documentId = body.entry[0].changes[0].value.messages[0].document.id;
-			
-			if (message !=="lead" && message !== "leads"){
+
+			if (message !== "lead" && message !== "leads") {
 				// Caso que el vendedor manda el excel y no pone "leads"
-				
+
 				res.status(200).send("EVENT_RECEIVED");
-				
+
 				const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, al enviar el Excel con tus leads por favor coloca la palabra "leads".\n\n*Megamoto*`;
-				
+
 				await handleWhatsappMessage(userPhone, notification);
 			}
-		
 		} else if (typeOfWhatsappMessage === "interactive") {
 			// Hace next si es un vendedor y es un Flow
 			next();
@@ -126,28 +128,52 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 			// Chequea que haya más de 1 registro
 			if (allLeads.length > 0) {
-				// Filtra leads del vendor_phone salvo G.Glunz que ve todos los Leads
+				let available = true;
+				const availableLeads = allLeads.reduce(
+					(count, lead) => (!lead.lastFlow.vendor_phone ? count + 1 : count),
+					0
+				);
+				if (availableLeads === 0) {
+					available = false;
+				}
+
+				console.log("Leads sin vendedor asignado:", availableLeads);
+
 				let vendorLeads;
 
 				if (vendorName !== "G. Glunz") {
+					// Filtra leads del vendor_phone salvo G.Glunz que ve todos los Leads
 					vendorLeads = allLeads.filter((lead) => {
 						return lead.lastFlow.vendor_phone === parseInt(userPhone);
 					});
 				} else {
 					vendorLeads = allLeads;
 				}
-
 				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
 
-				// Genera un Excel con los datos
-				//const excelFile = await exportFlowLeadsToProtectedExcel(vendorLeads);
-				//const excelFile = await exportFlowLeadsToExcel(vendorLeads);
-				const excelFile = await exportFlowLeadsToTemplate(vendorLeads);
-				console.log("excel:", excelFile);
+				// Procesa solo los leads del vendedor
+				if (vendorLeads.length > 0) {
+					// Genera un Excel con los datos
+					//const excelFile = await exportFlowLeadsToProtectedExcel(vendorLeads);
+					//const excelFile = await exportFlowLeadsToExcel(vendorLeads);
+					const excelFile = await exportFlowLeadsToTemplate(vendorLeads);
+					//console.log("excel:", excelFile);
 
-				// Se envía el Excel por WhatsApp
-				const fileName = `Leads ${vendorName}`;
-				await sendExcelByWhatsApp(userPhone, excelFile, fileName);
+					// Se envía el Excel por WhatsApp con el nombre del vendedor
+					const fileName = `Leads ${vendorName}`;
+					await sendExcelByWhatsApp(userPhone, excelFile, fileName);
+				} else {
+					// Como no hay Leads en la fila del VENDEDOR se lo notifica
+					let message
+					if (available === true){
+						message = `*🔔 Notificación Automática:*\n\n⚠️ No tenés Leads que estés atendiendo. Hay *${availableLeads}* leads para atender asique enviá la palabra "lead" para que se te asigne uno. ¡A vender!\n\n*Megamoto*`;
+
+					} else {
+						message = `*🔔 Notificación Automática:*\n\n⚠️ No tenés Leads que estés atendiendo y por el momento no hay leads disponibles para atender.\n\n*Megamoto*`
+					}
+
+					await handleWhatsappMessage(userPhone, message);
+				}
 			} else {
 				// Como no hay Leads en la fila notificar al vendedor
 				const message = `*🔔 Notificación Automática:*\n\n⚠️ Por el momento no hay Leads para atender.\n\nMegamoto`;
