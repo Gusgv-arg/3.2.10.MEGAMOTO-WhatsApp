@@ -41,27 +41,24 @@ export const exportFlowLeadsToTemplate3 = async (leads) => {
             }
 
             newRow.values = [
-                null, // Dejar la primera columna vacía si corresponde
                 lead.name,
                 lead.id_user,
-                lead.botSwitch,
                 lastFlow?.client_status,
                 lastFlow?.flowDate,
                 lastFlow?.toContact || "",
                 lastFlow?.brand,
                 lastFlow?.model,
                 lastFlow?.price,
+                lastFlow?.otherProducts || "",
                 lastFlow?.payment,
                 lastFlow?.dni || "",
                 lastFlow?.questions || "",
                 lastFlow?.vendor_notes || "",
                 lastFlow?.vendor_name,
-                lastFlow?.flow_status,
                 lastFlow?.history,
-                lastFlow?.error || "",
-                lastFlow?.flow_2token,
                 lastFlow?.origin,
-                lastFlow?.otherProducts || ""
+                lastFlow?.flow_2token,
+                lastFlow?.error || "",
             ];
 
             // Copiar validaciones de datos desde la fila de encabezado
