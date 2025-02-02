@@ -215,7 +215,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				} else {
 					const vendorPhone = userPhone;
 					const notification =
-						"*🔔 Notificación Automática:*\n\n⚠️ Lamentablemente no hay Leads que atender.\n\n*Megamoto*";
+						"*🔔 Notificación Automática:*\n\n⚠️ Por el momento no hay Leads que atender.\n\n*Megamoto*";
 
 					await handleWhatsappMessage(vendorPhone, notification);
 					
