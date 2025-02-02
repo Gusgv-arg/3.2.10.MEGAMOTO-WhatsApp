@@ -9,6 +9,7 @@ import { downloadWhatsAppMedia } from "../utils/media/downloadWhatsAppMedia.js";
 import { processExcelToChangeLeads } from "../utils/excel/processExcelToChangeLeads.js";
 import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTemplate.js";
 import { exportFlowLeadsToTemplate2 } from "../utils/excel/exportFlowLeadsToTemplate2.js";
+import { exportFlowLeadsToTemplate3 } from "../utils/excel/exportFlowLeadsToTemplate3.js";
 import { exportFlowLeadsToProtectedExcel } from "../utils/excel/exportFlowLeadsToProtectedExcel.js";
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
@@ -158,7 +159,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					// Genera un Excel con los datos
 					//const excelFile = await exportFlowLeadsToProtectedExcel(vendorLeads);
 					//const excelFile = await exportFlowLeadsToExcel(vendorLeads);
-					const excelFile = await exportFlowLeadsToTemplate(vendorLeads);
+					const excelFile = await exportFlowLeadsToTemplate3(vendorLeads);
 					//console.log("excel:", excelFile);
 
 					// Se envía el Excel por WhatsApp con el nombre del vendedor
