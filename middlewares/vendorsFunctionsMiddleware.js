@@ -140,9 +140,9 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
 
 				// Genera un Excel con los datos
-				const excelFile = await exportFlowLeadsToProtectedExcel(vendorLeads);
+				//const excelFile = await exportFlowLeadsToProtectedExcel(vendorLeads);
 				//const excelFile = await exportFlowLeadsToExcel(vendorLeads);
-				//const excelFile = await exportFlowLeadsToTemplate2(vendorLeads);
+				const excelFile = await exportFlowLeadsToTemplate2(vendorLeads);
 				console.log("excel:", excelFile);
 
 				// Se envía el Excel por WhatsApp
