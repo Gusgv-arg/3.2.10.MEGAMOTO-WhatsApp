@@ -118,14 +118,11 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			// Función que envía excel con los leads en la fila del vendedor
 			res.status(200).send("EVENT_RECEIVED");
 
-			// Notificar al vendedor del proceso
-			const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\n*Megamoto*`;
-			await handleWhatsappMessage(userPhone, message);
-
+			
 			// Se buscan todos los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
 			console.log("allLeads:", allLeads);
-
+			
 			// Chequea que haya más de 1 registro
 			if (allLeads.length > 0) {
 				let available = true;
@@ -136,11 +133,11 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				if (availableLeads === 0) {
 					available = false;
 				}
-
+				
 				console.log("Leads sin vendedor asignado:", availableLeads);
-
+				
 				let vendorLeads;
-
+				
 				if (vendorName !== "G. Glunz") {
 					// Filtra leads del vendor_phone salvo G.Glunz que ve todos los Leads
 					vendorLeads = allLeads.filter((lead) => {
@@ -150,9 +147,14 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					vendorLeads = allLeads;
 				}
 				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
-
+				
 				// Procesa solo los leads del vendedor
 				if (vendorLeads.length > 0) {
+					// Notificar al vendedor del proceso
+					const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\n*Megamoto*`;
+					
+					await handleWhatsappMessage(userPhone, message);
+					
 					// Genera un Excel con los datos
 					//const excelFile = await exportFlowLeadsToProtectedExcel(vendorLeads);
 					//const excelFile = await exportFlowLeadsToExcel(vendorLeads);
