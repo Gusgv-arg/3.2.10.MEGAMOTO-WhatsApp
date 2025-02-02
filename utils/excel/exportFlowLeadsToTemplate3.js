@@ -18,8 +18,8 @@ export const exportFlowLeadsToTemplate3 = async (leads) => {
         const worksheet = workbook.getWorksheet(1); // Obtener la primera hoja de la plantilla
 
         // Desproteger la hoja si está protegida
-        if (worksheet.protection.sheet) {
-            worksheet.protection = { sheet: false };
+        if (worksheet.protect.sheet) {
+            worksheet.protect = { sheet: false };
         }
 
         // Limpiar el contenido de las celdas sin eliminar las filas
@@ -76,8 +76,8 @@ export const exportFlowLeadsToTemplate3 = async (leads) => {
         await workbook.xlsx.writeFile(outputPath);
 
         // Reactivar protección si estaba activada
-        if (worksheet.protection.sheet === false) {
-            worksheet.protection = { sheet: true };
+        if (worksheet.protect.sheet === false) {
+            worksheet.protect = { sheet: true };
         }
 
         // Generar y retornar la URL pública

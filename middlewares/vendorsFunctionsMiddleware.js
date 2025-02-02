@@ -165,6 +165,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					// Se envía el Excel por WhatsApp con el nombre del vendedor
 					const fileName = `Leads ${vendorName}`;
 					await sendExcelByWhatsApp(userPhone, excelFile, fileName);
+					
 				} else {
 					// Como no hay Leads en la fila del VENDEDOR se lo notifica
 					let message
