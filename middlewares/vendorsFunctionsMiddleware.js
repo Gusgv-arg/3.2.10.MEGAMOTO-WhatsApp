@@ -13,6 +13,7 @@ import { exportFlowLeadsToProtectedExcel } from "../utils/excel/exportFlowLeadsT
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
+	const name = body.entry[0].changes[0].value.contacts[0].profile.name;
 	let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages?.[0]
 		?.type
 		? body.entry[0].changes[0].value.messages[0].type
@@ -20,6 +21,12 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const userPhone = body.entry[0].changes[0]?.value?.messages?.[0]?.from
 		? body.entry[0].changes[0].value.messages[0].from
 		: "";
+	const message =
+		typeOfWhatsappMessage === "text"
+			? body.entry[0].changes[0].value.messages[0].text.body
+			: typeOfWhatsappMessage === "document"
+			? body.entry[0].changes[0].value.messages[0].document.caption
+			: "no se pudo extraer el mensaje";
 	let vendor = false;
 
 	// Teléfono de los vendedores
@@ -29,43 +36,79 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	let vendorName;
 
 	// Determiar si es un vendedor
-	if (userPhone === vendor1 || userPhone === vendor2 || userPhone === vendor) {
+	if (userPhone === vendor1 || userPhone === vendor2 || userPhone === vendor3) {
 		vendor = true;
 		// Nombre del vendedor
-		vendorName = userPhone === vendor1
-			? "G. Glunz"
-			: userPhone === vendor2
-			? "G. G.Villafañe"
-			: userPhone === vendor3
-			? "Joana"
-			: "";
+		vendorName =
+			userPhone === vendor1
+				? "G. Glunz"
+				: userPhone === vendor2
+				? "G. G.Villafañe"
+				: userPhone === vendor3
+				? "Joana"
+				: "";
 	}
 
-	// Check de que msje sea del vendedor y de tipo texto o documento (para cuando manden excel)
-	if (
+	// Check del tipo de msje
+	if (typeOfWhatsappMessage !== "text" && vendor === false) {
+		// El Lead manda mensaje que NO sea texto
+
+		res.status(200).send("EVENT_RECEIVED");
+
+		const notification = `*🔔 Notificación Automática:*\n\n❗ Estimado /a ${name}, esta es una línea de WhatsApp que *solo procesa mensajes de texto* y sirve para que los vendedores puedan atenderte más rápido.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+
+		await handleWhatsappMessage(userPhone, notification);
+	
+	} else if (
+		typeOfWhatsappMessage !== "text" &&
+		typeOfWhatsappMessage !== "document" &&
+		typeOfWhatsappMessage !== "interactive" &&
+		vendor === true 
+	) {
+		res.status(200).send("EVENT_RECEIVED");
+		
+		const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1. Enviar palabra "lead" para recibir un Lead.\n2. Enviar palabra "leads" para recibir un excel con sus leads.\n3. Adjuntar el mismo excel recibido más la palabra "leads" para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
+		
+		await handleWhatsappMessage(userPhone, notification);
+	} else if (
 		(typeOfWhatsappMessage === "text" && vendor === true) ||
-		(typeOfWhatsappMessage === "document" && vendor === true)
+		(typeOfWhatsappMessage === "document" && vendor === true) ||
+		(typeOfWhatsappMessage === "interactive" && vendor === true)
 	) {
 		let message;
 		let documentId;
-
+		
 		if (typeOfWhatsappMessage === "text") {
 			message =
-				body.entry[0].changes[0].value.messages[0].text.body.toLowerCase();
+			body.entry[0].changes[0].value.messages[0].text.body.toLowerCase();
+			
+			if (message !=="lead" && message !== "leads" && userPhone !== vendor1 && userPhone !== vendor2){
+				// Caso que el vendedor manda un texto con algo que la API no procesa
+				res.status(200).send("EVENT_RECEIVED");
+				
+				const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido más la palabra "leads" para modificar información (estado, etc).\n\n*Megamoto*`;
+				
+				await handleWhatsappMessage(userPhone, notification);
+			}
+			
 		} else if (typeOfWhatsappMessage === "document") {
 			message =
 				body.entry[0].changes[0].value.messages[0].document.caption.toLowerCase();
 			documentId = body.entry[0].changes[0].value.messages[0].document.id;
+			
+			if (message !=="lead" && message !== "leads"){
+				// Caso que el vendedor manda el excel y no pone "leads"
+				
+				res.status(200).send("EVENT_RECEIVED");
+				
+				const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, al enviar el Excel con tus leads por favor coloca la palabra "leads".\n\n*Megamoto*`;
+				
+				await handleWhatsappMessage(userPhone, notification);
+			}
+		
 		} else if (typeOfWhatsappMessage === "interactive") {
 			// Hace next si es un vendedor y es un Flow
 			next();
-		} else {
-			// Si vendedor manda algo que no sea texto, documento o Flow lo rebota
-			res.status(200).send("EVENT_RECEIVED");
-
-			const notification = `*🔔 Notificación automática:*\n\n❌ Los vendedores solo pueden:\n 1. Enviar palabra "lead" para recibir un Lead.\n2. Enviar palabra "leads" para recibir un excel con sus leads.\n3. Adjuntar el mismo excel recibido más la palabra "leads" para modificar información (estado, etc).\n4.Rsponder al Formulario recibido para tomar un lead.\n\nMegamoto`;
-
-			await handleWhatsappMessage(userPhone, notification);
 		}
 
 		// ---- Funciones disponibles para los vendedores -------------------------------
@@ -79,7 +122,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 			// Se buscan todos los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
-			console.log("allLeads:", allLeads)
+			console.log("allLeads:", allLeads);
 
 			// Chequea que haya más de 1 registro
 			if (allLeads.length > 0) {
@@ -131,7 +174,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					const oneLead = findOneLeadForVendor(availableLeads);
 					const { myLead, flow_2Token } = oneLead;
 					//console.log("myLead:", myLead)
-					
+
 					// Se notifica al vendedor por si no ve el Flow
 					const notification =
 						"*🔔 Notificación Automática:*\n\n✅ Entrá en tu celular para tomar un Lead.\n\nMegamoto";
