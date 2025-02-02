@@ -218,10 +218,18 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 						"*🔔 Notificación Automática:*\n\n⚠️ Lamentablemente no hay Leads que atender.\n\nMegamoto";
 
 					await handleWhatsappMessage(vendorPhone, notification);
-
+					
 					// A FUTURO GENERAR UNA ALARMA AL ADMIN!!
 				}
+			} else {
+				const vendorPhone = userPhone;
+				const notification =
+					"*🔔 Notificación Automática:*\n\n⚠️ Lamentablemente no hay Leads que atender.\n\nMegamoto";
+
+				await handleWhatsappMessage(vendorPhone, notification);
+
 			}
+		
 		} else if (
 			(message === "leads" && typeOfWhatsappMessage === "document") ||
 			(message === "lead" && typeOfWhatsappMessage === "document")
