@@ -15,26 +15,36 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.load(response.data);
 
-        // Buscar tablas en hojas específicas
-        const tableSheets = ["Status Válidos", "Marcas", "Vendedores", "Orígen"];
+        // Listar todas las hojas y sus tablas
+        console.log("Listando hojas y tablas...");
+        workbook.eachSheet((sheet) => {
+            console.log(`Hoja: ${sheet.name}`);
+            if (sheet.tables && sheet.tables.length > 0) {
+                sheet.tables.forEach((table) => {
+                    console.log(`  Tabla encontrada: ${table.name}`);
+                });
+            } else {
+                console.log("  No hay tablas en esta hoja.");
+            }
+        });
+
+        // Buscar tablas específicas por nombre
+        const tableNames = ["Status", "Marca", "Motomel", "Benelli", "Suzuki", "SYM", "Teknial", "Keeway", "TVS", "Vendedores", "Orígen"];
         const allTables = [];
 
         workbook.eachSheet((sheet) => {
-            if (tableSheets.includes(sheet.name)) {
-                console.log(`Buscando tablas en la hoja: ${sheet.name}`);
-                if (sheet.tables && sheet.tables.length > 0) {
-                    sheet.tables.forEach((table) => {
+            if (sheet.tables && sheet.tables.length > 0) {
+                sheet.tables.forEach((table) => {
+                    if (tableNames.includes(table.name)) {
                         allTables.push(table);
                         console.log(`Tabla encontrada: ${table.name} en la hoja ${sheet.name}`);
-                    });
-                } else {
-                    console.log(`No se encontraron tablas en la hoja: ${sheet.name}`);
-                }
+                    }
+                });
             }
         });
 
         if (allTables.length === 0) {
-            console.warn("No se encontraron tablas en ninguna de las hojas especificadas.");
+            throw new Error("No se encontraron las tablas esperadas en ninguna hoja.");
         }
 
         // Deshabilitar filtros automáticos en las tablas encontradas
