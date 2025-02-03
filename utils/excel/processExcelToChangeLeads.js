@@ -31,7 +31,7 @@ const vendors = [
 	},
 ];
 
-export const processExcelToChangeLeads = async (excelBuffer, userPhone) => {
+export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorName) => {
 	console.log("validClientStatuses:", validClientStatuses);
 	try {
 		const workbook = xlsx.read(excelBuffer, { type: "buffer" });
@@ -50,6 +50,7 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone) => {
 			const flow_2token = col[16] ? String(col[16]).trim() : null; // Columna Q (índice 16)
 
 			// Validar client_status e ir acumulando errores posibles
+			// EN TEORIA LO PODRIA SACAR PORQUE TRABAJO CON LISTAS DESPLEGABLES //
 			let client_status = col[2]; // Columna C (índice 2)
 			const originalClientStatus = client_status; // Guardar el estado original
 
@@ -120,6 +121,7 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone) => {
 
 			console.log("Found lead:", existingLead ? "Yes" : "No");
 
+			// Si no existe, crear un nuevo registro
 			if (!existingLead) {
 				console.log(
 					`No lead found for id_user: ${id_user} and flow_2token: ${flow_2token}`
@@ -135,7 +137,6 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone) => {
 					second: "2-digit",
 				});
 
-				// Si no existe, crear un nuevo registro
 				const newLead = new Leads({
 					id_user: id_user,
 					name: name,
@@ -188,9 +189,10 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone) => {
 				minute: "2-digit",
 				second: "2-digit",
 			});
+
 			const historyUpdate = `${
 				existingLead.flows[flowIndex].history || ""
-			} ${currentDateTime} - Status: vendedor actualizó status Lead.`;
+			} ${currentDateTime} - ${vendorName} actualizó Leads.xls. Status: ${updateData["flows.$.client_status"]} `;
 
 			// Update the matching flow directly using the positional $ operator
 			const result = await Leads.updateOne(
@@ -215,6 +217,7 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone) => {
 						[`flows.${flowIndex}.vendor_notes`]:
 							updateData["flows.$.vendor_notes"],
 						[`flows.${flowIndex}.origin`]: updateData["flows.$.origin"],
+						[`flows.${flowIndex}.history`]: historyUpdate,
 					},
 					$setOnInsert: {
 						// Agregar campos que no existan en el registro
@@ -235,13 +238,15 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone) => {
 		// Si hay mensajes de error, enviarlos al usuario
 		if (errorMessages.length > 0) {
 			const combinedErrorMessage = errorMessages.join("\n");
-			const finalMessage = `*Notificación Automática de Error al actualizar los Leads:*\n${combinedErrorMessage}\nStatus posibles: "compró", "no compró", "a contactar", "transferido al vendedor" o "sin definición".\n\nMegamoto`;
+			const finalMessage = `🔔 *Notificación Automática:*\n\nError al actualizar los Leads:*\n${combinedErrorMessage}\n\n*Megamoto*`;
 
 			await handleWhatsappMessage(userPhone, finalMessage);
+		
 		} else {
+			// Notificar el éxito del proceso al usuario
 			await handleWhatsappMessage(
 				userPhone,
-				`*Notificación Automática:*\n\n✅ ¡Se actualizaron tus Leads!\n\nMegamoto`
+				`🔔 *Notificación Automática:*\n\n✅ ¡Se actualizaron tus Leads!\n\n*Megamoto*`
 			);
 		}
 	} catch (error) {

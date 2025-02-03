@@ -55,7 +55,7 @@ export const exportFlowLeadsToTemplate3 = async (leads) => {
                 lastFlow?.vendor_name,
                 lastFlow?.vendor_notes,
                 lastFlow?.history,
-                lastFlow?.origin,
+                lastFlow?.origin || "API General",
                 lastFlow?.flow_2token,
                 lastFlow?.error,
             ];

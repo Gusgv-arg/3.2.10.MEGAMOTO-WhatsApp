@@ -247,7 +247,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			const documentBufferData = documentBuffer.data;
 
 			// Call the new function to process the campaign
-			await processExcelToChangeLeads(documentBufferData, userPhone);
+			await processExcelToChangeLeads(documentBufferData, userPhone, vendorName);
 		} else {
 			next();
 		}
