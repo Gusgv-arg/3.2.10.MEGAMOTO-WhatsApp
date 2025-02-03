@@ -13,38 +13,59 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
         // Cargar la plantilla de Excel usando axios
         const response = await axios.get(leadsTemplate, { responseType: 'arraybuffer' });
         const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.load(response.data, { sheetRows: Infinity });
+        await workbook.xlsx.load(response.data);
 
-        // Depurar el contenido de las hojas
-        console.log("Depurando contenido de las hojas...");
-        workbook.eachSheet((sheet) => {
-            console.log(`Hoja: ${sheet.name}`);
-            console.log("Contenido de la hoja:");
-            sheet.eachRow((row, rowNumber) => {
-                console.log(`  Fila ${rowNumber}:`, row.values);
-            });
-        });
+        // Verificar si getRange está disponible
+        const hasGetRange = typeof workbook.getWorksheet("Status Válidos")?.getRange === "function";
 
-        // Verificar si las tablas existen
-        let tablesFound = false;
-        workbook.eachSheet((sheet) => {
-            if (sheet.tables && sheet.tables.length > 0) {
-                sheet.tables.forEach((table) => {
-                    console.log(`Tabla encontrada: ${table.name} en la hoja ${sheet.name}`);
-                    tablesFound = true;
-                });
+        // Función para obtener un rango compatible con todas las versiones
+        const getRange = (sheetName, rangeAddress) => {
+            const sheet = workbook.getWorksheet(sheetName);
+            if (!sheet) {
+                throw new Error(`No se encontró la hoja: ${sheetName}`);
             }
-        });
+            if (hasGetRange) {
+                return sheet.getRange(rangeAddress); // Usar getRange si está disponible
+            } else {
+                return { address: rangeAddress }; // Simular un rango usando la dirección
+            }
+        };
 
-        if (!tablesFound) {
-            console.warn("No se encontraron tablas en ninguna hoja. Usando rangos en su lugar.");
-        }
+        // Configurar listas desplegables usando los nuevos rangos
+        const statusRange = getRange("Status Válidos", "A1:A17"); // Rango para Status Válidos
+        const marcasRange = getRange("Marcas", "H1:H8"); // Rango para Marcas
+        const vendedoresRange = getRange("Vendedores", "A1:A11"); // Rango para Vendedores
+        const origenRange = getRange("Orígen", "A1:A4"); // Rango para Orígen
 
         // Seleccionar la hoja principal para agregar datos
         const mainWorksheet = workbook.getWorksheet(1); // Suponiendo que la hoja principal es la primera
         if (!mainWorksheet) {
             throw new Error("No se encontró la hoja principal para agregar datos.");
         }
+
+        // Aplicar validaciones de datos (listas desplegables) en la hoja principal
+        mainWorksheet.getColumn(3).dataValidation = {
+            type: "list",
+            formulae: [statusRange.address],
+            allowBlank: true,
+        };
+        mainWorksheet.getColumn(6).dataValidation = {
+            type: "list",
+            formulae: [marcasRange.address],
+            allowBlank: true,
+        };
+        mainWorksheet.getColumn(13).dataValidation = {
+            type: "list",
+            formulae: [vendedoresRange.address],
+            allowBlank: true,
+        };
+        mainWorksheet.getColumn(16).dataValidation = {
+            type: "list",
+            formulae: [origenRange.address],
+            allowBlank: true,
+        };
+
+        console.log("Listas desplegables configuradas.");
 
         // Desproteger la hoja si está protegida
         if (mainWorksheet.protect) {
@@ -58,35 +79,6 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
                 cell.value = null; // Limpia el valor de la celda
             });
         }
-
-        // Configurar listas desplegables usando rangos
-        const statusRange = workbook.getWorksheet("Status Válidos").getRange("A1:A17"); // Suponiendo que la lista está en la columna A
-        const marcaRange = workbook.getWorksheet("Marca2").getRange("H12:H8");
-        const vendedoresRange = workbook.getWorksheet("Vendedores").getRange("A1:A11");
-        const origenRange = workbook.getWorksheet("Orígen").getRange("A1:A4");
-
-        mainWorksheet.getColumn(4).dataValidation = {
-            type: "list",
-            formulae: [statusRange.address],
-            allowBlank: true,
-        };
-        mainWorksheet.getColumn(8).dataValidation = {
-            type: "list",
-            formulae: [marcaRange.address],
-            allowBlank: true,
-        };
-        mainWorksheet.getColumn(15).dataValidation = {
-            type: "list",
-            formulae: [vendedoresRange.address],
-            allowBlank: true,
-        };
-        mainWorksheet.getColumn(19).dataValidation = {
-            type: "list",
-            formulae: [origenRange.address],
-            allowBlank: true,
-        };
-
-        console.log("Listas desplegables configuradas usando rangos.");
 
         // Agregar los datos dentro de la tabla
         leads.forEach((lead, index) => {
@@ -103,26 +95,26 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
             const nextRowNum = parseInt(endCell.replace(/[A-Z]/g, "")) + 1; // Extraer el número de fila
             const newRow = mainWorksheet.getRow(nextRowNum);
 
-            // Agregar los datos a la nueva fila
+            // Agregar los datos a la nueva fila (ajustado según tu solicitud)
             newRow.values = [
-                lead.name,
-                lead.id_user,
-                lastFlow?.client_status,
-                lastFlow?.flowDate,
-                lastFlow?.toContact,
-                lastFlow?.brand,
-                lastFlow?.model,
-                lastFlow?.price,
-                lastFlow?.otherProducts,
-                lastFlow?.payment,
-                lastFlow?.dni,
-                lastFlow?.questions,
-                lastFlow?.vendor_name,
-                lastFlow?.vendor_notes,
-                lastFlow?.history,
-                lastFlow?.origin || "API General",
-                lastFlow?.flow_2token,
-                lastFlow?.error,
+                lead.name, // Columna 1: Nombre
+                lead.id_user, // Columna 2: ID de usuario
+                lastFlow?.client_status, // Columna 3: Estado del cliente (validado por Status Válidos)
+                lastFlow?.flowDate, // Columna 4: Fecha del flujo
+                lastFlow?.toContact, // Columna 5: Fecha para contactar
+                lastFlow?.brand, // Columna 6: Marca (validado por Marcas)
+                lastFlow?.model, // Columna 7: Modelo
+                lastFlow?.price, // Columna 8: Precio
+                lastFlow?.otherProducts, // Columna 9: Otros productos
+                lastFlow?.payment, // Columna 10: Forma de pago
+                lastFlow?.dni, // Columna 11: DNI
+                lastFlow?.questions, // Columna 12: Preguntas
+                lastFlow?.vendor_name, // Columna 13: Vendedor (validado por Vendedores)
+                lastFlow?.vendor_notes, // Columna 14: Notas del vendedor
+                lastFlow?.history, // Columna 15: Historial
+                lastFlow?.origin || "API General", // Columna 16: Origen (validado por Orígen o "API General" por defecto)
+                lastFlow?.flow_2token, // Columna 17: Token del flujo 2
+                lastFlow?.error, // Columna 18: Errores
             ];
 
             // Ajustar el rango de la tabla para incluir la nueva fila
