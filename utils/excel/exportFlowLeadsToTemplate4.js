@@ -17,17 +17,19 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
         const worksheet = workbook.getWorksheet(1); // Obtener la primera hoja de la plantilla
 
         // Desproteger la hoja si está protegida
-        /* if (worksheet.protect) {
+        if (worksheet.protect) {
             worksheet.unprotect(); // Desactivar protección
-        } */
+        }
 
         // Deshabilitar filtros automáticos en todas las tablas
-        workbook.eachSheet((sheet) => {
-            sheet.tableCollection.each((table) => {
+        if (worksheet.tables && worksheet.tables.length > 0) { // Verifica si hay tablas
+            worksheet.tables.forEach((table) => {
                 table.autoFilter = null; // Elimina los filtros automáticos de la tabla
                 console.log(`Filtros automáticos deshabilitados en la tabla: ${table.name}`);
             });
-        });
+        } else {
+            console.log("No se encontraron tablas en la hoja.");
+        }
 
         // Limpiar el contenido de las celdas sin eliminar las filas
         for (let i = 2; i <= worksheet.rowCount; i++) {
@@ -41,11 +43,15 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
         leads.forEach((lead, index) => {
             const lastFlow = lead.lastFlow;
 
-            // Obtener la última fila de la tabla
-            const table = worksheet.tables[0]; // Suponiendo que hay una sola tabla en la hoja
-            if (!table) throw new Error("No se encontró ninguna tabla en la hoja.");
+            // Obtener la primera tabla de la hoja
+            const table = worksheet.tables?.[0]; // Usar operador opcional (?)
+            if (!table) {
+                throw new Error("No se encontró ninguna tabla en la hoja.");
+            }
 
-            const nextRowNum = parseInt(table.ref.split(":")[1].replace(/[A-Z]/g, "")) + 1; // Calcular la próxima fila
+            // Calcular la próxima fila después del rango actual de la tabla
+            const [startCell, endCell] = table.ref.split(":");
+            const nextRowNum = parseInt(endCell.replace(/[A-Z]/g, "")) + 1; // Extraer el número de fila
             const newRow = worksheet.getRow(nextRowNum);
 
             // Agregar los datos a la nueva fila
@@ -71,7 +77,7 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
             ];
 
             // Ajustar el rango de la tabla para incluir la nueva fila
-            table.ref = `${table.ref.split(":")[0]}:${newRow.address}`;
+            table.ref = `${startCell}:${newRow.address}`;
         });
 
         // Generar nombre para el archivo
