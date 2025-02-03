@@ -23,12 +23,12 @@ export const exportFlowLeadsToTemplate3 = async (leads) => {
         }
 
         // Limpiar el contenido de las celdas sin eliminar las filas
-        for (let i = 2; i <= worksheet.rowCount; i++) {
+        /* for (let i = 2; i <= worksheet.rowCount; i++) {
             const row = worksheet.getRow(i);
             row.eachCell({ includeEmpty: true }, (cell) => {
                 cell.value = null; // Limpia el valor de la celda
             });
-        }
+        } */
 
         // Agregar los datos
         leads.forEach((lead, index) => {
