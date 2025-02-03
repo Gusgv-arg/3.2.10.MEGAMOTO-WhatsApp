@@ -11,6 +11,7 @@ import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTempl
 import { exportFlowLeadsToTemplate2 } from "../utils/excel/exportFlowLeadsToTemplate2.js";
 import { exportFlowLeadsToTemplate3 } from "../utils/excel/exportFlowLeadsToTemplate3.js";
 import { exportFlowLeadsToProtectedExcel } from "../utils/excel/exportFlowLeadsToProtectedExcel.js";
+import { exportFlowLeadsToTemplate4 } from "../utils/excel/exportFlowLeadsToTemplate4.js";
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
@@ -156,11 +157,8 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					await handleWhatsappMessage(userPhone, message);
 					
 					// Genera un Excel con los datos
-					//const excelFile = await exportFlowLeadsToProtectedExcel(vendorLeads);
-					//const excelFile = await exportFlowLeadsToExcel(vendorLeads);
-					const excelFile = await exportFlowLeadsToTemplate3(vendorLeads);
-					//console.log("excel:", excelFile);
-
+					const excelFile = await exportFlowLeadsToTemplate4(vendorLeads);
+					
 					// Se envía el Excel por WhatsApp con el nombre del vendedor
 					const fileName = `Leads ${vendorName}`;
 					await sendExcelByWhatsApp(userPhone, excelFile, fileName);
