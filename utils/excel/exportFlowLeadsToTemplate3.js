@@ -6,6 +6,7 @@ import axios from "axios"; // Importar axios
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// FUNCIONA BIEN PERO APARECEN WARNINGS QUE BORRA FILTROS
 export const exportFlowLeadsToTemplate3 = async (leads) => {
     try {
         const leadsTemplate = "https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/temp/PlantillaLeads.xlsx";

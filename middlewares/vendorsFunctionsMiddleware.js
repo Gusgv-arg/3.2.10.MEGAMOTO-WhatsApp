@@ -157,7 +157,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					await handleWhatsappMessage(userPhone, message);
 					
 					// Genera un Excel con los datos
-					const excelFile = await exportFlowLeadsToTemplate4(vendorLeads);
+					const excelFile = await exportFlowLeadsToTemplate3(vendorLeads);
 					
 					// Se envía el Excel por WhatsApp con el nombre del vendedor
 					const fileName = `Leads ${vendorName}`;
