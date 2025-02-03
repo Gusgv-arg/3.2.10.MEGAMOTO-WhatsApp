@@ -26,8 +26,42 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
         if (!mainTable) {
             console.warn("No se encontró ninguna tabla en la hoja principal. Creando una nueva tabla...");
 
-            // Definir el rango inicial para la tabla (ajusta según tu plantilla)
-            const tableRange = "A1:R1"; // Suponiendo que las columnas van de A a R
+            // Verificar si existe una fila de encabezados
+            if (!mainWorksheet.getRow(1).values) {
+                console.warn("No se encontró una fila de encabezados. Creando una nueva fila...");
+
+                // Agregar una fila de encabezados
+                const headerRow = mainWorksheet.addRow([
+                    "Nombre",
+                    "ID Usuario",
+                    "Estado",
+                    "Fecha Flujo",
+                    "Fecha Contactar",
+                    "Marca",
+                    "Modelo",
+                    "Precio",
+                    "Otros Productos",
+                    "Forma Pago",
+                    "DNI",
+                    "Preguntas",
+                    "Vendedor",
+                    "Notas Vendedor",
+                    "Historial",
+                    "Origen",
+                    "Token Flow 2",
+                    "Error",
+                ]);
+
+                // Ajustar el estilo de la fila de encabezados (opcional)
+                headerRow.eachCell((cell) => {
+                    cell.font = { bold: true }; // Hacer negrita los encabezados
+                });
+
+                console.log("Fila de encabezados creada exitosamente.");
+            }
+
+            // Definir el rango inicial para la tabla (incluye la fila de encabezados)
+            const tableRange = `A1:R1`; // Suponiendo que las columnas van de A a R
 
             // Definir las columnas de la tabla
             const tableColumns = [
@@ -51,7 +85,7 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
                 { name: "Error", key: "error" },
             ];
 
-            // Crear la tabla con las columnas definidas
+            // Crear la tabla con las columnas y el rango inicial
             mainTable = mainWorksheet.addTable({
                 name: "MainTable", // Nombre de la tabla
                 ref: tableRange, // Rango inicial de la tabla
