@@ -32,7 +32,7 @@ export const findFlowLeadsForVendors = async () => {
 					{
 						"flows.client_status": {
 							$in: [
-								"contactado",
+								"primer contacto",
 								"enviado",
 								"leído",
 								"falló envío",
@@ -83,6 +83,7 @@ export const findFlowLeadsForVendors = async () => {
 							flow_2token: lastFlow.flow_2token,
 							flow_status: lastFlow.flow_status,
 							error: lastFlow.error,
+							origin: lastFlow.origin
 					  }
 					: null,
 			};
