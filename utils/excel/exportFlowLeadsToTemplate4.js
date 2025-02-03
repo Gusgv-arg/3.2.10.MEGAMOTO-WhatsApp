@@ -26,12 +26,13 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
         if (!mainTable) {
             console.warn("No se encontró ninguna tabla en la hoja principal. Creando una nueva tabla...");
 
-            // Verificar si existe una fila de encabezados
-            if (!mainWorksheet.getRow(1).values) {
-                console.warn("No se encontró una fila de encabezados. Creando una nueva fila...");
+            // Verificar si existe una fila de encabezados válida
+            const headerRow = mainWorksheet.getRow(1);
+            if (!headerRow.values || headerRow.values.every(cell => cell === null || cell === undefined)) {
+                console.warn("La fila de encabezados no es válida. Creando una nueva fila...");
 
-                // Agregar una fila de encabezados
-                const headerRow = mainWorksheet.addRow([
+                // Agregar una fila de encabezados con valores válidos
+                const newHeaderRow = mainWorksheet.addRow([
                     "Nombre",
                     "ID Usuario",
                     "Estado",
@@ -53,15 +54,18 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
                 ]);
 
                 // Ajustar el estilo de la fila de encabezados (opcional)
-                headerRow.eachCell((cell) => {
+                newHeaderRow.eachCell((cell) => {
                     cell.font = { bold: true }; // Hacer negrita los encabezados
                 });
 
                 console.log("Fila de encabezados creada exitosamente.");
             }
 
-            // Definir el rango inicial para la tabla (incluye la fila de encabezados)
-            const tableRange = `A1:R1`; // Suponiendo que las columnas van de A a R
+            // Agregar una fila temporal con datos ficticios
+            const tempDataRow = mainWorksheet.addRow(["Temp", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
+
+            // Definir el rango inicial para la tabla (incluye la fila de encabezados y la fila temporal)
+            const tableRange = `A1:R${mainWorksheet.rowCount}`;
 
             // Definir las columnas de la tabla
             const tableColumns = [
@@ -85,7 +89,7 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
                 { name: "Error", key: "error" },
             ];
 
-            // Crear la tabla con las columnas y el rango inicial
+            // Crear la tabla con el rango inicial
             mainTable = mainWorksheet.addTable({
                 name: "MainTable", // Nombre de la tabla
                 ref: tableRange, // Rango inicial de la tabla
@@ -93,6 +97,9 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
                 totalsRow: false, // No incluir fila de totales
                 columns: tableColumns, // Definir las columnas
             });
+
+            // Eliminar la fila temporal después de crear la tabla
+            tempDataRow.delete();
 
             console.log("Tabla creada exitosamente.");
         }
