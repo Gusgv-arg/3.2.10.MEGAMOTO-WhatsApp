@@ -14,26 +14,49 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
         const response = await axios.get(leadsTemplate, { responseType: 'arraybuffer' });
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.load(response.data);
-        const worksheet = workbook.getWorksheet(1); // Obtener la primera hoja de la plantilla
 
-        // Desproteger la hoja si está protegida
-        if (worksheet.protect) {
-            worksheet.unprotect(); // Desactivar protección
+        // Buscar tablas en hojas específicas
+        const tableSheets = ["Status Válidos", "Marcas", "Vendedores", "Orígen"];
+        const allTables = [];
+
+        workbook.eachSheet((sheet) => {
+            if (tableSheets.includes(sheet.name)) {
+                console.log(`Buscando tablas en la hoja: ${sheet.name}`);
+                if (sheet.tables && sheet.tables.length > 0) {
+                    sheet.tables.forEach((table) => {
+                        allTables.push(table);
+                        console.log(`Tabla encontrada: ${table.name} en la hoja ${sheet.name}`);
+                    });
+                } else {
+                    console.log(`No se encontraron tablas en la hoja: ${sheet.name}`);
+                }
+            }
+        });
+
+        if (allTables.length === 0) {
+            console.warn("No se encontraron tablas en ninguna de las hojas especificadas.");
         }
 
-        // Deshabilitar filtros automáticos en todas las tablas
-        if (worksheet.tables && worksheet.tables.length > 0) { // Verifica si hay tablas
-            worksheet.tables.forEach((table) => {
-                table.autoFilter = null; // Elimina los filtros automáticos de la tabla
-                console.log(`Filtros automáticos deshabilitados en la tabla: ${table.name}`);
-            });
-        } else {
-            console.log("No se encontraron tablas en la hoja.");
+        // Deshabilitar filtros automáticos en las tablas encontradas
+        allTables.forEach((table) => {
+            table.autoFilter = null; // Elimina los filtros automáticos de la tabla
+            console.log(`Filtros automáticos deshabilitados en la tabla: ${table.name}`);
+        });
+
+        // Seleccionar la hoja principal para agregar datos
+        const mainWorksheet = workbook.getWorksheet(1); // Suponiendo que la hoja principal es la primera
+        if (!mainWorksheet) {
+            throw new Error("No se encontró la hoja principal para agregar datos.");
+        }
+
+        // Desproteger la hoja si está protegida
+        if (mainWorksheet.protect) {
+            mainWorksheet.unprotect(); // Desactivar protección
         }
 
         // Limpiar el contenido de las celdas sin eliminar las filas
-        for (let i = 2; i <= worksheet.rowCount; i++) {
-            const row = worksheet.getRow(i);
+        for (let i = 2; i <= mainWorksheet.rowCount; i++) {
+            const row = mainWorksheet.getRow(i);
             row.eachCell({ includeEmpty: true }, (cell) => {
                 cell.value = null; // Limpia el valor de la celda
             });
@@ -43,16 +66,16 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
         leads.forEach((lead, index) => {
             const lastFlow = lead.lastFlow;
 
-            // Obtener la primera tabla de la hoja
-            const table = worksheet.tables?.[0]; // Usar operador opcional (?)
-            if (!table) {
-                throw new Error("No se encontró ninguna tabla en la hoja.");
+            // Obtener la primera tabla de la hoja principal
+            const mainTable = mainWorksheet.tables?.[0]; // Usar operador opcional (?)
+            if (!mainTable) {
+                throw new Error("No se encontró ninguna tabla en la hoja principal.");
             }
 
             // Calcular la próxima fila después del rango actual de la tabla
-            const [startCell, endCell] = table.ref.split(":");
+            const [startCell, endCell] = mainTable.ref.split(":");
             const nextRowNum = parseInt(endCell.replace(/[A-Z]/g, "")) + 1; // Extraer el número de fila
-            const newRow = worksheet.getRow(nextRowNum);
+            const newRow = mainWorksheet.getRow(nextRowNum);
 
             // Agregar los datos a la nueva fila
             newRow.values = [
@@ -77,7 +100,7 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
             ];
 
             // Ajustar el rango de la tabla para incluir la nueva fila
-            table.ref = `${startCell}:${newRow.address}`;
+            mainTable.ref = `${startCell}:${newRow.address}`;
         });
 
         // Generar nombre para el archivo
@@ -89,8 +112,8 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
         await workbook.xlsx.writeFile(outputPath);
 
         // Reactivar protección si estaba activada
-        if (!worksheet.protect) {
-            worksheet.protect("password"); // Reactivar protección con contraseña
+        if (!mainWorksheet.protect) {
+            mainWorksheet.protect("password"); // Reactivar protección con contraseña
         }
 
         // Generar y retornar la URL pública
