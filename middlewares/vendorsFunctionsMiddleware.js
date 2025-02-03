@@ -118,11 +118,10 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 		if (message === "leads" && typeOfWhatsappMessage === "text") {
 			// Función que envía excel con los leads en la fila del vendedor
 			res.status(200).send("EVENT_RECEIVED");
-
 			
 			// Se buscan todos los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
-			console.log("allLeads:", allLeads);
+			//console.log("allLeads:", allLeads);
 			
 			// Chequea que haya más de 1 registro
 			if (allLeads.length > 0) {
@@ -135,7 +134,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					available = false;
 				}
 				
-				console.log("Leads sin vendedor asignado:", availableLeads);
+				//console.log("Leads sin vendedor asignado:", availableLeads);
 				
 				let vendorLeads;
 				
@@ -147,7 +146,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				} else {
 					vendorLeads = allLeads;
 				}
-				console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
+				//console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
 				
 				// Procesa solo los leads del vendedor
 				if (vendorLeads.length > 0) {

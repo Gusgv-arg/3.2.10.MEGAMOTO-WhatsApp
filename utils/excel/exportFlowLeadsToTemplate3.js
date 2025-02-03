@@ -6,7 +6,6 @@ import axios from "axios"; // Importar axios
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 export const exportFlowLeadsToTemplate3 = async (leads) => {
     try {
         const leadsTemplate = "https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/temp/PlantillaLeads.xlsx";
@@ -45,20 +44,20 @@ export const exportFlowLeadsToTemplate3 = async (leads) => {
                 lead.id_user,
                 lastFlow?.client_status,
                 lastFlow?.flowDate,
-                lastFlow?.toContact || "",
+                lastFlow?.toContact,
                 lastFlow?.brand,
                 lastFlow?.model,
                 lastFlow?.price,
-                lastFlow?.otherProducts || "",
+                lastFlow?.otherProducts,
                 lastFlow?.payment,
-                lastFlow?.dni || "",
-                lastFlow?.questions || "",
-                lastFlow?.vendor_notes || "",
+                lastFlow?.dni,
+                lastFlow?.questions,
                 lastFlow?.vendor_name,
+                lastFlow?.vendor_notes,
                 lastFlow?.history,
                 lastFlow?.origin,
                 lastFlow?.flow_2token,
-                lastFlow?.error || "",
+                lastFlow?.error,
             ];
 
             // Copiar validaciones de datos desde la fila de encabezado
