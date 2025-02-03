@@ -29,12 +29,35 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
             // Definir el rango inicial para la tabla (ajusta según tu plantilla)
             const tableRange = "A1:R1"; // Suponiendo que las columnas van de A a R
 
-            // Crear una nueva tabla
+            // Definir las columnas de la tabla
+            const tableColumns = [
+                { name: "Nombre", key: "nombre" },
+                { name: "ID Usuario", key: "idUsuario" },
+                { name: "Estado", key: "estado" },
+                { name: "Fecha Flujo", key: "fechaFlow" },
+                { name: "Fecha Contactar", key: "fechaContactar" },
+                { name: "Marca", key: "marca" },
+                { name: "Modelo", key: "modelo" },
+                { name: "Precio", key: "precio" },
+                { name: "Otros Productos", key: "otrosProductos" },
+                { name: "Forma Pago", key: "formaPago" },
+                { name: "DNI", key: "dni" },
+                { name: "Preguntas", key: "preguntas" },
+                { name: "Vendedor", key: "vendedor" },
+                { name: "Notas Vendedor", key: "notasVendedor" },
+                { name: "Historial", key: "historial" },
+                { name: "Origen", key: "origen" },
+                { name: "Token Flow 2", key: "tokenFlow2" },
+                { name: "Error", key: "error" },
+            ];
+
+            // Crear la tabla con las columnas definidas
             mainTable = mainWorksheet.addTable({
                 name: "MainTable", // Nombre de la tabla
                 ref: tableRange, // Rango inicial de la tabla
                 headerRow: true, // Indica si la primera fila es un encabezado
                 totalsRow: false, // No incluir fila de totales
+                columns: tableColumns, // Definir las columnas
             });
 
             console.log("Tabla creada exitosamente.");
