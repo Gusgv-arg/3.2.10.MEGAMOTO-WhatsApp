@@ -13,45 +13,32 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
         // Cargar la plantilla de Excel usando axios
         const response = await axios.get(leadsTemplate, { responseType: 'arraybuffer' });
         const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.load(response.data);
+        await workbook.xlsx.load(response.data, { sheetRows: Infinity });
 
-        // Listar todas las hojas y sus tablas
-        console.log("Listando hojas y tablas...");
+        // Depurar el contenido de las hojas
+        console.log("Depurando contenido de las hojas...");
         workbook.eachSheet((sheet) => {
             console.log(`Hoja: ${sheet.name}`);
-            if (sheet.tables && sheet.tables.length > 0) {
-                sheet.tables.forEach((table) => {
-                    console.log(`  Tabla encontrada: ${table.name}`);
-                });
-            } else {
-                console.log("  No hay tablas en esta hoja.");
-            }
+            console.log("Contenido de la hoja:");
+            sheet.eachRow((row, rowNumber) => {
+                console.log(`  Fila ${rowNumber}:`, row.values);
+            });
         });
 
-        // Buscar tablas específicas por nombre
-        const tableNames = ["Status", "Marca", "Motomel", "Benelli", "Suzuki", "SYM", "Teknial", "Keeway", "TVS", "Vendedores", "Orígen"];
-        const allTables = [];
-
+        // Verificar si las tablas existen
+        let tablesFound = false;
         workbook.eachSheet((sheet) => {
             if (sheet.tables && sheet.tables.length > 0) {
                 sheet.tables.forEach((table) => {
-                    if (tableNames.includes(table.name)) {
-                        allTables.push(table);
-                        console.log(`Tabla encontrada: ${table.name} en la hoja ${sheet.name}`);
-                    }
+                    console.log(`Tabla encontrada: ${table.name} en la hoja ${sheet.name}`);
+                    tablesFound = true;
                 });
             }
         });
 
-        if (allTables.length === 0) {
-            throw new Error("No se encontraron las tablas esperadas en ninguna hoja.");
+        if (!tablesFound) {
+            console.warn("No se encontraron tablas en ninguna hoja. Usando rangos en su lugar.");
         }
-
-        // Deshabilitar filtros automáticos en las tablas encontradas
-        allTables.forEach((table) => {
-            table.autoFilter = null; // Elimina los filtros automáticos de la tabla
-            console.log(`Filtros automáticos deshabilitados en la tabla: ${table.name}`);
-        });
 
         // Seleccionar la hoja principal para agregar datos
         const mainWorksheet = workbook.getWorksheet(1); // Suponiendo que la hoja principal es la primera
@@ -71,6 +58,35 @@ export const exportFlowLeadsToTemplate4 = async (leads) => {
                 cell.value = null; // Limpia el valor de la celda
             });
         }
+
+        // Configurar listas desplegables usando rangos
+        const statusRange = workbook.getWorksheet("Status Válidos").getRange("A1:A17"); // Suponiendo que la lista está en la columna A
+        const marcaRange = workbook.getWorksheet("Marca2").getRange("H12:H8");
+        const vendedoresRange = workbook.getWorksheet("Vendedores").getRange("A1:A11");
+        const origenRange = workbook.getWorksheet("Orígen").getRange("A1:A4");
+
+        mainWorksheet.getColumn(4).dataValidation = {
+            type: "list",
+            formulae: [statusRange.address],
+            allowBlank: true,
+        };
+        mainWorksheet.getColumn(8).dataValidation = {
+            type: "list",
+            formulae: [marcaRange.address],
+            allowBlank: true,
+        };
+        mainWorksheet.getColumn(15).dataValidation = {
+            type: "list",
+            formulae: [vendedoresRange.address],
+            allowBlank: true,
+        };
+        mainWorksheet.getColumn(19).dataValidation = {
+            type: "list",
+            formulae: [origenRange.address],
+            allowBlank: true,
+        };
+
+        console.log("Listas desplegables configuradas usando rangos.");
 
         // Agregar los datos dentro de la tabla
         leads.forEach((lead, index) => {
