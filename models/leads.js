@@ -8,7 +8,7 @@ const flowDetailSchema = new mongoose.Schema({
 	origin: String,
 	brand: {type: String, enum : ["Benelli", "Suzuki", "Sym", "Motomel", "Keeway", "Tarpan", "Teknial eléctricas", "TVS", "No sé"]},
 	model: String,
-	price: String,
+	price: Number,
 	payment: String,
 	otherProducts: String,
 	dni: Number,
