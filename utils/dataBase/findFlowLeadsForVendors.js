@@ -17,12 +17,7 @@ export const findFlowLeadsForVendors = async () => {
     };
 
     const twentyFourHoursAgoFormatted = formatDate(twentyFourHoursAgo);
-    
-    console.log("ahora UTC:", currentDateUTC);
-    console.log("ahora Argentina:", currentDate);
-    console.log("24hs atras Argentina:", twentyFourHoursAgo);
-    console.log("24hs atrás (formatted):", twentyFourHoursAgoFormatted);
-	
+        
 	const leads = await Leads.find({
 		$or: [
 			// Entran directamente

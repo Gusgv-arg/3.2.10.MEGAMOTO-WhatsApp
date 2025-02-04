@@ -30,11 +30,11 @@ export const findOneLeadForVendor = (availableLeads) => {
 	}. Marca: ${lastFlow.brand ? lastFlow.brand : "No sabe"}. Modelo: ${
 		lastFlow.model ? lastFlow.model : "No sabe"
 	}. Precio Informado: ${lastFlow.price ? lastFlow.price : "No informado"}. ${
-		lastFlow.otherProducts && lastFlow.otherProducts.trim() !== ""
-			? lastFlow.otherProducts
-			: ""
-	} Método de Pago: ${lastFlow.payment}. DNI: ${lastFlow.dni}. Preguntas: ${
-		lastFlow.questions
+		lastFlow.otherProducts ? lastFlow.otherProducts : ""
+	} Método de Pago: ${lastFlow.payment ? lastFlow.payment : "No informado"}. DNI: ${
+		lastFlow.dni ? lastFlow.dni : "No informado"
+	}. Preguntas: ${
+		lastFlow.questions ? lastFlow.questions : "Sin preguntas"
 	}.`
 		.replace(/\n/g, " ")
 		.replace(/ {2,}/g, " ");
