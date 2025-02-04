@@ -24,15 +24,15 @@ const transformToAccented = (status) => {
 };
 
 const vendors = [
-	{ name: "gustavo glunz", phone: process.env.PHONE_GUSTAVO_GLUNZ },
+	{ name: "Gustavo_Glunz", phone: process.env.PHONE_GUSTAVO_GLUNZ },
 	{
-		name: "gustavo gomez villafane",
+		name: "Gustavo_GV",
 		phone: process.env.PHONE_GUSTAVO_GOMEZ_VILLAFANE,
 	},
 ];
 
 export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorName) => {
-	console.log("validClientStatuses:", validClientStatuses);
+	//console.log("validClientStatuses:", validClientStatuses);
 	try {
 		const workbook = xlsx.read(excelBuffer, { type: "buffer" });
 		const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -144,7 +144,7 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorNa
 					channel: "whatsapp",
 					flows: [
 						{
-							client_status: `${updateData["flows.$.client_status"]} ? ${updateData["flows.$.client_status"]} : "vendedor"`,
+							client_status: updateData["flows.$.client_status"] || "vendedor",
 							flowdate: `${currentDateTime}`,
 							toContact: updateData["flows.$.toContact"],
 							brand: updateData["flows.$.brand"],
@@ -156,9 +156,9 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorNa
 							vendor_name: vendorName,
 							vendor_phone: vendorPhone,
 							vendor_notes: updateData["flows.$.vendor_notes"],
-							origin: `${updateData["flows.$.origin"]} ? ${updateData["flows.$.origin"]} : "Salón"`,
+							origin: updateData["flows.$.origin"] || "Salón",
 							flow_2token: `2${uuidv4()}`, // Generar flow_2token,
-							history: `${currentDateTime} Alta manual de ${vendorName}. Status - ${updateData["flows.$.client_status"]} ? ${updateData["flows.$.client_status"]} : "vendedor"`,
+							history: `${currentDateTime} Alta manual de ${vendorName}. Status - ${updateData["flows.$.client_status"] || "vendedor"}`,
 						},
 					],
 				});
