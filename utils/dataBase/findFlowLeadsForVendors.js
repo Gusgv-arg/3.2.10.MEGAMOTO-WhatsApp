@@ -50,16 +50,18 @@ export const findFlowLeadsForVendors = async () => {
 					{
 						$expr: {
 							$lt: [
-								{ 
+								{
 									$toDate: {
-										$dateFromString: { 
-											dateString: { 
-												$arrayElemAt: [
-													"$flows.flowDate",
-													-1
-												]
-											} 
-										}
+										$concat: [
+											{ 
+												$substr: [
+													{ $arrayElemAt: ["$flows.flowDate", -1] },
+													0,
+													19
+												] 
+											},
+											"Z"
+										]
 									}
 								},
 								twentyFourHoursAgo
