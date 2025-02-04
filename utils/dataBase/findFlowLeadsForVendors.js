@@ -52,16 +52,54 @@ export const findFlowLeadsForVendors = async () => {
 							$lt: [
 								{
 									$toDate: {
-										$concat: [
-											{ 
-												$substr: [
-													{ $arrayElemAt: ["$flows.flowDate", -1] },
-													0,
-													19
-												] 
+										$let: {
+											vars: {
+												fullDate: { $arrayElemAt: ["$flows.flowDate", -1] },
+												datePart: { 
+													$substr: [
+														{ $arrayElemAt: ["$flows.flowDate", -1] },
+														0,
+														10
+													]
+												},
+												timePart: {
+													$substr: [
+														{ $arrayElemAt: ["$flows.flowDate", -1] },
+														12,
+														8
+													]
+												},
+												isPM: {
+													$regexMatch: {
+														input: { $arrayElemAt: ["$flows.flowDate", -1] },
+														regex: "p\\. m\\."
+													}
+												}
 											},
-											"Z"
-										]
+											in: {
+												$concat: [
+													{ $substr: ["$$datePart", 6, 4] }, "-",  // año
+													{ $substr: ["$$datePart", 3, 2] }, "-",  // mes
+													{ $substr: ["$$datePart", 0, 2] }, "T",  // día
+													{
+														$toString: {
+															$add: [
+																{ $toInt: { $substr: ["$$timePart", 0, 2] } },
+																{
+																	$cond: [
+																		{ $and: ["$$isPM", { $ne: [{ $toInt: { $substr: ["$$timePart", 0, 2] } }, 12] }] },
+																		12,
+																		0
+																	]
+																}
+															]
+														}
+													},
+													{ $substr: ["$$timePart", 2, 6] },  // resto del tiempo (minutos y segundos)
+													"Z"
+												]
+											}
+										}
 									}
 								},
 								twentyFourHoursAgo
