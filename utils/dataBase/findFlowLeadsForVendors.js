@@ -4,6 +4,9 @@ import Leads from "../../models/leads.js";
 export const findFlowLeadsForVendors = async () => {
 	const currentDate = new Date();
 	const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
+	
+	console.log("ahora:", currentDate)
+	console.log("24hs atras:", twentyFourHoursAgo)
 
 	const leads = await Leads.find({
 		$or: [

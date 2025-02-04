@@ -22,7 +22,7 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 
 	// Check status update && save in DB
 	if (status !== null) {
-		console.log("Id:", status.id, "Status:", status.status);
+		//console.log("Id:", status.id, "Status:", status.status);
 		const recipient_id =
 			body.entry[0].changes[0].value.statuses[0].recipient_id;
 		const wab_id = body.entry[0].changes[0].value.statuses[0].id;

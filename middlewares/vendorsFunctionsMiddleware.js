@@ -122,7 +122,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			
 			// Se buscan todos los leads a atender
 			const allLeads = await findFlowLeadsForVendors();
-			//console.log("allLeads:", allLeads);
+			console.log("allLeads:", allLeads);
 			
 			// Chequea que haya más de 1 registro
 			if (allLeads.length > 0) {
