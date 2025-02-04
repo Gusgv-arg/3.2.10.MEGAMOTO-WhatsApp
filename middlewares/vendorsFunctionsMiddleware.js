@@ -131,7 +131,8 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				await handleWhatsappMessage(userPhone, notification);
 			}
 		} else if (typeOfWhatsappMessage === "interactive") {
-			// Hace next si es un vendedor y es un Flow
+			// Hace next si es un vendedor y es un Flow y le manda el nombre del vendedor
+			req.vendorName = vendorName;
 			next();
 		}
 

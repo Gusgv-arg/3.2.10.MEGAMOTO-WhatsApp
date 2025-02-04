@@ -81,16 +81,16 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					notification.message.includes("Atender más tarde")
 				) {
 					vendorPhone = userMessage.userPhone;
-					vendorName = userMessage.name;
+					vendorName = userMessage.vendorName;
 				} else if (notification.message.includes("Derivar a")) {
 					if (notification.delegate === "Derivar a Gustavo Glunz") {
 						vendorPhone = process.env.PHONE_GUSTAVO_GLUNZ;
-						vendorName = "Gustavo Glunz";
+						vendorName = "Gustavo_Glunz";
 					} else if (
 						notification.delegate === "Derivar a Gustavo G.Villafañe"
 					) {
 						vendorPhone = process.env.PHONE_GUSTAVO_GOMEZ_VILLAFANE;
-						vendorName = "Gustavo Gómez Villafañe";
+						vendorName = "Gustavo_GV";
 					} else if (notification.delegate === "Derivar a Joana") {
 						vendorPhone = process.env.PHONE_JOANA;
 						vendorName = "Joana";

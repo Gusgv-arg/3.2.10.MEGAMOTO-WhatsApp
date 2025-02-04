@@ -11,6 +11,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
 	//console.log("Messages-->", body.entry[0].changes[0].value.messages[0]);
 	const type = body?.entry[0]?.changes[0]?.value?.messages[0]?.type;
+	const vendorName = req.vendorName ? req.vendorName : ""
 
 	let audioId;
 	let imageId;
@@ -71,6 +72,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 				channel: channel,
 				message: message,
 				type: type,
+				vendorName: vendorName,
 				audioId: audioId ? audioId : "",
 				imageId: imageId ? imageId : "",
 				documentId: documentId ? documentId : "",
