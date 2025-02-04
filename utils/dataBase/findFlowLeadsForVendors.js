@@ -2,11 +2,13 @@ import Leads from "../../models/leads.js";
 
 // Función que trae todo los Leads disponibles para atender
 export const findFlowLeadsForVendors = async () => {
-	const currentDate = new Date();
-	const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
+	// Crear fechas en UTC y ajustarlas a Argentina (UTC-3)
+    const currentDateUTC = new Date();
+    const currentDate = new Date(currentDateUTC.getTime() - (3 * 60 * 60 * 1000));
+    const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
 
-	 // Convertir las fechas al formato "DD/MM/YYYY, HH:mm:ss a. m./p. m."
-	 const formatDate = (date) => {
+    // Convertir las fechas al formato "DD/MM/YYYY, HH:mm:ss a. m./p. m."
+    const formatDate = (date) => {
         const hours = date.getHours();
         const ampm = hours >= 12 ? 'p. m.' : 'a. m.';
         const hour12 = hours % 12 || 12;
@@ -16,8 +18,9 @@ export const findFlowLeadsForVendors = async () => {
 
     const twentyFourHoursAgoFormatted = formatDate(twentyFourHoursAgo);
     
-    console.log("ahora:", currentDate);
-    console.log("24hs atras:", twentyFourHoursAgo);
+    console.log("ahora UTC:", currentDateUTC);
+    console.log("ahora Argentina:", currentDate);
+    console.log("24hs atras Argentina:", twentyFourHoursAgo);
     console.log("24hs atrás (formatted):", twentyFourHoursAgoFormatted);
 	
 	const leads = await Leads.find({
