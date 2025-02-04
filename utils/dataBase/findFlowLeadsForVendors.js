@@ -5,10 +5,21 @@ export const findFlowLeadsForVendors = async () => {
 	const currentDate = new Date();
 	const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
 
-	console.log("ahora:", currentDate);
-	console.log("24hs atras:", twentyFourHoursAgo);
-	console.log("24hs atrás (ISO):", twentyFourHoursAgo.toISOString());
+	 // Convertir las fechas al formato "DD/MM/YYYY, HH:mm:ss a. m./p. m."
+	 const formatDate = (date) => {
+        const hours = date.getHours();
+        const ampm = hours >= 12 ? 'p. m.' : 'a. m.';
+        const hour12 = hours % 12 || 12;
+        
+        return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}, ${hour12.toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')} ${ampm}`;
+    };
 
+    const twentyFourHoursAgoFormatted = formatDate(twentyFourHoursAgo);
+    
+    console.log("ahora:", currentDate);
+    console.log("24hs atras:", twentyFourHoursAgo);
+    console.log("24hs atrás (formatted):", twentyFourHoursAgoFormatted);
+	
 	const leads = await Leads.find({
 		$or: [
 			// Entran directamente
@@ -48,64 +59,8 @@ export const findFlowLeadsForVendors = async () => {
 						},
 					},
 					{
-						$expr: {
-							$lt: [
-								{
-									$toDate: {
-										$let: {
-											vars: {
-												fullDate: { $arrayElemAt: ["$flows.flowDate", -1] },
-												datePart: { 
-													$substr: [
-														{ $arrayElemAt: ["$flows.flowDate", -1] },
-														0,
-														10
-													]
-												},
-												timePart: {
-													$substr: [
-														{ $arrayElemAt: ["$flows.flowDate", -1] },
-														12,
-														8
-													]
-												},
-												isPM: {
-													$regexMatch: {
-														input: { $arrayElemAt: ["$flows.flowDate", -1] },
-														regex: "p\\. m\\."
-													}
-												}
-											},
-											in: {
-												$concat: [
-													{ $substr: ["$$datePart", 6, 4] }, "-",  // año
-													{ $substr: ["$$datePart", 3, 2] }, "-",  // mes
-													{ $substr: ["$$datePart", 0, 2] }, "T",  // día
-													{
-														$toString: {
-															$add: [
-																{ $toInt: { $substr: ["$$timePart", 0, 2] } },
-																{
-																	$cond: [
-																		{ $and: ["$$isPM", { $ne: [{ $toInt: { $substr: ["$$timePart", 0, 2] } }, 12] }] },
-																		12,
-																		0
-																	]
-																}
-															]
-														}
-													},
-													{ $substr: ["$$timePart", 2, 6] },  // resto del tiempo (minutos y segundos)
-													"Z"
-												]
-											}
-										}
-									}
-								},
-								twentyFourHoursAgo
-							]
-						}
-					}
+                        "flows.flowDate": { $lt: twentyFourHoursAgoFormatted }
+                    }
 				],
 			},
 		],
