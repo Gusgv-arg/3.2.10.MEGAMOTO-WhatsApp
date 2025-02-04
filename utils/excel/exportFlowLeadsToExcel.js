@@ -57,7 +57,7 @@ export const exportFlowLeadsToExcel = async (leads) => {
 				historial: lastFlow?.history || "",
 				error: lastFlow?.error || "",
 				tokenFlow2: lastFlow?.flow_2token || "",
-				orígen: lastFlow?.origin || "",
+				orígen: lastFlow?.origin || "API General",
 			});
 		});		
 

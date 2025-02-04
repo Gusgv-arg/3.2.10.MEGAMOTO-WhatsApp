@@ -144,7 +144,8 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorNa
 					channel: "whatsapp",
 					flows: [
 						{
-							client_status: updateData["flows.$.client_status"],
+							client_status: `${updateData["flows.$.client_status"]} ? ${updateData["flows.$.client_status"]} : "vendedor"`,
+							flowdate: `${currentDateTime}`,
 							toContact: updateData["flows.$.toContact"],
 							brand: updateData["flows.$.brand"],
 							model: updateData["flows.$.model"],
@@ -152,12 +153,12 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorNa
 							otherProducts: updateData["flows.$.otherProducts"],
 							payment: updateData["flows.$.payment"],
 							dni: updateData["flows.$.dni"],
-							vendor_name: updateData["flows.$.vendor_name"],
+							vendor_name: vendorName,
 							vendor_phone: vendorPhone,
 							vendor_notes: updateData["flows.$.vendor_notes"],
-							origin: updateData["flows.$.origin"],
+							origin: `${updateData["flows.$.origin"]} ? ${updateData["flows.$.origin"]} : "Salón"`,
 							flow_2token: `2${uuidv4()}`, // Generar flow_2token,
-							history: `${currentDateTime} Alta manual de ${userPhone}. Status - ${updateData["flows.$.client_status"]} `,
+							history: `${currentDateTime} Alta manual de ${vendorName}. Status - ${updateData["flows.$.client_status"]} ? ${updateData["flows.$.client_status"]} : "vendedor"`,
 						},
 					],
 				});
