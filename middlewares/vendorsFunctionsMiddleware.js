@@ -120,16 +120,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			message =
 				body.entry[0].changes[0].value.messages[0].document.caption.toLowerCase();
 			documentId = body.entry[0].changes[0].value.messages[0].document.id;
-
-			if (message !== "lead" && message !== "leads") {
-				// Caso que el vendedor manda el excel y no pone "leads"
-
-				res.status(200).send("EVENT_RECEIVED");
-
-				const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, al enviar el Excel con tus leads por favor coloca la palabra "leads".\n\n*Megamoto*`;
-
-				await handleWhatsappMessage(userPhone, notification);
-			}
+			
 		} else if (typeOfWhatsappMessage === "interactive") {
 			// Hace next si es un vendedor y es un Flow y le manda el nombre del vendedor
 			req.vendorName = vendorName;
@@ -248,7 +239,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 		} else if (
 			(message === "leads" && typeOfWhatsappMessage === "document") ||
 			(message === "lead" && typeOfWhatsappMessage === "document") ||
-			(message === "" && typeOfWhatsappMessage === "document")
+			typeOfWhatsappMessage === "document"
 		) {
 			// Función para que el vendedor envíe un Excel para cambiar estados
 			res.status(200).send("EVENT_RECEIVED");
