@@ -90,12 +90,13 @@ export const processExcelToChangeLeads = async (
 		
 		const errorMessages = []; // Array para acumular mensajes de error
 		
-		let rowNumber = 2;
+		let rowNumber = 1;
 
 		// Obtener todas las filas excepto el encabezado, sin filtrar
 		const dataRows = data.slice(1);
 
 		for (const col of dataRows) {
+			rowNumber++
 			// Comenzar desde la segunda fila
 			const name = col[0]? String(col[0]).trim() : "";
 			const id_user = String(col[1]).trim();
@@ -299,9 +300,7 @@ export const processExcelToChangeLeads = async (
 						}, {}),
 					},
 				}
-			);
-
-		rowNumber++
+			);		
 		}
 
 		// Si hay mensajes de error, enviarlos al usuario
