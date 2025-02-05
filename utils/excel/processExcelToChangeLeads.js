@@ -36,18 +36,29 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorNa
 	try {
 		const workbook = xlsx.read(excelBuffer, { type: "buffer" });
 		const sheet = workbook.Sheets[workbook.SheetNames[0]];
-		const data = xlsx.utils.sheet_to_json(sheet, { header: 1 }); // Leer como array de arrays
+		const data = xlsx.utils.sheet_to_json(sheet, { 
+            header: 1,
+            blankrows: false,
+            defval: ''  // valor por defecto para celdas vacías
+        });
 
-		console.log("Total rows to process:", data.length);
+        // Filtrar las filas que realmente tienen datos (teléfono en columna B)
+        const validRows = data.slice(1).filter(row => {
+            const id_user = col[1] ? String(col[1]).trim() : '';
+            // Verificar que id_user no esté vacío y sea un número válido
+            return id_user && !isNaN(id_user) && id_user.length > 5;
+        });
+
+		console.log("Total rows in Excel:", data.length);
+        console.log("Total valid rows to process:", validRows.length);
 
 		const errorMessages = []; // Array para acumular mensajes de error
 
-		for (let i = 1; i < data.length; i++) {
+		for (const col of validRows) {
 			// Comenzar desde la segunda fila
-			const col = data[i]; // Cada fila es un array
 			const name = col[0];
-			const id_user = col[1] ? String(col[1]).trim() : null; // Columna B (índice 1)
-			const flow_2token = col[16] ? String(col[16]).trim() : null; // Columna Q (índice 16)
+			const id_user = String(col[1]).trim();
+            const flow_2token = col[16] ? String(col[16]).trim() : null;
 
 			// Validar client_status e ir acumulando errores posibles
 			// EN TEORIA LO PODRIA SACAR PORQUE TRABAJO CON LISTAS DESPLEGABLES //
@@ -145,7 +156,7 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorNa
 					flows: [
 						{
 							client_status: updateData["flows.$.client_status"] || "vendedor",
-							flowdate: `${currentDateTime}`,
+							flowDate: `${currentDateTime}`,
 							toContact: updateData["flows.$.toContact"],
 							brand: updateData["flows.$.brand"],
 							model: updateData["flows.$.model"],
