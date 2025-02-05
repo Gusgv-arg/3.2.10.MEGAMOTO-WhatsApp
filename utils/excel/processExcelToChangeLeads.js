@@ -71,7 +71,7 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorNa
 				if (transformedStatus !== client_status) {
 					client_status = transformedStatus;
 					console.log(
-						`Transformed client_status to "${client_status}" for row ${i + 1}.`
+						`Transformed client_status to "${client_status}" `
 					);
 				}
 				// Validar nuevamente después de la transformación
@@ -91,7 +91,7 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorNa
 			});
 
 			if (!id_user) {
-				console.log(`id_user is missing for row ${i + 1}. Skipping.`);
+				console.log(`id_user is missing for ${col}. Skipping.`);
 				continue;
 			}
 
