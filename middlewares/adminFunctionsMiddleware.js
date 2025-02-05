@@ -21,6 +21,7 @@ import { updateDbPricesFromExcel } from "../utils/dataBase/updatesDbPricesFromEx
 import { findFlowLeadsForVendors } from "../utils/dataBase/findFlowLeadsForVendors.js";
 import { exportFlowLeadsToExcel } from "../utils/excel/exportFlowLeadsToExcel.js";
 import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
+import { handleWhatsappMessage } from "../utils/whatsapp/handleWhatsappMessage.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
@@ -36,7 +37,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 	const userPhone = body.entry[0].changes[0]?.value?.messages?.[0]?.from
 		? body.entry[0].changes[0].value.messages[0].from
 		: "";
-	
+
 	// Admin INSTRUCTIONS: can be text or document format in case of Campaign!!!
 	if (
 		(typeOfWhatsappMessage === "text" && userPhone === myPhone) ||
@@ -64,7 +65,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			await adminWhatsAppNotification(userPhone, botSwitchOnNotification);
 
 			res.status(200).send("EVENT_RECEIVED");
-		
 		} else if (message === "no responder") {
 			//Change general switch to OFF
 			await changeMegaBotSwitch("OFF");
@@ -73,13 +73,11 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			await adminWhatsAppNotification(userPhone, botSwitchOffNotification);
 
 			res.status(200).send("EVENT_RECEIVED");
-		
 		} else if (message === "megamoto") {
 			// WhatsApp Admin notification
 			await adminWhatsAppNotification(userPhone, helpFunctionNotification);
 
 			res.status(200).send("EVENT_RECEIVED");
-		
 		} else if (message.startsWith("campaña")) {
 			// Campaigns format: "campaña" "template name" "campaign name"
 			const parts = message.split(" ");
@@ -115,7 +113,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			}
 
 			res.status(200).send("EVENT_RECEIVED");
-		
 		} else if (message.startsWith("inactivar")) {
 			const parts = message.split(" ");
 			const campaignName = parts.slice(1).join("_");
@@ -123,7 +120,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			//Call the functions that inactivates Campaign
 			res.status(200).send("EVENT_RECEIVED");
 			await changeCampaignStatus("inactiva", campaignName, userPhone);
-		
 		} else if (message.startsWith("activar")) {
 			const parts = message.split(" ");
 			const campaignName = parts.slice(1).join("_");
@@ -131,17 +127,14 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			//Call the functions that activates Campaign
 			res.status(200).send("EVENT_RECEIVED");
 			await changeCampaignStatus("activa", campaignName, userPhone);
-		
 		} else if (message === "listar campañas") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			await listCampaigns(userPhone);
-		
 		} else if (message === "campañas") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			const leads = await exportCampaignsToExcel(userPhone);
-		
 		} else if (message === "precios") {
 			if (isScrapperCalled === false) {
 				isScrapperCalled = true;
@@ -151,11 +144,9 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				console.log("isScrapperCelles esta en:", isScrapperCalled);
 				res.status(200).send("EVENT_RECEIVED");
 			}
-		
 		} else if (message === "facebook") {
 			res.status(200).send("EVENT_RECEIVED");
 			await scrapeFacebook(userPhone);
-		
 		} else if (message.startsWith("plantilla")) {
 			res.status(200).send("EVENT_RECEIVED");
 
@@ -180,33 +171,37 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				templateName,
 				campaignName
 			);
-		
 		} else if (message === "actualizar precios") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			const notification = await updateDbPricesFromExcel();
 
 			await adminWhatsAppNotification(userPhone, notification);
-		
 		} else if (message === "crear precios") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			const notification = await pricesModelCreation();
-					
 		} else if (message === "flow1") {
 			res.status(200).send("EVENT_RECEIVED");
-			
-			// Filtra de la BD los Leads disponibles para atender dentro del Flow 
+
+			// Filtra de la BD los Leads disponibles para atender dentro del Flow
 			const queue = await findFlowLeadsForVendors();
 			console.log("Queue", queue);
 
-			// Genera un Excel con los datos 
-			const excelFile = await exportFlowLeadsToExcel(queue)
-			console.log("excel:", excelFile)
+			// Chequea que haya leads en la fila
+			if (queue.length > 0) {
+				// Genera un Excel con los datos
+				const excelFile = await exportFlowLeadsToExcel(queue);
+				console.log("excel:", excelFile);
 
-			// Se envía el Excel por WhatsApp
-			await sendExcelByWhatsApp(userPhone, excelFile, "Leads")
-		
+				// Se envía el Excel por WhatsApp
+				await sendExcelByWhatsApp(userPhone, excelFile, "Leads");
+			} else {
+				const message = `*🔔 Notificación Automática:*\n\n⚠️ No hay Leads de ningún vendedor que estén pendientes.\n\n*Megamoto*`;
+
+				// Se notifica de que no hay Leads
+				await handleWhatsappMessage(userPhone, message);
+			}
 		} else {
 			// Does next if its an admin message but is not an instruction
 			next();
