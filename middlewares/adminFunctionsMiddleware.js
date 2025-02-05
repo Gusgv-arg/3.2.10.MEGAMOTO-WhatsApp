@@ -19,9 +19,9 @@ import { processTemplateExcel } from "../functions/processTemplateExcel.js";
 import { pricesModelCreation } from "../utils/dataBase/pricesModelCreation.js";
 import { updateDbPricesFromExcel } from "../utils/dataBase/updatesDbPricesFromExcel.js";
 import { findFlowLeadsForVendors } from "../utils/dataBase/findFlowLeadsForVendors.js";
-import { exportFlowLeadsToExcel } from "../utils/excel/exportFlowLeadsToExcel.js";
 import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
 import { handleWhatsappMessage } from "../utils/whatsapp/handleWhatsappMessage.js";
+import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTemplate.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
@@ -191,7 +191,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			// Chequea que haya leads en la fila
 			if (queue.length > 0) {
 				// Genera un Excel con los datos
-				const excelFile = await exportFlowLeadsToExcel(queue);
+				const excelFile = await exportFlowLeadsToTemplate(queue);
 				console.log("excel:", excelFile);
 
 				// Se envía el Excel por WhatsApp
