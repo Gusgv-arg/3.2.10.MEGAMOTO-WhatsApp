@@ -99,10 +99,9 @@ export const processExcelToChangeLeads = async (
 		console.log("Total valid rows to process:", validRows.length);
 
 		const errorMessages = []; // Array para acumular mensajes de error
-		let rowNumber = 1;
+		let rowNumber = 2;
 
 		for (const col of validRows) {
-			rowNumber++;
 			// Comenzar desde la segunda fila
 			const name = col[0];
 			const id_user = String(col[1]).trim();
@@ -122,7 +121,7 @@ export const processExcelToChangeLeads = async (
 				continue;
 			}
 
-			// Validar status
+			// Validar status - EN TORIA NO HARIA FALTA X QUE ES UNA LISTA
 			let client_status = col[2]; // Columna C (índice 2)
 			const originalClientStatus = client_status; // Guardar el estado original
 
@@ -142,7 +141,7 @@ export const processExcelToChangeLeads = async (
 				}
 			}
 
-			// Validar brand (columna F, índice 5)
+			// Validar brand (columna F, índice 5) - EN TORIA NO HARIA FALTA X QUE ES UNA LISTA
 			const brand = col[5] ? String(col[5]).trim() : "";
 			if (brand && !validBrands.includes(brand)) {
 				const errorMessage = `❌ Fila ${rowNumber}: ${name} (${id_user}) - Marca "${brand}" inválida`;
@@ -308,7 +307,7 @@ export const processExcelToChangeLeads = async (
 				}
 			);
 
-			console.log("Update result:", result);
+		rowNumber++
 		}
 
 		// Si hay mensajes de error, enviarlos al usuario
