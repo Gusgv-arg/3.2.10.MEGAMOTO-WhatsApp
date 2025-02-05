@@ -10,25 +10,25 @@ const validBrands = Leads.schema.path("flows.brand").enumValues;
 
 // Definir los encabezados esperados en el Excel
 const expectedHeaders = [
-	'Nombre',
-	'Teléfono',
-	'Estado',
-	'Primer Contacto',
-	'Fecha a Contactar',
-	'Marca',
-	'Modelo',
-	'Precio informado',
-	'Otros Modelos',
-	'Forma de Pago',
-	'DNI',
-	'Preguntas del Lead',
-	'Vendedor',
-	'Notas del Vendedor',
-	'Historial',
-	'Orígen',
-	'Token Flow 2',
-	'Error'
-  ];
+	"Nombre",
+	"Teléfono",
+	"Estado",
+	"Primer Contacto",
+	"Fecha a Contactar",
+	"Marca",
+	"Modelo",
+	"Precio informado",
+	"Otros Modelos",
+	"Forma de Pago",
+	"DNI",
+	"Preguntas del Lead",
+	"Vendedor",
+	"Notas del Vendedor",
+	"Historial",
+	"Orígen",
+	"Token Flow 2",
+	"Error",
+];
 
 // Array de vendedores con sus teléfonos
 const vendors = [
@@ -54,7 +54,6 @@ const transformToAccented = (status) => {
 	return transformations[status.toLowerCase()] || status;
 };
 
-
 export const processExcelToChangeLeads = async (
 	excelBuffer,
 	userPhone,
@@ -73,32 +72,32 @@ export const processExcelToChangeLeads = async (
 		// Validar estructura del Excel
 		const headers = data[0];
 		for (let i = 0; i < expectedHeaders.length; i++) {
-		  const actualHeader = headers[i] ? String(headers[i]).trim() : '';
-		  if (actualHeader !== expectedHeaders[i]) {
-			const errorMessage = "🔔 *Notificación Automática:*\n\n❌ El archivo Excel no respeta la estructura de la plantilla original. Por favor, utilice la plantilla correcta sin modificar los encabezados ni agregar o sacar columnas.\n\n*Megamoto*";
-			
-			console.log(`El usuario ${vendorName} envió el archivo Leads incorrecto.`)
-			
-			// Notificar al usuario
-			await handleWhatsappMessage(
-			  userPhone,
-			  errorMessage
-			);
-			return
-		  }
+			const actualHeader = headers[i] ? String(headers[i]).trim() : "";
+			if (actualHeader !== expectedHeaders[i]) {
+				const errorMessage =
+					"🔔 *Notificación Automática:*\n\n❌ El archivo Excel no respeta la estructura de la plantilla original. Por favor, utilice la plantilla correcta sin modificar los encabezados ni agregar o sacar columnas.\n\n*Megamoto*";
+
+				console.log(
+					`El usuario ${vendorName} envió el archivo Leads incorrecto.`
+				);
+
+				// Notificar al usuario
+				await handleWhatsappMessage(userPhone, errorMessage);
+				return;
+			}
 		}
-		
+
 		const errorMessages = []; // Array para acumular mensajes de error
-		
+
 		let rowNumber = 1;
 
 		// Obtener todas las filas excepto el encabezado, sin filtrar
 		const dataRows = data.slice(1);
 
 		for (const col of dataRows) {
-			rowNumber++
+			rowNumber++;
 			// Comenzar desde la segunda fila
-			const name = col[0]? String(col[0]).trim() : "";
+			const name = col[0] ? String(col[0]).trim() : "";
 			const id_user = String(col[1]).trim();
 			const flow_2token = col[16] ? String(col[16]).trim() : null;
 
@@ -136,6 +135,16 @@ export const processExcelToChangeLeads = async (
 				}
 			}
 
+			// Validar fecha a contactar si existe
+			if (toContact) {
+				const date = new Date(toContact);
+				if (isNaN(date.getTime())) {
+					const errorMessage = `❌ Fila ${rowNumber}: ${name} - Fecha a contactar "${toContact}" inválida`;
+					errorMessages.push(errorMessage);
+					continue;
+				}
+			}
+			
 			// Validar brand (columna F, índice 5) - EN TORIA NO HARIA FALTA X QUE ES UNA LISTA
 			const brand = col[5] ? String(col[5]).trim() : "";
 			if (brand && !validBrands.includes(brand)) {
@@ -300,7 +309,7 @@ export const processExcelToChangeLeads = async (
 						}, {}),
 					},
 				}
-			);		
+			);
 		}
 
 		// Si hay mensajes de error, enviarlos al usuario
