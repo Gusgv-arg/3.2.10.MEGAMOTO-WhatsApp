@@ -88,20 +88,14 @@ export const processExcelToChangeLeads = async (
 		  }
 		}
 		
-		// Filtrar las filas que realmente tienen datos (teléfono en columna B)
-		const validRows = data.slice(1).filter((row) => {
-			const id_user = row[1] ? String(row[1]).trim() : "";
-			// Verificar que id_user no esté vacío y sea un número válido
-			return id_user && !isNaN(id_user) && id_user.length > 5;
-		});
-
-		console.log("Total rows in Excel:", data.length);
-		console.log("Total valid rows to process:", validRows.length);
-
 		const errorMessages = []; // Array para acumular mensajes de error
+		
 		let rowNumber = 2;
 
-		for (const col of validRows) {
+		// Obtener todas las filas excepto el encabezado, sin filtrar
+		const dataRows = data.slice(1);
+
+		for (const col of dataRows) {
 			// Comenzar desde la segunda fila
 			const name = col[0]? String(col[0]).trim() : "";
 			const id_user = String(col[1]).trim();

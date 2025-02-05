@@ -247,7 +247,8 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			}
 		} else if (
 			(message === "leads" && typeOfWhatsappMessage === "document") ||
-			(message === "lead" && typeOfWhatsappMessage === "document")
+			(message === "lead" && typeOfWhatsappMessage === "document") ||
+			(message === "" && typeOfWhatsappMessage === "document")
 		) {
 			// Función para que el vendedor envíe un Excel para cambiar estados
 			res.status(200).send("EVENT_RECEIVED");
