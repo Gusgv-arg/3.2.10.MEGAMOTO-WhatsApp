@@ -44,7 +44,7 @@ export const processExcelToChangeLeads = async (excelBuffer, userPhone, vendorNa
 
         // Filtrar las filas que realmente tienen datos (teléfono en columna B)
         const validRows = data.slice(1).filter(row => {
-            const id_user = col[1] ? String(col[1]).trim() : '';
+            const id_user = row[1] ? String(row[1]).trim() : '';
             // Verificar que id_user no esté vacío y sea un número válido
             return id_user && !isNaN(id_user) && id_user.length > 5;
         });
