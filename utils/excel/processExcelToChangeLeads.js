@@ -103,7 +103,7 @@ export const processExcelToChangeLeads = async (
 
 		for (const col of validRows) {
 			// Comenzar desde la segunda fila
-			const name = col[0];
+			const name = col[0]? String(col[0]).trim() : "";
 			const id_user = String(col[1]).trim();
 			const flow_2token = col[16] ? String(col[16]).trim() : null;
 
@@ -115,7 +115,7 @@ export const processExcelToChangeLeads = async (
 			}
 
 			// Validar teléfono
-			if (!id_user || isNaN(id_user) || id_user.length < 6) {
+			if (!id_user || !/^\d+$/.test(id_user) || id_user.length < 6) {
 				const errorMessage = `❌ Fila ${rowNumber}: ${name} - Teléfono "${id_user}" inválido`;
 				errorMessages.push(errorMessage);
 				continue;
@@ -313,7 +313,7 @@ export const processExcelToChangeLeads = async (
 		// Si hay mensajes de error, enviarlos al usuario
 		if (errorMessages.length > 0) {
 			const combinedErrorMessage = errorMessages.join("\n");
-			const finalMessage = `🔔 *Notificación Automática:*\n\nError al actualizar los Leads:*\n${combinedErrorMessage}\n\n*Megamoto*`;
+			const finalMessage = `🔔 *Notificación Automática:*\n\nError al actualizar Leads:\n${combinedErrorMessage}\n\n*Megamoto*`;
 
 			await handleWhatsappMessage(userPhone, finalMessage);
 		} else {
