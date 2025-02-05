@@ -56,7 +56,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			documentId = body.entry[0].changes[0].value.messages[0].document.id;
 		}
 
-		if (message === "megabot responder") {
+		if (message === "responder") {
 			//Change general switch to ON
 			await changeMegaBotSwitch("ON");
 
@@ -65,7 +65,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 			res.status(200).send("EVENT_RECEIVED");
 		
-		} else if (message === "megabot no responder") {
+		} else if (message === "no responder") {
 			//Change general switch to OFF
 			await changeMegaBotSwitch("OFF");
 
@@ -74,7 +74,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 			res.status(200).send("EVENT_RECEIVED");
 		
-		} else if (message === "megabot") {
+		} else if (message === "megamoto") {
 			// WhatsApp Admin notification
 			await adminWhatsAppNotification(userPhone, helpFunctionNotification);
 
@@ -132,17 +132,17 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 			await changeCampaignStatus("activa", campaignName, userPhone);
 		
-		} else if (message === "megabot listar campañas") {
+		} else if (message === "listar campañas") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			await listCampaigns(userPhone);
 		
-		} else if (message === "megabot campañas") {
+		} else if (message === "campañas") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			const leads = await exportCampaignsToExcel(userPhone);
 		
-		} else if (message === "megabot precios") {
+		} else if (message === "precios") {
 			if (isScrapperCalled === false) {
 				isScrapperCalled = true;
 				res.status(200).send("EVENT_RECEIVED");
@@ -152,7 +152,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				res.status(200).send("EVENT_RECEIVED");
 			}
 		
-		} else if (message === "megabot facebook") {
+		} else if (message === "facebook") {
 			res.status(200).send("EVENT_RECEIVED");
 			await scrapeFacebook(userPhone);
 		
@@ -193,10 +193,10 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 			const notification = await pricesModelCreation();
 					
-		} else if (message === "leads1") {
+		} else if (message === "flow1") {
 			res.status(200).send("EVENT_RECEIVED");
 			
-			// Filtra de l BD los Leads disponibles para atender dentro del Flow 
+			// Filtra de la BD los Leads disponibles para atender dentro del Flow 
 			const queue = await findFlowLeadsForVendors();
 			console.log("Queue", queue);
 

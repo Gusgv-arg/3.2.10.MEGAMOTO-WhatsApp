@@ -88,7 +88,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	) {
 		res.status(200).send("EVENT_RECEIVED");
 
-		const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1. Enviar palabra "lead" para recibir un Lead.\n2. Enviar palabra "leads" para recibir un excel con sus leads.\n3. Adjuntar el mismo excel recibido más la palabra "leads" para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
+		const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1. Enviar palabra "lead" para recibir un Lead.\n2. Enviar palabra "leads" para recibir un excel con sus leads.\n3. Adjuntar el mismo excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
 
 		await handleWhatsappMessage(userPhone, notification);
 	} else if (
@@ -112,7 +112,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				// Caso que el vendedor manda un texto con algo que la API no procesa
 				res.status(200).send("EVENT_RECEIVED");
 
-				const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido más la palabra "leads" para modificar información (estado, etc).\n\n*Megamoto*`;
+				const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
 
 				await handleWhatsappMessage(userPhone, notification);
 			}
