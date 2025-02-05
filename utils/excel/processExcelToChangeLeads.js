@@ -99,6 +99,7 @@ export const processExcelToChangeLeads = async (
 			// Comenzar desde la segunda fila
 			const name = col[0] ? String(col[0]).trim() : "";
 			const id_user = String(col[1]).trim();
+			const toContact = col[4];
 			const flow_2token = col[16] ? String(col[16]).trim() : null;
 
 			// Validar nombre
