@@ -17,7 +17,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			// Llama a la función para crear el Lead y guardar en BD
 			existingLead = await createLeadInDb(userMessage);
 
-			// Envía un mensaje previo de bienvenida x si no se ve el Flow
+			// Envía un mensaje previo de bienvenida xq no se ve el Flow
 			const greeting = `👋 Hola ${userMessage.name}, bienvenido a Megamoto!\n\nPor favor completá el siguiente formulario con tu consulta *desde tu celular.*\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 			await handleWhatsappMessage(userMessage.userPhone, greeting);
@@ -34,7 +34,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 
 			// Actualiza el log
 			log =
-				"1-Se creo el lead en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1.";
+				`1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD.`;
 			return log;
 		} else {
 			// Lead EXISTE -------------------------------------------------------------
@@ -67,7 +67,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await saveNotificationInDb(userMessage, notification);
 					
 					// Actualiza el log
-					log = `1-Se notificó al lead recordando su vendedor. 2-Alarma al vendedor ${lastFlowVendor}. `;
+					log = `1-Se notificó al lead ${userMessage.name} recordando su vendedor. 2-Alarma al vendedor ${lastFlowVendor}. `;
 					
 					return log;
 				} else {
@@ -82,7 +82,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await saveNotificationInDb(userMessage, notification);
 
 					// Actualiza el log
-					log = `1-Se notificó al Lead de que no tiene un vendedor asignado. `;
+					log = `1-Se notificó al Lead ${userMessage.name} que aún no tiene un vendedor asignado. `;
 
 					return log;
 
@@ -100,7 +100,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				await sendFlow_1ToLead(userMessage);
 
 				// Actualiza el log
-				log = `1-Se volvió a saludar al lead ya que estaba en BD y no tenía un Flow. 2-Se le envió Flow 1.`;
+				log = `1-Se volvió a saludar al lead ${userMessage.name} ya que estaba en BD y no tenía un Flow abierto. 2-Se le envió Flow 1.`;
 
 				return log;
 			}
@@ -113,9 +113,9 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				: error.message
 		);
 
-		const errorMessage = error?.response?.data
+		const errorMessage = `Error en processWhatsAppWithApi.js: ${error?.response?.data
 			? JSON.stringify(error.response.data)
-			: error.message;
+			: error.message}`;
 
 		throw errorMessage;
 	}

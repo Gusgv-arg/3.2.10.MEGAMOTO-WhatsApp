@@ -65,7 +65,8 @@ export const statusMiddleware = async (req, res, next) => {
 			}
 		} catch (error) {
 			console.log("Error in statusMiddleware.js", error.message);
-			await adminWhatsAppNotification(myPhone, error.message);
+			const message = `Error en statusMiddleware.js: ${error.message}`
+			await adminWhatsAppNotification(myPhone, message);
 		}
 	} else {
 		next();

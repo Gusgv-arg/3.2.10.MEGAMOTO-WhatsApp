@@ -53,22 +53,25 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					await saveNotificationInDb(userMessage, notification);
 
 					// Actualiza el log
-					log = `1-Se extrajo la respuesta del Flow 1. 2-Se mandó whatsapp al lead x respuesta incompleta. 3-Se reenvió FLOW 1. `;
+					log = `1-Se extrajo la respuesta del Flow 1 de ${userMessage.name}. 2-Se mandó whatsapp al lead x respuesta incompleta: ${notification.message}. 3-Se reenvió FLOW 1. `;
 				} else {
 					// Guarda en BD
 					await saveNotificationInDb(userMessage, notification);
 
 					// Actualiza el log
-					log = `1-Se extrajo la respuesta del Flow 1. 2-Se mandó whatsapp al lead de que un vendedor lo estará contactando.`;
+					log = `1-Se extrajo la respuesta del Flow 1 de ${userMessage.name}. 2-Se mandó whatsapp al lead de que un vendedor lo estará contactando.`;
 				}
 
 				return log;
+
 			} else if (/\"flow_token\":\"2/.test(userMessage.message)) {
 				// ---- TOKEN 2 -------------------------------------//
 				let vendorPhone;
 				let vendorName;
 
 				const notification = extractFlowToken_2Responses(userMessage.message);
+
+				log = `1-Se extrajo la respuesta del Flow 2 del vendedor ${userMessage.name}. `
 
 				// Confirmar la respuesta al vendedor que envió la respuesta
 				await handleWhatsappMessage(
@@ -82,6 +85,8 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				) {
 					vendorPhone = userMessage.userPhone;
 					vendorName = userMessage.vendorName;
+					log += `La respuesta fue ${notification.message}. `
+
 				} else if (notification.message.includes("Derivar a")) {
 					if (notification.delegate === "Derivar a Gustavo Glunz") {
 						vendorPhone = process.env.PHONE_GUSTAVO_GLUNZ;
@@ -95,6 +100,8 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 						vendorPhone = process.env.PHONE_JOANA;
 						vendorName = "Joana";
 					}
+
+					log += `La respuesta fue ${notification.message}. `
 				}
 
 				// Buscar Lead x token 2 y Guardar en BD los datos
@@ -121,7 +128,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 
 				if (notification.delegate) {
 					// Notificar al vendedor derivado
-					const message = `*🔔 Notificación Automática:*\n\n📣 El vendedor ${userMessage.name} te derivó al cliente ${customerName}\n❗ Importante: entrá en tu celular para tomar el Lead.\n\nMegamoto`;
+					const message = `*🔔 Notificación Automática:*\n\n📣 El vendedor ${userMessage.name} te derivó al cliente ${customerName}\n❗ Importante: entrá en tu celular para tomar el Lead.\n\n*Megamoto*`;
 
 					await handleWhatsappMessage(vendorPhone, message);
 
@@ -133,6 +140,8 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 						vendorPhone,
 						notification.flowToken
 					);
+
+					log += `Se lo notificó al vendedor ${vendorName} que le derivaron a ${customerName} y se le envió el Flow 2 con toda la info. `
 				
 				} else if (!notification.delegate) {
 					// Notificar datos del vendedor al cliente con template (pueden pasar +24hs)
@@ -144,16 +153,15 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					);
 
 					// Grabar en BD la notificación al cliente
-					const message = `*🔔 Notificación de Megamoto:*\n\n👋 Hola ${customerName}, tenemos buenas noticias! Tu consulta fue tomada por un vendedor:
-					Nombre: ${vendorName}. Celular: ${vendorPhone}\n❗ Te recomendamos agendar sus datos así lo reconoces cuando te contacte.\n¡Mucha suerte con tu compra!`;
+					const message = `*🔔 Notificación de Megamoto:*\n\n👋 Hola ${customerName}, tenemos buenas noticias! Tu consulta fue tomada por un vendedor:\n				Nombre: ${vendorName}. Celular: ${vendorPhone}\n❗ Te recomendamos agendar sus datos así lo reconoces cuando te contacte.\n¡Mucha suerte con tu compra!`;
 					
 					const notification = {message: message}
 					const userMessage = {userPhone: customerPhone}
 
 					await saveNotificationInDb(userMessage, notification)
-				}
 
-				log = `1-Se extrajo la respuesta del Flow 2. 2-Se mandó WhatsApp al lead con los datos del vendedor. 3-Se le confirmó al vendedor de su respuesta.`;
+					log += `Se lo notificó al lead ${customerName} que su vendedor asignado es ${vendorName}. `
+				}
 
 				return log;
 			}
@@ -165,6 +173,10 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 		}
 	} catch (error) {
 		console.error("Error en processWhatsAppFlowWithApi.js:", error.message);
-		throw error.message;
+		const errorMessage = `Error en processWhatsAppFlowWithApi.js: ${error?.response?.data
+			? JSON.stringify(error.response.data)
+			: error.message}`;
+		
+		throw errorMessage;
 	}
 };

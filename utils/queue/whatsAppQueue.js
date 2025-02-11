@@ -97,19 +97,19 @@ export class WhatsAppMessageQueue {
 						// Get the Document URL from WhatsApp
 						const document = await getMediaWhatsappUrl(newMessage.documentId);
 						const documentUrl = document.data.url;
-						console.log("Document URL:", documentUrl);
+						//console.log("Document URL:", documentUrl);
 
 						// Download Document from WhatsApp
 						const documentBuffer = await downloadWhatsAppMedia(documentUrl);
 						const documentBufferData = documentBuffer.data;
-						console.log("Document download:", documentBufferData);
+						//console.log("Document download:", documentBufferData);
 
 						// Convert buffer received from WhatsApp to a public URL
 						documentURL = await convertBufferImageToUrl(
 							documentBufferData,
 							"https://three-2-12-messenger-api.onrender.com"
 						);
-						console.log("Public Document URL:", documentURL);
+						//console.log("Public Document URL:", documentURL);
 					}
 				}
 

@@ -141,7 +141,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				res.status(200).send("EVENT_RECEIVED");
 				const precios = await scrapeMercadoLibre(userPhone);
 			} else {
-				console.log("isScrapperCelles esta en:", isScrapperCalled);
+				//console.log("isScrapperCelles esta en:", isScrapperCalled);
 				res.status(200).send("EVENT_RECEIVED");
 			}
 		} else if (message === "facebook") {
@@ -186,13 +186,13 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 			// Filtra de la BD los Leads disponibles para atender dentro del Flow
 			const queue = await findFlowLeadsForVendors();
-			console.log("Queue", queue);
+			//console.log("Queue", queue);
 
 			// Chequea que haya leads en la fila
 			if (queue.length > 0) {
 				// Genera un Excel con los datos
 				const excelFile = await exportFlowLeadsToTemplate(queue);
-				console.log("excel:", excelFile);
+				//console.log("excel:", excelFile);
 
 				// Se envía el Excel por WhatsApp
 				await sendExcelByWhatsApp(userPhone, excelFile, "Leads");
