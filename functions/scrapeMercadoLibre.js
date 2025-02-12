@@ -14,7 +14,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 	try {
 		// Advises Admin of the task
 		const task =
-			"*NOTIFICACION:*\nSe envió tu solicitud a otra API que busca en Mercado Libre todas las publicaciones de los modelos que vende Megamoto. Es un proceso que tarda.\n¡Paciencia!";
+			"🔔 *NOTIFICACION:*\nSe envió tu solicitud a otra API que busca en Mercado Libre todas las publicaciones de los modelos que vende Megamoto. Es un proceso que tarda.\n¡Paciencia!";
 		await adminWhatsAppNotification(userPhone, task);
 
 		// Uses other API as a microservice for scrapping
@@ -87,7 +87,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 				responseType: "arraybuffer",
 			});
 			await workbook.xlsx.load(response.data);
-			console.log("Template file loaded successfully");
+			//console.log("Template file loaded successfully");
 		} catch (error) {
 			console.log("Error al acceder a precios_template.xlsx", error.message);
 			const errorMessage =
@@ -134,11 +134,11 @@ export const scrapeMercadoLibre = async (userPhone) => {
 
 		// Guardar el archivo actualizado en una ubicación pública
 		await workbook.xlsx.writeFile(outputPath);
-		console.log("Archivo actualizado guardado en:", outputPath);
+		//console.log("Archivo actualizado guardado en:", outputPath);
 
 		// Generar la URL pública del archivo
 		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/precios_mercado_libre.xlsx`;
-		console.log("Archivo disponible en:", fileUrl);
+		//console.log("Archivo disponible en:", fileUrl);
 
 		// Enviar el archivo Excel por WhatsApp (opcional)
 		const fileName = "Precios Mercado Libre";
@@ -157,7 +157,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 
 		// Manejo específico para el error 502
 		if (error.message === "Request failed with status code 502") {
-			errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema momentáneo en Render que es donde está hosteado el Servidor. Puedes intentar nuevamente o esperar una hora.`;
+			errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nHay un problema momentáneo en Render que es donde está hosteado el Servidor. Puedes intentar nuevamente o esperar una hora.`;
 		}
 		// Notificar al administrador
 		adminWhatsAppNotification(userPhone, errorMessage);

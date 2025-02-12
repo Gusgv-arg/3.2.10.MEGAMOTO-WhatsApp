@@ -14,7 +14,7 @@ export const scrapeFacebook = async (userPhone) => {
 		const ads = await axios.get(
 			"https://three-2-13-web-scrapping.onrender.com/scrape/facebook"
 		);
-		console.log("Avisos:", ads.data);
+		//console.log("Avisos:", ads.data);
 
 		const results = ads.data;
 
@@ -139,11 +139,11 @@ export const scrapeFacebook = async (userPhone) => {
 
 		// Obtain complete route for the temporal file
 		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/Avisos_Facebook.xlsx`;
-		console.log("FileUrl:", fileUrl);
+		//console.log("FileUrl:", fileUrl);
 
 		// Guardar el archivo de Excel
 		await workbook.xlsx.writeFile(tempFilePath);
-		console.log("tempFilePath:", tempFilePath);
+		//console.log("tempFilePath:", tempFilePath);
 		console.log(`Archivo de Excel creado en: ${fileUrl}`);
 
 		// Send the excel to the admin

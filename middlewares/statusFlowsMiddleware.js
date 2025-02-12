@@ -64,9 +64,9 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 				if (lastFlowRecord.wamId_flow1 === wab_id) {
 					lastFlowRecord.client_status = newStatus;
 					lastFlowRecord.history += `${currentDateTime} - Status: ${newStatus}. `;
-					/* console.log(
-						`Actualizó el status de mensaje de "${lead.name}" a "${newStatus}"`
-					); */
+					console.log(
+						`Se actualizó el status de mensaje de "${lead.name}" a "${newStatus}"`
+					);
 					await lead.save();
 				} else {
 					/* console.log(
