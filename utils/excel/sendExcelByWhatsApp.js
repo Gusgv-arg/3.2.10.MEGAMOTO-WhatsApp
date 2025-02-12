@@ -25,16 +25,7 @@ export const sendExcelByWhatsApp = async (userPhone, fileUrl, fileName) => {
 					"Content-Type": "application/json",
 				},
 			})
-			.catch((error) => {
-				console.error(
-					`Error enviando ${fileName} x WhatsApp a ${userPhone}:`,
-					error.response ? error.response.data : error.message
-				);
-			});
-
-		if (response.data) {
-			console.log(`Archivo ${fileName} enviado por whatsApp a ${userPhone}`);
-		}
+		
 	} catch (error) {
 		console.log(
 			"Error in sendExcelByWhatsApp.js:",

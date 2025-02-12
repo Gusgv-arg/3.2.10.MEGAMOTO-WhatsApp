@@ -324,7 +324,7 @@ export const processExcelToChangeLeads = async (
 			// Notificar el éxito del proceso al usuario
 			await handleWhatsappMessage(
 				userPhone,
-				`🔔 *Notificación Automática:*\n\n✅ ¡Se actualizaron ${validRows.length} Leads!\n\n*Megamoto*`
+				`🔔 *Notificación Automática:*\n\n✅ ¡Se actualizaron ${dataRows.length} Leads!\n\n*Megamoto*`
 			);
 		}
 	} catch (error) {

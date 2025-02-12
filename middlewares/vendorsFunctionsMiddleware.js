@@ -168,7 +168,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				// Procesa solo los leads del vendedor
 				if (vendorLeads.length > 0) {
 					// Notificar al vendedor del proceso
-					const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\n*Megamoto*`;
+					const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. Al abrir el archivo NO le des importancia a los mensajes de error. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\n*Megamoto*`;
 
 					await handleWhatsappMessage(userPhone, message);
 
