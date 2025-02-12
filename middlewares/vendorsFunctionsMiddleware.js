@@ -278,9 +278,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				userPhone,
 				vendorName
 			);
-
-			console.log(`El vendedor ${vendorName} envió el excel para actualizar los leads.`)
-
+			
 		} else {
 			next();
 		}

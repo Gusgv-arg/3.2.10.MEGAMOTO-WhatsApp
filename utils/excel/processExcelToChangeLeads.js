@@ -320,12 +320,16 @@ export const processExcelToChangeLeads = async (
 
 			await handleWhatsappMessage(userPhone, finalMessage);
 		
+			console.log(`El vendedor ${vendorName} envió su Excel con sus leads y hubo un error: ${combinedErrorMessage}`)
+
 		} else {
 			// Notificar el éxito del proceso al usuario
 			await handleWhatsappMessage(
 				userPhone,
 				`🔔 *Notificación Automática:*\n\n✅ ¡Se actualizaron ${dataRows.length} Leads!\n\n*Megamoto*`
 			);
+
+			console.log(`El vendedor ${vendorName} envió sus leads en Excel y se procesaron exitosamente ${dataRows.length} registros.`)
 		}
 	} catch (error) {
 		console.error(`Error en processExcelToChangeLeads.js: Vendedor: ${vendorName}. Error: ${error?.response?.data
