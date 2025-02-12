@@ -31,8 +31,8 @@ export class WhatsAppFlowMessageQueue {
 
 			try {
 				// Process the message
-				const response = await processWhatsAppFlowWithApi(userMessage);
-				//console.log(`Flow de ${userMessage.name}: ${response}`);
+				const log = await processWhatsAppFlowWithApi(userMessage);
+				console.log(log);
 
 			} catch (error) {
 				console.error(`Error in whatsAppFlowQueue.js: Lead ${userMessage}. Error: ${error.message}`);

@@ -114,8 +114,9 @@ export class WhatsAppMessageQueue {
 				}
 
 				// Process whatsApp with API
-				const response = await processWhatsAppWithApi(newMessage);
-				//console.log(`Mensaje del cliente ${newMessage.name}: ${response}`);
+				const log = await processWhatsAppWithApi(newMessage);
+				console.log(log);
+				
 			} catch (error) {
 				console.error(`Error en whatsAppMessageQueue.js: ${error.message}`);
 
