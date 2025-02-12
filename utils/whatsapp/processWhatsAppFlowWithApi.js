@@ -85,7 +85,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				) {
 					vendorPhone = userMessage.userPhone;
 					vendorName = userMessage.vendorName;
-					log += `La respuesta fue ${notification.message}. `
+					log += `La respuesta del vendedor fue ${notification.message}. `
 
 				} else if (notification.message.includes("Derivar a")) {
 					if (notification.delegate === "Derivar a Gustavo Glunz") {
@@ -101,7 +101,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 						vendorName = "Joana";
 					}
 
-					log += `La respuesta fue ${notification.message}. `
+					log += `La respuesta del vendedor fue ${notification.message}. `
 				}
 
 				// Buscar Lead x token 2 y Guardar en BD los datos
@@ -163,14 +163,10 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					log += `Se lo notificó al lead ${customerName} que su vendedor asignado es ${vendorName}. `
 				}
 
-				return log;
+			return log;
 			}
-		} else {
-			console.log(
-				"No debió haber entrado aca ya que processWhatsAppFlowWithApi.js procesa type interactive"
-			);
-			return;
-		}
+		} 
+		
 	} catch (error) {
 		console.error("Error en processWhatsAppFlowWithApi.js:", error.message);
 		const errorMessage = `Error en processWhatsAppFlowWithApi.js: ${error?.response?.data
