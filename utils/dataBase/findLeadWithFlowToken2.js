@@ -39,14 +39,14 @@ export const findLeadWithFlowToken2 = async (
 			if (isNaN(daysToAdd)) {
 				throw new Error("notification.days debe ser un número válido");
 			}
-			console.log("not",notification.days)
-			console.log("days to add",daysToAdd)
+			//console.log("not",notification.days)
+			//console.log("days to add",daysToAdd)
 
 			futureDate.setDate(futureDate.getDate() + daysToAdd);
 			const futureArgDate = new Date(futureDate.toLocaleString('es-AR', {
 				timeZone: 'America/Argentina/Buenos_Aires'
 			}));
-			console.log("future", futureDate)
+			//console.log("future", futureDate)
 
 			flow.toContact = futureArgDate;
 			flow.history += `${currentDateTime} - Status: a contactar por ${vendorName} en ${notification.days} días. `;
@@ -83,11 +83,15 @@ export const findLeadWithFlowToken2 = async (
 			questions,
 		};
 	} catch (error) {
+		const errorMessage = error?.response?.data
+		? JSON.stringify(error.response.data)
+		: error.message
+
 		console.log(
 			"error en findLeadWithFlowToken2.js:",
-			error.data ? error.data : error.message
+			errorMessage
 		);
 
-		throw error;
+		throw errorMessage;
 	}
 };

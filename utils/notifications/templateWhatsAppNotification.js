@@ -9,9 +9,9 @@ export const templateWhatsAppNotification = async (
 	vendor_phone,
 	parameters
 ) => {
-	console.log("template:", templateName);
-	console.log("telefono vendedor:", vendor_phone);
-	console.log("variables:", parameters);
+	//console.log("template:", templateName);
+	//console.log("telefono vendedor:", vendor_phone);
+	//console.log("variables:", parameters);
 	try {
 		// URL where to post the Template message
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
@@ -39,8 +39,7 @@ export const templateWhatsAppNotification = async (
 		const response = await axios.post(url, messageData, {
 			headers: { "Content-Type": "application/json" },
 		});
-        
-		console.log("Notification sent to the vendor!!");
+        		
 	} catch (error) {
 		console.log("Error in templateWhatsAppNotification.js:", error.message);
 		throw error;

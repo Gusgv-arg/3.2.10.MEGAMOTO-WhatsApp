@@ -40,9 +40,10 @@ export const sendExcelByWhatsApp = async (userPhone, fileUrl, fileName) => {
 			"Error in sendExcelByWhatsApp.js:",
 			error.response ? error.response.data : error.message
 		);
-		const errorMessage = `*NOTIFICACION DE ERROR:*\nHay un problema enviando el Excel  ${fileName} por WhatsApp: ${
+		const errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nHay un problema enviando el Excel ${fileName} por WhatsApp: ${
 			error.response ? error.response.data : error.message
 		}`;
+		
 		adminWhatsAppNotification(userPhone, errorMessage);
 	}
 };

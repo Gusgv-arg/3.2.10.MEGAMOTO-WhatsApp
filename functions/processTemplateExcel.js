@@ -12,6 +12,7 @@ dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
+const adminPhone = process.env.MY_PHONE
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -23,7 +24,7 @@ export const processTemplateExcel = async (
 	try {
 		// Look for the template text body
 		const templateText = await searchTemplate(templateName);
-		console.log("Texto de la Plantilla:", templateText);
+		//console.log("Texto de la Plantilla:", templateText);
 
 		// Extract variables from template text
 		const templateVariables = templateText.match(/{{\w+}}/g) || [];
@@ -92,7 +93,7 @@ export const processTemplateExcel = async (
 				}
 			);
 
-			console.log("Mensaje individual:", personalizedMessage);
+			//console.log("Mensaje individual:", personalizedMessage);
 
 			// Generate a flow token
 			const flowToken = uuidv4();
@@ -138,16 +139,14 @@ export const processTemplateExcel = async (
 				},
 			};
 
-			console.log("Data final para el POST:", JSON.stringify(payload, null, 2));
+			//console.log("Data final para el POST:", JSON.stringify(payload, null, 2));
 
 			try {
 				// Post the Survey to the customer
 				const response = await axios.post(url, payload, {
 					headers: { "Content-Type": "application/json" },
 				});
-				console.log(
-					`Encuesta enviada a ${telefono}: ${response.data.messages[0].id}`
-				);
+				//console.log(`Encuesta enviada a ${telefono}: ${response.data.messages[0].id}`);
 
 				// Increment counter
 				successCount++;
@@ -197,7 +196,7 @@ export const processTemplateExcel = async (
 					`Error enviando mensaje a ${telefono}:`,
 					error.response?.data || error.message
 				);
-				console.log("error.message:", error.message);
+				
 				errorCount++;
 
 				// Handle the Error
@@ -245,7 +244,7 @@ export const processTemplateExcel = async (
 		}
 
 		const summaryMessage = `*NOTIFICACION de Plantilla:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
-		await adminWhatsAppNotification(summaryMessage);
+		await adminWhatsAppNotification(adminPhone, summaryMessage);
 	} catch (error) {
 		console.error(
 			"Error in processSurveyExcel.js:",
@@ -255,7 +254,7 @@ export const processTemplateExcel = async (
 		);
 
 		// Receives the throw new error && others
-		await adminWhatsAppNotification(
+		await adminWhatsAppNotification(adminPhone, 
 			`*NOTIFICACION de Error de Plantilla:*\n${
 				error?.response?.data
 					? JSON.stringify(error.response.data)

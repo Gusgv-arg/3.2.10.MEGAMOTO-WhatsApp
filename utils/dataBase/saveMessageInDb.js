@@ -48,7 +48,7 @@ export const saveMessageInDb = async (
 
 				// Save the updated lead
 				await lead.save();
-				console.log("Lead updated with GPT message in Leads DB");
+				//console.log("Lead updated with GPT message in Leads DB");
 				return;
 			} else if (campaignFlag === true) {
 				// Look for Campaign in the array of Campaigns
@@ -72,41 +72,37 @@ export const saveMessageInDb = async (
 				// Update Campaign status
 				if (newMessage.message.toLowerCase() === "no gracias") {
 					currentCampaign.client_status = "no interesado";
-					console.log(`Client status updated to "no interesado"`);
+					//console.log(`Client status updated to "no interesado"`);
 				} else if (newMessage.message.toLowerCase() === "sí, pago de contado") {
 					currentCampaign.payment = "contado";
 					currentCampaign.client_status = "vendedor";
-					console.log(
-						`Payment updated to "contado" && Client status to "vendedor"`
-					);
+					//console.log(`Payment updated to "contado" && Client status to "vendedor"`);
+
 				} else if (
 					newMessage.message.toLowerCase() === "sí, pago con tarjeta"
 				) {
 					currentCampaign.payment = "tarjeta";
 					currentCampaign.client_status = "vendedor";
-					console.log(
-						`Payment updated to "tarjeta" && Client status to "vendedor"`
-					);
+					//console.log(`Payment updated to "tarjeta" && Client status to "vendedor"`);
+
 				} else if (
 					newMessage.message.toLowerCase() === "sí, pero tengo consultas"
 				) {
 					currentCampaign.client_status = "vendedor";
-					console.log(`Client status updated to "vendedor"`);
+					//console.log(`Client status updated to "vendedor"`);
 				} else if (messageGpt === pagoConPrestamo) {
 					currentCampaign.payment = "préstamo";
 					currentCampaign.client_status = "dni";
-					console.log(
-						`Payment updated to "préstamo" && Client status updated to "dni"`
-					);
+					//console.log(`Payment updated to "préstamo" && Client status updated to "dni"`);
+
 				} else if (messageGpt === dniNotification) {
 					currentCampaign.payment = "préstamo";
 					currentCampaign.client_status = "vendedor";
-					console.log(
-						`Payment updated to "préstamo" && Client status to "vendedor"`
-					);
+					//console.log(`Payment updated to "préstamo" && Client status to "vendedor"`);
+
 				} else if (currentCampaign.client_status === "leído") {
 					currentCampaign.client_status = "respuesta_cliente";
-					console.log(`Client status updated to "respuesta_cliente"`);
+					//console.log(`Client status updated to "respuesta_cliente"`);
 				}
 
 				// Clean error if it existed
@@ -123,7 +119,11 @@ export const saveMessageInDb = async (
 			}
 		}
 	} catch (error) {
-		logError(error, "An error occured while saving message in Messages DB");
-		throw new Error(error.message);
+		const errorMessage = error?.response?.data
+		? JSON.stringify(error.response.data)
+		: error.message
+
+		logError(errorMessage, "An error occured while saving message in Messages DB");
+		throw new Error(errorMessage);
 	}
 };

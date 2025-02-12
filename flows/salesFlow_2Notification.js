@@ -4,6 +4,7 @@ import axios from "axios"
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
+const adminPhone = process.env.MY_PHONE 
 
 export const salesFlow_2Notification = async ( myLead, vendorPhone, flow_2Token) => {
 	// URL where to post
@@ -32,26 +33,23 @@ export const salesFlow_2Notification = async ( myLead, vendorPhone, flow_2Token)
 		const response = await axios.post(url, payload, {
 			headers: { "Content-Type": "application/json" },
 		});
-		console.log(
-			`Plantilla de Notificación al Vendedor enviada al número: ${vendorPhone}`
-		);
-
+		//console.log(`Plantilla de Notificación al Vendedor enviada al número: ${vendorPhone}`);
 
 	} catch (error) {
+		const errorMessage = error?.response?.data
+		? JSON.stringify(error.response.data)
+		: error.message
+
 		console.error(
 			"Error in salesFlow_2Notification.js:",
-			error?.response?.data
-				? JSON.stringify(error.response.data)
-				: error.message
+			errorMessage
 		);
 
 		// Receives the throw new error && others
-		await adminWhatsAppNotification(
-			`*NOTIFICACION de Error de Flow en salesFlow_2Notification.js:*\n${
-				error?.response?.data
-					? JSON.stringify(error.response.data)
-					: error.message
+		const message = `🔔 *NOTIFICACION de Error de Flow en salesFlow_2Notification.js:*\nError: ${
+				errorMessage
 			}`
-		);
+
+		await adminWhatsAppNotification(adminPhone, message);
 	}
 };

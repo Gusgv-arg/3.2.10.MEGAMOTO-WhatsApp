@@ -38,14 +38,17 @@ export const createLeadInDb = async (userMessage) => {
 
 		// Save thread in DB
 		await lead.save();
+	
 	} catch (error) {
+		const errorMessage = error?.response?.data
+		? JSON.stringify(error.response.data)
+		: error.message
+		
 		console.log(
 			"Error en createLeadInDb.js:",
-			error?.response?.data
-				? JSON.stringify(error.response.data)
-				: error.message
+			errorMessage
 		);
 
-		throw error;
+		throw errorMessage;
 	}
 };

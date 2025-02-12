@@ -20,7 +20,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 		audioId = body.entry[0].changes[0].value.messages[0].audio
 			? body.entry[0].changes[0].value.messages[0].audio.id
 			: "otro formato";
-		console.log("Audio ID:", audioId);
+		//console.log("Audio ID:", audioId);
 	} else if (type === "image") {
 		imageId = body.entry[0].changes[0].value.messages[0].image
 			? body.entry[0].changes[0].value.messages[0].image.id
@@ -77,7 +77,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 				imageId: imageId ? imageId : "",
 				documentId: documentId ? documentId : "",
 			};
-			console.log("Objeto creado userMessage:", userMessage)
+			console.log("Objeto userMessage que entra a la fila:", userMessage)
 
 			// Distribution to different Queues
 			if (type === "interactive") {

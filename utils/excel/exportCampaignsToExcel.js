@@ -58,7 +58,7 @@ export const exportCampaignsToExcel = async (userPhone) => {
 		// Define un nombre de archivo temporal para el archivo Excel
 		const tempFilePath = "excel/Leads.xlsx";
 		xlsx.writeFile(wb, tempFilePath);
-		console.log("Leads DB exported to Leads.xlsx");
+		//console.log("Leads DB exported to Leads.xlsx");
 
 		// Obtiene la ruta completa del archivo temporal
 		const __dirname = path.dirname(fileURLToPath(import.meta.url));

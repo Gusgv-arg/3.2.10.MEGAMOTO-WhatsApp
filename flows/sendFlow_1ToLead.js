@@ -6,7 +6,7 @@ import { DeviceRequestPromptManager } from "puppeteer";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
-const appToken = process.env.WHATSAPP_APP_TOKEN;
+const adminPhone = process.env.MY_PHONE;
 
 // Obtain current date and hour
 const currentDateTime = new Date().toLocaleString("es-AR", {
@@ -54,11 +54,13 @@ export const sendFlow_1ToLead = async (userMessage) => {
 		return wamId
 		
 	} catch (error) {
+		const errorMessage = error?.response?.data
+		? JSON.stringify(error.response.data)
+		: error.message
+
 		console.error(
 			`Error en sendFlow_1ToLead.js:`,
-			error?.response?.data
-				? JSON.stringify(error.response.data)
-				: error.message
+			errorMessage
 		);
 
 		// Handle the Error
@@ -72,7 +74,8 @@ export const sendFlow_1ToLead = async (userMessage) => {
 		await lead.save();
 
 		// Notify Error to the Admin
-		const message = `*NOTIFICACION DE ERROR:* Hubo un error al enviar el Flow 1 al cliente ${userMessage.name}.\nError: ${error.message}`;
-		await adminWhatsAppNotification(message);
+		const message = `🔔 *NOTIFICACION DE ERROR en sendFlow_1ToLead.js:* Hubo un error al enviar el Flow 1 al cliente ${userMessage.name}.\nError: ${errorMessage}`;
+
+		await adminWhatsAppNotification(adminPhone, message);
 	}
 };

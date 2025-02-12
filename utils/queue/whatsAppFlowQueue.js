@@ -32,22 +32,27 @@ export class WhatsAppFlowMessageQueue {
 			try {
 				// Process the message
 				const response = await processWhatsAppFlowWithApi(userMessage);
-				console.log(`Flow de ${userMessage.name}: ${response}`);
+				//console.log(`Flow de ${userMessage.name}: ${response}`);
 
 			} catch (error) {
-				console.error(`Error in whatsAppFlowQueue.js: ${error.message}`);
+				console.error(`Error in whatsAppFlowQueue.js: Lead ${userMessage}. Error: ${error.message}`);
+
+				const errorMessage = error?.response?.data
+					? JSON.stringify(error.response.data)
+					: error.message;
 
 				// Change flag to allow next message processing
 				queue.processing = false;
 
 				// Error handlers
 				// Send error message to customer
-				const errorMessage = errorMessage1;
-				handleWhatsappMessage(senderId, errorMessage);
+				const errorMessageToCustomer = errorMessage1;
+				handleWhatsappMessage(senderId, errorMessageToCustomer);
 
 				// Send WhatsApp error message to Admin
-				const alarm = `*NOTIFICACION DE ERROR:*\n${error.message}`;
-				await adminWhatsAppNotification(myPhone, alarm);
+				const message = `🔔 *NOTIFICACION DE ERROR en whatsAppFlowQueue.js:*\nLead ${userMessage}.\nError: ${errorMessage}.`;
+
+				await adminWhatsAppNotification(myPhone, message);
 			}
 		}
 		// Change flag to allow next message processing

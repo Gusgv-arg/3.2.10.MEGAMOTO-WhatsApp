@@ -4,6 +4,7 @@ import Leads from "../../models/leads.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
+const adminPhone = process.env.MY_PHONE
 
 // Obtain current date and hour
 const currentDateTime = new Date().toLocaleString("es-AR", {
@@ -70,6 +71,9 @@ export const sendVendorDataToLead = async (
 				? JSON.stringify(error.response.data)
 				: error.message
 		);
+		const errorMessage = error?.response?.data
+		? JSON.stringify(error.response.data)
+		: error.message
 
 		// Handle the Error
 		// Looks existent lead
@@ -83,7 +87,8 @@ export const sendVendorDataToLead = async (
 		await lead.save();
 
 		// Notify Error to the Admin
-		const message = `*NOTIFICACION DE ERROR:* Hubo un error al enviar los datos del vendedor al Lead ${userMessage.name}.\nError: ${error.message}`;
-		await adminWhatsAppNotification(message);
+		const message = `🔔 *NOTIFICACION DE ERROR:* Hubo un error al enviar los datos del vendedor al Lead ${userMessage.name}.\nError: ${errorMessage}`;
+
+		await adminWhatsAppNotification(adminPhone, message);
 	}
 };

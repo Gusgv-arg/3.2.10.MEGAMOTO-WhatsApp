@@ -138,7 +138,11 @@ export const updateDbPricesFromExcel = async () => {
 		return notification;
 	
 	} catch (error) {
-		console.log("Error en updatesDbPricesFromExcel", error.message);
-		throw error.message;
+		const errorMessage = error?.response?.data
+		? JSON.stringify(error.response.data)
+		: error.message
+
+		console.log("Error en updatesDbPricesFromExcel.js", errorMessage);
+		throw errorMessage;
 	}
 };

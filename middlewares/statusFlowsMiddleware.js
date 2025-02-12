@@ -78,8 +78,14 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 				return;
 			}
 		} catch (error) {
-			console.log("Error in statusFlowsMiddleware.js", error.message);
-			const message = `Error en statusFlowsMiddleware.js: ${error.message}`;
+			const errorMessage = error?.response?.data
+			? JSON.stringify(error.response.data)
+			: error.message
+
+			console.log("Error in statusFlowsMiddleware.js", errorMessage);
+
+			const message = `🔔 *NOTIFICACION DE ERROR en statusFlowsMiddleware.js:* Error: ${errorMessage}`;
+			
 			await adminWhatsAppNotification(myPhone, message);
 		}
 	} else {

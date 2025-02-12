@@ -19,7 +19,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	let model = true;
 	let DNI = true;
 
-	console.log("Lo que viene del Flow:", flowMessage);
+	console.log("Lo que viene del Flow1:", flowMessage);
 
 	// Definir las marcas a buscar
 	const marcas = [
@@ -192,7 +192,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	} else {
 		response.message +=	`\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
 		
-		console.log("Response desde extractFlowToken_1Responses.js", response)
+		//console.log("Response desde extractFlowToken_1Responses.js", response)
 		
 		return response;
 	}

@@ -7,7 +7,6 @@ const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 const myPhone = process.env.MY_PHONE;
 
 export const leadTemplateWabNotification = async (templateName, senderId) => {
-	console.log("Template Name--->", templateName);
 	let lead;
 	let currentCampaign;
 	let campaignDate;
@@ -75,14 +74,7 @@ export const leadTemplateWabNotification = async (templateName, senderId) => {
 		const response = await axios.post(url, messageData, {
 			headers: { "Content-Type": "application/json" },
 		});
-
-		if (response.data) {
-			console.log(`Notification for client ${lead.name} sent to the vendor!!`);
-		} else {
-			console.log(
-				`ERROR sending vendor Notification for client ${lead.name}!!`
-			);
-		}
+		
 	} catch (error) {
 		console.log(
 			"Error in leadTemplateWabNotification.js:",

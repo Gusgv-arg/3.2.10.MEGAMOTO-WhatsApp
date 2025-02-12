@@ -319,6 +319,7 @@ export const processExcelToChangeLeads = async (
 			const finalMessage = `🔔 *Notificación Automática:*\n\nError al actualizar Leads:\n${combinedErrorMessage}\n\n*Megamoto*`;
 
 			await handleWhatsappMessage(userPhone, finalMessage);
+		
 		} else {
 			// Notificar el éxito del proceso al usuario
 			await handleWhatsappMessage(
@@ -327,10 +328,17 @@ export const processExcelToChangeLeads = async (
 			);
 		}
 	} catch (error) {
-		console.error("Error completo:", error);
+		console.error(`Error en processExcelToChangeLeads.js: Vendedor: ${vendorName}. Error: ${error?.response?.data
+			? JSON.stringify(error.response.data)
+			: error.message}`);
+		
+		const errorMessage = error?.response?.data
+					? JSON.stringify(error.response.data)
+					: error.message;
+
 		await adminWhatsAppNotification(
 			userPhone,
-			`🔔 *NOTIFICACION Automática al Admin:*\nError procesando Excel de Leads de ${vendorName}: ${error.message}\n\n*Megamoto*`
+			`🔔 *NOTIFICACION DE ERROR:*\nError en processExcelToChangeLeads.js procesando Excel de ${vendorName}. Error: ${errorMessage}\n\n*Megamoto*`
 		);
 	}
 };

@@ -71,19 +71,19 @@ export class WhatsAppMessageQueue {
 						// Get the Image URL from WhatsApp
 						const image = await getMediaWhatsappUrl(newMessage.imageId);
 						const imageUrl = image.data.url;
-						console.log("Image URL:", imageUrl);
+						//console.log("Image URL:", imageUrl);
 
 						// Download image from WhatsApp
 						const imageBuffer = await downloadWhatsAppMedia(imageUrl);
 						const imageBufferData = imageBuffer.data;
-						console.log("Image download:", imageBufferData);
+						//console.log("Image download:", imageBufferData);
 
 						// Convert buffer received from WhatsApp to a public URL
 						imageURL = await convertBufferImageToUrl(
 							imageBufferData,
 							"https://three-2-12-messenger-api.onrender.com"
 						);
-						console.log("Public image URL:", imageURL);
+						//console.log("Public image URL:", imageURL);
 
 						// --- Messenger Image --- //
 					} else if (newMessage.channel === "messenger") {
@@ -115,11 +115,14 @@ export class WhatsAppMessageQueue {
 
 				// Process whatsApp with API
 				const response = await processWhatsAppWithApi(newMessage);
-				console.log(`Mensaje del cliente ${newMessage.name}: ${response}`);
-
+				//console.log(`Mensaje del cliente ${newMessage.name}: ${response}`);
 			} catch (error) {
 				console.error(`Error en whatsAppMessageQueue.js: ${error.message}`);
 
+				const errorMessage = error?.response?.data
+					? JSON.stringify(error.response.data)
+					: error.message;
+					
 				// Change flag to allow next message processing
 				queue.processing = false;
 
@@ -128,8 +131,9 @@ export class WhatsAppMessageQueue {
 				handleWhatsappMessage(newMessage.userPhone, customerErrorMessage);
 
 				// Send WhatsApp error message to Admin
-				const errorMessage = `*NOTIFICACION DE ERROR:*\nFunción: whatsAppQueue.js\nRegistro de la Queue: ${userMessage}\nError:${error.message}`;
-				await adminWhatsAppNotification(myPhone, errorMessage);
+				const message = `🔔 *NOTIFICACION DE ERROR:*\nFunción: whatsAppQueue.js\nRegistro de la Queue: ${userMessage}\nError:${errorMessage}`;
+
+				await adminWhatsAppNotification(myPhone, message);
 			}
 		}
 		// Change flag to allow next message processing

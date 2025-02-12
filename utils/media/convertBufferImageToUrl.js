@@ -26,7 +26,7 @@ export const convertBufferImageToUrl = async (imageBufferData, baseUrl) => {
             throw new Error("Failed to save the file");
         }
 
-        console.log(`File saved at: ${filePath}`);
+        //console.log(`File saved at: ${filePath}`);
 
         // Construir la URL completa
         return new URL(`/temp/${fileName}`, baseUrl).toString();

@@ -1,6 +1,8 @@
 import Leads from "../models/leads.js";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 
+const adminPhone = process.env.MY_PHONE
+
 export const saveVendorFlow_2Response = async (
 	senderId,
 	notification,
@@ -24,10 +26,10 @@ export const saveVendorFlow_2Response = async (
 
 		// Check if lead and flows exist
 		if (!lead || !lead.flows || lead.flows.length === 0) {
-			console.log("No se encontró el lead o no tiene flujos.");
+			console.log("No se encontró el lead o no tiene flujos. Teléfono:", senderId);
 			return null;
 		}
-		console.log("FlowToken recibido en saveVendroFlow_2", flowToken);
+		//console.log("FlowToken recibido en saveVendroFlow_2", flowToken);
 
 		// Find the specific flow to update
 		const flowToUpdate = lead.flows.find(
@@ -49,9 +51,8 @@ export const saveVendorFlow_2Response = async (
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
 				flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} `;
-				console.log(
-					`El vendedor ${name} aceptó atender al cliente ${lead.name}`
-				);
+				//console.log(`El vendedor ${name} aceptó atender al cliente ${lead.name}`);
+
 				vendorPhone = senderId;
 				vendorName = name;
 			} else if (
@@ -62,26 +63,24 @@ export const saveVendorFlow_2Response = async (
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
 				flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} más tarde. `;
-				console.log(
-					`El vendedor ${name} aceptó atender al cliente ${lead.name} más tarde!!`
-				);
+				//console.log(`El vendedor ${name} aceptó atender al cliente ${lead.name} más tarde!!`);
 				vendorPhone = senderId;
 				vendorName = name;
+
 			} else if (notification.includes("Derivación a Vendedor:")) {
 				// Buscar la consulta del cliente
 				customerQuestion = flowToUpdate.messages.match(
 					/Marca(.*?)¡Gracias por confiar en Megamoto!/s
 				)[0];
-				console.log("customerQuestion:", customerQuestion);
+				//console.log("customerQuestion:", customerQuestion);
 
 				if (notification.includes("Gustavo Glunz")) {
 					flowToUpdate.client_status = "vendedor derivado";
 					flowToUpdate.vendor_phone = process.env.PHONE_GUSTAVO_GLUNZ;
 					flowToUpdate.vendor_name = "Gustavo Glunz";
 					flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} derivó su cliente a Gustavo Glunz. `;
-					console.log(
-						`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustavo Glunz.`
-					);
+					//console.log(`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustavo Glunz.`);
+
 					vendorPhone = process.env.PHONE_GUSTAVO_GLUNZ;
 					vendorName = "Gustavo Glunz";
 
@@ -90,9 +89,8 @@ export const saveVendorFlow_2Response = async (
 					flowToUpdate.vendor_phone = process.env.MY_PHONE;
 					flowToUpdate.vendor_name = "Gustavo Gómez Villafañe";
 					flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} derivó su cliente a Gustavo Gómez Villafañe. `;
-					console.log(
-						`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustvo Gómez Villafañe.`
-					);
+					//console.log(`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustvo Gómez Villafañe.`);
+					
 					vendorPhone = process.env.MY_PHONE;
 					vendorName = "Gustavo Gómez Villafañe";
 				}
@@ -119,20 +117,18 @@ export const saveVendorFlow_2Response = async (
 			customerQuestion,
 		};
 	} catch (error) {
+		const errorMessage = error?.response?.data
+		? JSON.stringify(error.response.data)
+		: error.message
+
 		console.error(
-			"Error in saveVendorFlow_2Response.js:",
-			error?.response?.data
-				? JSON.stringify(error.response.data)
-				: error.message
+			"Error en saveVendorFlow_2Response.js:",
+			errorMessage
 		);
 
 		// Receives the throw new error && others
-		await adminWhatsAppNotification(
-			`*NOTIFICACION de Error en saveVendorFlow_2Response.js:*\n${
-				error?.response?.data
-					? JSON.stringify(error.response.data)
-					: error.message
-			}`
-		);
+		const message = `🔔 *NOTIFICACION DE ERROR en saveVendorFlow_2Response.js:*\nError: ${errorMessage} `
+		
+		await adminWhatsAppNotification(adminPhone, message);
 	}
 };

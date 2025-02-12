@@ -90,7 +90,12 @@ export const exportFlowLeadsToTemplate = async (leads) => {
         return fileUrl;
 
     } catch (error) {
-        console.error("Error en exportFlowLeadsToExcel.js:", error.message);
-        throw error.message;
+        const errorMessage = error?.response?.data
+        ? JSON.stringify(error.response.data)
+        : error.message
+        
+        console.error("Error en exportFlowLeadsToExcel.js:", errorMessage);
+
+        throw errorMessage;
     }
 };

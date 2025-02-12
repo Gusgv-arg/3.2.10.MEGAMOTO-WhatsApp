@@ -40,9 +40,14 @@ export const whatsAppGeneralBotSwitchMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 		}
 	} catch (error) {
+		const errorMessage = error?.response?.data
+		? JSON.stringify(error.response.data)
+		: error.message
+
 		console.log(
-			"Error in whatsAppGeneralBotSwitchMiddleware.js:", error.message
+			"Error in whatsAppGeneralBotSwitchMiddleware.js:", errorMessage
 		);
-		throw error;
+		
+		throw errorMessage;
 	}
 };

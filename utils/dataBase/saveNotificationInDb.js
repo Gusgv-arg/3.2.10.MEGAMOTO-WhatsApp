@@ -76,7 +76,11 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 			return;
 		}
 	} catch (error) {
-		console.log("error en saveNotificationInDb.js:", error.message);
-		throw new Error(error.message);
+		const errorMessage = error?.response?.data
+			? JSON.stringify(error.response.data)
+			: error.message
+
+		console.log("error en saveNotificationInDb.js:", errorMessage);
+		throw new Error(errorMessage);
 	}
 };

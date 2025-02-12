@@ -33,7 +33,7 @@ export const sendLeadsByMail = async (filePath, mail, userPhone) => {
 		// Notify the Admin by WhatsApp
 		await adminWhatsAppNotification(
 			userPhone,
-			`*NOTIFICACION envío Leads.xls por mail:*\nSe envió Leads.xls por mail a ${mail}.`
+			`🔔 *NOTIFICACION envío Leads.xls por mail:*\nSe envió Leads.xls por mail a ${mail}.`
 		);
 	} catch (error) {
 		console.error("Error en sendLeadsByMail.js:", error.message);
