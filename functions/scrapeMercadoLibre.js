@@ -151,7 +151,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			// Si hay una respuesta de la API, usar el mensaje de error de la respuesta
 			errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nError en la API de Scraping: ${error.response.data.error}`;
 			
-		} else if (error.message === "Request failed with status code 502") {
+		} else if (error.message === "Request failed with status code 502" || error.message === "Request failed with status code 503" || error === "AxiosError: Request failed with status code 503") {
 			// Manejo específico para el error 502
 			errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nHay un problema momentáneo en Render que es donde está hosteado el Servidor. Puedes intentar nuevamente o esperar una hora.`;
 		
