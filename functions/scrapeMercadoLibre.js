@@ -33,7 +33,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		} else {
 			// Si no se reciben datos, lanzar un error
 			console.log("Hubo un error en el Scrapin:", precios.data);
-			throw new Error("El array de precios vino vacío por lo que el problema está en la API de scrapin.");
+			throw new Error("El array de precios vino vacío; por lo que seguramente Mercado Libre cambió la estructura de la página y haya que modificar la API de scrapin.");
 		}
 
 		const allProducts = precios.data;
