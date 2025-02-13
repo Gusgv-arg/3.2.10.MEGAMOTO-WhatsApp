@@ -58,35 +58,33 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 		}
 
 		if (message === "responder") {
-			
 			res.status(200).send("EVENT_RECEIVED");
-			
+
 			//Change general switch to ON
 			await changeMegaBotSwitch("ON");
 
 			// WhatsApp Admin notification
 			await adminWhatsAppNotification(userPhone, botSwitchOnNotification);
-			
-			console.log(`${userPhone} prendió la API.`)
-			
+
+			console.log(`${userPhone} prendió la API.`);
 		} else if (message === "no responder") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			//Change general switch to OFF
 			await changeMegaBotSwitch("OFF");
-			
+
 			// WhatsApp Admin notification
 			await adminWhatsAppNotification(userPhone, botSwitchOffNotification);
-			
-			console.log(`${userPhone} apagó la API.`)
-			
+
+			console.log(`${userPhone} apagó la API.`);
 		} else if (message === "megamoto") {
 			res.status(200).send("EVENT_RECEIVED");
 			// WhatsApp Admin notification
 			await adminWhatsAppNotification(userPhone, helpFunctionNotification);
-			
-			console.log(`${userPhone} envío la palabra Megamoto y recibió las funciones disponibles.`)
-		
+
+			console.log(
+				`${userPhone} envío la palabra Megamoto y recibió las funciones disponibles.`
+			);
 		} else if (message.startsWith("campaña")) {
 			// Campaigns format: "campaña" "template name" "campaign name"
 			const parts = message.split(" ");
@@ -150,8 +148,9 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				res.status(200).send("EVENT_RECEIVED");
 				const precios = await scrapeMercadoLibre(userPhone);
 
-				console.log(`${userPhone} recibió el excel con los precios de Mercado Libre.`)
-
+				console.log(
+					`${userPhone} recibió el excel con los precios de Mercado Libre.`
+				);
 			} else {
 				//console.log("isScrapperCelles esta en:", isScrapperCalled);
 				res.status(200).send("EVENT_RECEIVED");
@@ -160,8 +159,9 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 			await scrapeFacebook(userPhone);
 
-			console.log(`${userPhone} recibió el excel con los avisos de Facebook de la competencia.`)
-
+			console.log(
+				`${userPhone} recibió el excel con los avisos de Facebook de la competencia.`
+			);
 		} else if (message.startsWith("plantilla")) {
 			res.status(200).send("EVENT_RECEIVED");
 
@@ -193,14 +193,18 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 			await adminWhatsAppNotification(userPhone, notification);
 
-			console.log(`${userPhone} corrió la actualización de precios.`)
-
+			console.log(`${userPhone} corrió la actualización de precios.`);
 		} else if (message === "crear precios") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			const notification = await pricesModelCreation();
-		} else if (message === "flow1") {
+		} else if (message === "leads") {
 			res.status(200).send("EVENT_RECEIVED");
+
+			// Si es GGV que haga next porque es vendedor
+			if (userPhone === myPhone) {
+				next();
+			}
 
 			// Filtra de la BD los Leads disponibles para atender dentro del Flow
 			const queue = await findFlowLeadsForVendors();
@@ -215,15 +219,16 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				// Se envía el Excel por WhatsApp
 				await sendExcelByWhatsApp(userPhone, excelFile, "Leads");
 
-				console.log(`Admin ${userPhone} recibió un excel con los leads.`)
-				
+				console.log(`Admin ${userPhone} recibió un excel con los leads.`);
 			} else {
 				const message = `*🔔 Notificación Automática:*\n\n⚠️ No hay Leads de ningún vendedor que estén pendientes.\n\n*Megamoto*`;
-				
+
 				// Se notifica de que no hay Leads
 				await handleWhatsappMessage(userPhone, message);
-				
-				console.log(`Admin ${userPhone} recibió un mensaje de que no hay leads x lo que no recibió el excel.`)
+
+				console.log(
+					`Admin ${userPhone} recibió un mensaje de que no hay leads x lo que no recibió el excel.`
+				);
 			}
 		} else {
 			// Does next if its an admin message but is not an instruction

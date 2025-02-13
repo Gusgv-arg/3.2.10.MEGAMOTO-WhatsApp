@@ -28,12 +28,12 @@ export const scrapeMercadoLibre = async (userPhone) => {
 				`Se recibieron ${precios.data.length} precios de Mercado Libre!! Ejemplo primer registro:`,
 				precios.data[0]
 			);
-			const message = `*NOTIFICACION:*\nSe recibieron ${precios.data.length} avisos de Mercado Libre. Ahora falta identificar a que modelo corresponde cada aviso y generar el Excel.\n¡Falta menos!`;
+			const message = `🔔 *NOTIFICACION:*\nSe recibieron ${precios.data.length} avisos de Mercado Libre. Ahora falta identificar a que modelo corresponde cada aviso y generar el Excel.\n¡Falta menos!`;
 			await adminWhatsAppNotification(userPhone, message);
 		} else {
 			// Si no se reciben datos, lanzar un error
 			console.log("Hubo un error en el Scrapin:", precios.data);
-			throw new Error(precios.data.error);
+			throw new Error("El array de precios vino vacío por lo que el problema está en la API de scrapin.");
 		}
 
 		const allProducts = precios.data;
@@ -145,20 +145,21 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
 		
 	} catch (error) {
-		console.log("Error en scrapeMercadoLibre.js:", error.message);
+		console.log("Error en scrapeMercadoLibre.js:", error);
 		let errorMessage;
 		if (error.response && error.response.data && error.response.data.error) {
 			// Si hay una respuesta de la API, usar el mensaje de error de la respuesta
-			errorMessage = `*NOTIFICACION DE ERROR:*\nError en la API de Scraping: ${error.response.data.error}`;
+			errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nError en la API de Scraping: ${error.response.data.error}`;
+			
+		} else if (error.message === "Request failed with status code 502") {
+			// Manejo específico para el error 502
+			errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nHay un problema momentáneo en Render que es donde está hosteado el Servidor. Puedes intentar nuevamente o esperar una hora.`;
+		
 		} else {
 			// Si no hay respuesta, usar el mensaje de error general
-			errorMessage = `*NOTIFICACION DE ERROR:*\nHubo un error en la solicitud: ${error.message}`;
+			errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nHubo un error en la solicitud: ${error}`;
 		}
 
-		// Manejo específico para el error 502
-		if (error.message === "Request failed with status code 502") {
-			errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nHay un problema momentáneo en Render que es donde está hosteado el Servidor. Puedes intentar nuevamente o esperar una hora.`;
-		}
 		// Notificar al administrador
 		adminWhatsAppNotification(userPhone, errorMessage);
 	}
