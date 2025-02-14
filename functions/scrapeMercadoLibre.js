@@ -42,7 +42,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		try {
 			correctModels = await lookModelWithEmbedding(allProducts);
 			console.log(
-				`CorrectModels: ${correctModels.length} registros - Ejemplo 1 registro: ${correctModels[0]}`
+				`CorrectModels: ${correctModels.length} registros - Ejemplo 1 registro: ${JSON.stringify(correctModels[0], null)}`
 			);
 		} catch (error) {
 			console.log("Error en lookModelWithEmbedding.js", error.message);

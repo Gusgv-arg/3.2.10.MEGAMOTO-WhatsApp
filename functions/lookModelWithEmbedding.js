@@ -67,6 +67,7 @@ export const lookModelWithEmbedding = async (allProducts) => {
 
 	// Obtener todos los modelos de la base de datos
 	const prices = await Prices.find();
+	console.log("base de datos de Precios:", prices)
 
 	allProducts.forEach((product) => {
 		try {
