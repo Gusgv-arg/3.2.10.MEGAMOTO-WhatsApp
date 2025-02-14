@@ -42,7 +42,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		try {
 			correctModels = await lookModelWithEmbedding(allProducts);
 			console.log(
-				`CorrectModels: ${correctModels.length} registros - Ejemplo 1 registro: ${JSON.stringify(correctModels[0], null)}`
+				`CorrectModels: ${correctModels.length} registros - Ejemplo 1 registro: ${correctModels[0]}`
 			);
 		} catch (error) {
 			console.log("Error en lookModelWithEmbedding.js", error.message);
@@ -107,6 +107,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			// Comenzar desde la última fila y eliminar hacia arriba
 			avisosSheet.spliceRows(i, 1);
 		}
+		console.log("correctModels antes del addRows:", correctModels)
 
 		// Añadir los nuevos datos a la hoja "Avisos"
 		if (correctModels && correctModels.length > 0) {
@@ -121,6 +122,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 				model.atributos,
 			]);
 
+			console.log("Filas a agregar antes del proceso:", rowsToAdd);
 			// Verifica que rowsToAdd no esté vacío antes de agregar
 			if (rowsToAdd.length > 0) {
 				avisosSheet.addRows(rowsToAdd);
