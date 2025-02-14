@@ -65,6 +65,9 @@ const isSubstring = (shorter, longer) => {
 export const lookModelWithEmbedding = async (allProducts) => {
 	const results = [];
 
+	// Obtener todos los modelos de la base de datos
+	const prices = await Prices.find();
+
 	allProducts.forEach((product) => {
 		try {
 			// Ajustar el título del producto
@@ -75,7 +78,7 @@ export const lookModelWithEmbedding = async (allProducts) => {
 			let highestSimilarity = -1;
 
 			// Usar similitud de coseno para todos los modelos y sinónimos
-			Prices.forEach((model) => {
+			prices.forEach((model) => {
 				const modelTexts = [model.modelo, ...model.sinonimos].filter(
 					(text) => text && text !== ""
 				);
@@ -87,7 +90,9 @@ export const lookModelWithEmbedding = async (allProducts) => {
 					const similarity = calculateSimilarity(productVector, modelVector);
 
 					if (similarity > highestSimilarity && similarity > 0.5) {
-						bestMatches = [{ model: model.modelo, similarity, synonym: modelText }];
+						bestMatches = [
+							{ model: model.modelo, similarity, synonym: modelText },
+						];
 						highestSimilarity = similarity;
 						// Log de la similitud calculada al almacenar un nuevo mejor match
 						console.log(
@@ -96,7 +101,11 @@ export const lookModelWithEmbedding = async (allProducts) => {
 							}, Similitud: ${similarity.toFixed(4)}`
 						);
 					} else if (similarity === highestSimilarity) {
-						bestMatches.push({ model: model.modelo, similarity, synonym: modelText });
+						bestMatches.push({
+							model: model.modelo,
+							similarity,
+							synonym: modelText,
+						});
 						// Log de la similitud calculada al almacenar un match igual
 						console.log(
 							`Match igual encontrado para "${productTitle}": - Sinónimo: "${modelText}",- Modelo: ${
