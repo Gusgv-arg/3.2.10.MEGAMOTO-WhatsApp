@@ -69,7 +69,7 @@ export const lookModelWithEmbedding = async (allProducts) => {
 			// Ajustar el título del producto
 			const adjustedTitle = adjustTitle(product.titulo);
 			const productTitle = normalizeText(adjustedTitle);
-			//console.log("productTtitle:", productTitle)
+			console.log("productTtitle:", productTitle)
 			let bestMatches = [];
 			let highestSimilarity = -1;
 
@@ -91,11 +91,11 @@ export const lookModelWithEmbedding = async (allProducts) => {
 						];
 						highestSimilarity = similarity;
 						// Log de la similitud calculada al almacenar un nuevo mejor match
-						console.log(
+						/* console.log(
 							`Nuevo mejor match para "${productTitle}:- Sinónimo: "${modelText}", - Modelo: ${
 								model.modelo
 							}, Similitud: ${similarity.toFixed(4)}`
-						);
+						); */
 					} else if (similarity === highestSimilarity) {
 						bestMatches.push({
 							model: model.modelo,
@@ -103,11 +103,11 @@ export const lookModelWithEmbedding = async (allProducts) => {
 							synonym: modelText,
 						});
 						// Log de la similitud calculada al almacenar un match igual
-						console.log(
+						/* console.log(
 							`Match igual encontrado para "${productTitle}": - Sinónimo: "${modelText}",- Modelo: ${
 								model.modelo
 							}, Similitud: ${similarity.toFixed(4)}`
-						);
+						); */
 					}
 				});
 			});
@@ -130,7 +130,7 @@ export const lookModelWithEmbedding = async (allProducts) => {
 	});
 
 	results.sort((a, b) => b.similitud - a.similitud);
-	console.log("Results - ejemplo del primer registro:", results[0]);
+	//console.log("Results - ejemplo del primer registro:", results[0]);
 	//console.log("Results:", results);
 	return results;
 };

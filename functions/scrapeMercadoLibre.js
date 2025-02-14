@@ -39,12 +39,14 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		}
 
 		const allProducts = precios.data;
+		console.log("Cantidad de registros allproducts",allProducts.length)
+		console.log("allProducts recibido de la api:", allProducts)
 
 		let correctModels;
 		try {
 			correctModels = await lookModelWithEmbedding(allProducts);
 			console.log(
-				`CorrectModels: ${correctModels.length} registros - Ejemplo 1 registro: ${correctModels[0]}`
+				`Cantidad de registros en CorrectModels: ${correctModels.length}\nRegistros: ${correctModels}`
 			);
 		} catch (error) {
 			console.log("Error en lookModelWithEmbedding.js", error.message);
