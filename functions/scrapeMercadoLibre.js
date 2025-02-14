@@ -82,6 +82,8 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			const response = await axios.get(templatePath, {
 				responseType: "arraybuffer",
 			});
+			console.log("response.data:", response.data)
+			
 			await workbook.xlsx.load(response.data);
 			//console.log("Template file loaded successfully");
 		} catch (error) {
