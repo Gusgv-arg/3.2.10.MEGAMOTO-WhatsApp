@@ -108,6 +108,9 @@ export const lookModelWithEmbedding = async (allProducts) => {
 								model.modelo
 							}, Similitud: ${similarity.toFixed(4)}`
 						); */
+					} else {
+						// Aquí puedes manejar los modelos excluidos
+						console.log(`Aviso excluido: ${productTitle} con similitud: ${similarity}`);
 					}
 				});
 			});
