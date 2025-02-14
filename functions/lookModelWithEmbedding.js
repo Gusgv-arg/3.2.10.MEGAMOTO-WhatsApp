@@ -1,5 +1,6 @@
-import { modelos } from "../excel/modelos.js";
+//import { modelos } from "../excel/modelos.js";
 //import { allProducts } from "../excel/allproducts.js"; // Para hacer pruebas harcodeadas
+import Prices from "../models/prices.js";
 
 // Función para limpiar y normalizar texto
 const normalizeText = (text) => {
@@ -74,7 +75,7 @@ export const lookModelWithEmbedding = async (allProducts) => {
 			let highestSimilarity = -1;
 
 			// Usar similitud de coseno para todos los modelos y sinónimos
-			modelos.forEach((model) => {
+			Prices.forEach((model) => {
 				const modelTexts = [model.modelo, ...model.sinonimos].filter(
 					(text) => text && text !== ""
 				);
@@ -129,5 +130,4 @@ export const lookModelWithEmbedding = async (allProducts) => {
 	return results;
 };
 
-// Llamada a la función
 //lookModelWithEmbedding(allProducts);
