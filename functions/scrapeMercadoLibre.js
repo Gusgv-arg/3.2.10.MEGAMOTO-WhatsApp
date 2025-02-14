@@ -33,7 +33,9 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		} else {
 			// Si no se reciben datos, lanzar un error
 			console.log("Hubo un error en el Scrapin:", precios.data);
-			throw new Error("El array de precios vino vacío; por lo que seguramente Mercado Libre cambió la estructura de la página y haya que modificar la API de scrapin.");
+			throw new Error(
+				"El array de precios vino vacío; por lo que seguramente Mercado Libre cambió la estructura de la página y haya que modificar la API de scrapin."
+			);
 		}
 
 		const allProducts = precios.data;
@@ -66,10 +68,10 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		}
 
 		//console.log("correctModels:", correctModels)
-		
+
 		const templatePath =
-		"https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/precios_template14_02_2025.xlsx";
-		
+			"https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/precios_template14_02_2025.xlsx";
+
 		const outputPath = path.join(
 			__dirname,
 			"../public/precios_mercado_libre.xlsx"
@@ -83,7 +85,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 				responseType: "arraybuffer",
 			});
 			//console.log("response.data:", response.data)
-						
+
 			await workbook.xlsx.load(response.data);
 			//console.log("Template file loaded successfully");
 		} catch (error) {
@@ -107,7 +109,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			// Comenzar desde la última fila y eliminar hacia arriba
 			avisosSheet.spliceRows(i, 1);
 		}
-		console.log("correctModels antes del addRows:", correctModels)
+		console.log("correctModels antes del addRows:", correctModels);
 
 		// Añadir los nuevos datos a la hoja "Avisos"
 		if (correctModels && correctModels.length > 0) {
@@ -123,12 +125,18 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			]);
 
 			console.log("Filas a agregar antes del proceso:", rowsToAdd);
+			console.log("Tamaño rowsToAdd:", rowsToAdd.length);
 			// Verifica que rowsToAdd no esté vacío antes de agregar
 			if (rowsToAdd.length > 0) {
-				avisosSheet.addRows(rowsToAdd);
+				try {
+					avisosSheet.addRows(rowsToAdd);
+				} catch (error) {
+					console.error("Error al agregar filas a la hoja 'Avisos':", error);
+				}
 			} else {
 				console.warn("No hay datos para agregar a la hoja 'Avisos'.");
 			}
+			console.log("Número de filas en la hoja 'Avisos' después de agregar:", avisosSheet.rowCount);
 		} else {
 			console.warn("No se encontraron modelos correctos.");
 		}
@@ -144,18 +152,19 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		// Enviar el archivo Excel por WhatsApp (opcional)
 		const fileName = "Precios Mercado Libre";
 		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
-		
 	} catch (error) {
 		console.log("Error en scrapeMercadoLibre.js:", error);
 		let errorMessage;
 		if (error.response && error.response.data && error.response.data.error) {
 			// Si hay una respuesta de la API, usar el mensaje de error de la respuesta
 			errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nError en la API de Scraping: ${error.response.data.error}`;
-			
-		} else if (error.message === "Request failed with status code 502" || error.message === "Request failed with status code 503" || error === "AxiosError: Request failed with status code 503") {
+		} else if (
+			error.message === "Request failed with status code 502" ||
+			error.message === "Request failed with status code 503" ||
+			error === "AxiosError: Request failed with status code 503"
+		) {
 			// Manejo específico para el error 502
 			errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nHay un problema momentáneo en Render que es donde está hosteado el Servidor. Puedes intentar nuevamente o esperar una hora.`;
-		
 		} else {
 			// Si no hay respuesta, usar el mensaje de error general
 			errorMessage = `🔔 *NOTIFICACION DE ERROR:*\nHubo un error en la solicitud: ${error}`;
