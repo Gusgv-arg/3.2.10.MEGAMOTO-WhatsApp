@@ -742,7 +742,7 @@ export const modelos = [
 		familia: "TK",
 		marca: "TEKNIAL",
 		precio: 0,
-		sinonimos: ["RE RACE", "RERACE"],
+		sinonimos: ["Teknial RE RACE", "Teknial RERACE", "Scooter Rerace", "Rerace", "Re race"],
 		cilindradas: 0,
 		url: "",
 		vigencia: "29/03/2024",

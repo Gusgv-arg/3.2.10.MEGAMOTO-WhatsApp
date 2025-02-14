@@ -85,7 +85,7 @@ export const lookModelWithEmbedding = async (allProducts) => {
 					const modelVector = textToVector(cleanModelText);
 					const similarity = calculateSimilarity(productVector, modelVector);
 
-					if (similarity > highestSimilarity && similarity > 0.5) {
+					if (similarity > highestSimilarity && similarity > 0.4) {
 						bestMatches = [
 							{ model: model.modelo, similarity, synonym: modelText },
 						];
