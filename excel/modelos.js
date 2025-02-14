@@ -1,4 +1,5 @@
 // Archivo con todos los modelos actualizados
+// Se usa tanto para crear precios como para los precios de M.Libre
 
 export const modelos = [
 	{

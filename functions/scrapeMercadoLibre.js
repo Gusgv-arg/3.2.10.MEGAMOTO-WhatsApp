@@ -82,10 +82,8 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			const response = await axios.get(templatePath, {
 				responseType: "arraybuffer",
 			});
-			console.log("response.data:", response.data)
-			//const arrayBuffer = response.data.buffer.slice(response.data.byteOffset, response.data.byteOffset + response.data.byteLength);
-			//await workbook.xlsx.load(arrayBuffer);
-			
+			//console.log("response.data:", response.data)
+						
 			await workbook.xlsx.load(response.data);
 			//console.log("Template file loaded successfully");
 		} catch (error) {
@@ -97,7 +95,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 
 		// Seleccionar la hoja "Avisos"
 		const avisosSheet = workbook.getWorksheet("Avisos");
-		console.log("Contenido de la hoja 'Avisos':", avisosSheet.getSheetValues());
+		//console.log("Contenido de la hoja 'Avisos':", avisosSheet.getSheetValues());
 
 		if (!avisosSheet) {
 			throw new Error("La hoja 'Avisos' no existe en el archivo predefinido.");

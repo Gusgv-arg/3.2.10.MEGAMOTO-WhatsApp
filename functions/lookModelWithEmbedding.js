@@ -1,6 +1,5 @@
-import { modelos } from "../excel/modelos.js";
+import { modelos } from "../excel/modelos.js"; // se usa este array hardcodeado porque con la BD trae problemas!!!
 //import { allProducts } from "../excel/allproducts.js"; // Para hacer pruebas harcodeadas
-import Prices from "../models/prices.js";
 
 // Función para limpiar y normalizar texto
 const normalizeText = (text) => {
@@ -64,11 +63,7 @@ const isSubstring = (shorter, longer) => {
 // Función principal para buscar modelos
 export const lookModelWithEmbedding = async (allProducts) => {
 	const results = [];
-
-	// Obtener todos los modelos de la base de datos
-	const prices = await Prices.find();
-	//console.log("base de datos de Precios:", prices)
-
+	
 	allProducts.forEach((product) => {
 		try {
 			// Ajustar el título del producto
