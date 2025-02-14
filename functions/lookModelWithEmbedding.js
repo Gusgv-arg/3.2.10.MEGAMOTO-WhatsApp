@@ -1,4 +1,4 @@
-//import { modelos } from "../excel/modelos.js";
+import { modelos } from "../excel/modelos.js";
 //import { allProducts } from "../excel/allproducts.js"; // Para hacer pruebas harcodeadas
 import Prices from "../models/prices.js";
 
@@ -79,7 +79,7 @@ export const lookModelWithEmbedding = async (allProducts) => {
 			let highestSimilarity = -1;
 
 			// Usar similitud de coseno para todos los modelos y sinónimos
-			prices.forEach((model) => {
+			modelos.forEach((model) => {
 				const modelTexts = [model.modelo, ...model.sinonimos].filter(
 					(text) => text && text !== ""
 				);
