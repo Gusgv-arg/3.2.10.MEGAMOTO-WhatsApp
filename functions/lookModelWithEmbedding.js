@@ -6,7 +6,7 @@ const normalizeText = (text) => {
 	return text
 		.toLowerCase()
 		.replace(/[\s]+/g, " ") // Reemplazar múltiples espacios por uno solo
-		.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "") // Eliminar caracteres especiales
+		.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "") // Eliminar caracteres especiales
 		.trim(); // Eliminar espacios al inicio y al final
 };
 
@@ -63,7 +63,7 @@ const isSubstring = (shorter, longer) => {
 // Función principal para buscar modelos
 export const lookModelWithEmbedding = async (allProducts) => {
 	const results = [];
-	
+		
 	allProducts.forEach((product) => {
 		try {
 			// Ajustar el título del producto
@@ -108,10 +108,7 @@ export const lookModelWithEmbedding = async (allProducts) => {
 								model.modelo
 							}, Similitud: ${similarity.toFixed(4)}`
 						); */
-					} else {
-						// Aquí puedes manejar los modelos excluidos
-						console.log(`Aviso excluido: ${productTitle} con similitud: ${similarity}`);
-					}
+					} 
 				});
 			});
 
