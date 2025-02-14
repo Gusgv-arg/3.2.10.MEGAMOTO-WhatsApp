@@ -76,7 +76,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			"https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/precios_template.xlsx";
 		const outputPath = path.join(
 			__dirname,
-			"../public/precios_mercado_libre.xlsx"
+			"../public/precios_template.xlsx"
 		);
 
 		// Cargar el archivo predefinido
