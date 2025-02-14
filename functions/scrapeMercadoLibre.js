@@ -67,11 +67,9 @@ export const scrapeMercadoLibre = async (userPhone) => {
 
 		//console.log("correctModels:", correctModels)
 		
+		const templatePath =
+		"https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/precios_template14_02_2025.xlsx";
 		
-		//const templatePath =
-		"https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/precios_template.xlsx";
-		
-		const templatePath = "https://github.com/Gusgv-arg/3.2.10.MEGAMOTO-WhatsApp/blob/b01ca5ad7e330b25e8aefd72d7edc1e28f2f8351/public/precios_template.xlsx"
 		const outputPath = path.join(
 			__dirname,
 			"../public/precios_template.xlsx"
