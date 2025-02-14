@@ -72,7 +72,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		
 		const outputPath = path.join(
 			__dirname,
-			"../public/precios_template.xlsx"
+			"../public/precios_mercado_libre.xlsx"
 		);
 
 		// Cargar el archivo predefinido
