@@ -1,5 +1,5 @@
 import Prices from '../../models/prices.js';
-import { precios } from '../../excel/listaPreciosFlow1.js';
+import { modelos } from '../../excel/modelos.js';
 
 // Función para crear la base de datos - se usa una sola vez!!!!!
 export const pricesModelCreation = async (req, res) => {
@@ -8,7 +8,7 @@ export const pricesModelCreation = async (req, res) => {
     await Prices.deleteMany({});
 
     // Itera sobre cada precio y crea un nuevo documento de Prices
-    for (const precio of precios) {
+    for (const precio of modelos) {
       await Prices.create(precio);
     }
     console.log('Modelo Prices creado en MongoDB.');
