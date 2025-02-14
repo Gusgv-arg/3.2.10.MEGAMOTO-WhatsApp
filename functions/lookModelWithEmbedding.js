@@ -69,7 +69,7 @@ export const lookModelWithEmbedding = async (allProducts) => {
 			// Ajustar el título del producto
 			const adjustedTitle = adjustTitle(product.titulo);
 			const productTitle = normalizeText(adjustedTitle);
-			console.log("productTtitle:", productTitle)
+			//console.log("productTtitle:", productTitle)
 			let bestMatches = [];
 			let highestSimilarity = -1;
 
