@@ -113,7 +113,7 @@ export const lookModelWithEmbedding = async (allProducts) => {
 			});
 
 			// Seleccionar el mejor match basado en la similitud más alta
-			if (bestMatches.length > 0 && highestSimilarity > 0.5) {
+			if (bestMatches.length > 0 && highestSimilarity > 0.4) {
 				// Ordenar por similitud
 				bestMatches.sort((a, b) => b.similarity - a.similarity);
 

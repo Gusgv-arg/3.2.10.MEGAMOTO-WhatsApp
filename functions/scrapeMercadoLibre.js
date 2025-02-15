@@ -39,8 +39,8 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		}
 
 		const allProducts = precios.data;
-		console.log("Cantidad de registros allproducts",allProducts.length)
-		console.log("allProducts recibido de la api:", allProducts)
+		console.log("Cantidad de registros recibidos de M.Libre:",allProducts.length)
+		//console.log("allProducts recibido de la api:", allProducts)
 
 		let correctModels;
 		try {
@@ -111,7 +111,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			// Comenzar desde la última fila y eliminar hacia arriba
 			avisosSheet.spliceRows(i, 1);
 		}
-		console.log("correctModels antes del addRows:", correctModels);
+		//console.log("correctModels antes del addRows:", correctModels);
 
 		// Añadir los nuevos datos a la hoja "Avisos"
 		if (correctModels && correctModels.length > 0) {
@@ -126,8 +126,8 @@ export const scrapeMercadoLibre = async (userPhone) => {
 				model.atributos,
 			]);
 
-			console.log("Filas a agregar antes del proceso:", rowsToAdd);
-			console.log("Tamaño rowsToAdd:", rowsToAdd.length);
+			//console.log("Filas a agregar antes del proceso:", rowsToAdd);
+			//console.log("Tamaño rowsToAdd:", rowsToAdd.length);
 			// Verifica que rowsToAdd no esté vacío antes de agregar
 			if (rowsToAdd.length > 0) {
 				try {
@@ -149,11 +149,13 @@ export const scrapeMercadoLibre = async (userPhone) => {
 
 		// Generar la URL pública del archivo
 		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/precios_mercado_libre.xlsx`;
-		//console.log("Archivo disponible en:", fileUrl);
+		console.log("Archivo de precios comparativos disponible en:", fileUrl);
 
 		// Enviar el archivo Excel por WhatsApp (opcional)
 		const fileName = "Precios Mercado Libre";
 		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
+		console.log("Excel enviado por WhatsApp a:", userPhone)
+
 	} catch (error) {
 		console.log("Error en scrapeMercadoLibre.js:", error);
 		let errorMessage;
