@@ -74,11 +74,6 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		const templatePath =
 			"https://raw.githubusercontent.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/main/public/precios_template14_02_2025.xlsx";
 
-		const outputPath = path.join(
-			__dirname,
-			"../public/precios_mercado_libre.xlsx"
-		);
-
 		// Cargar el archivo predefinido
 		const workbook = new ExcelJS.Workbook();
 		try {
@@ -143,16 +138,21 @@ export const scrapeMercadoLibre = async (userPhone) => {
 			console.warn("No se encontraron modelos correctos.");
 		}
 
+		// Generar un nombre de archivo único usando la fecha y hora actual
+		const timestamp = new Date().toISOString().replace(/[:.]/g, "-"); // Reemplazar ":" y "." para que sea un nombre de archivo válido
+		const fileName = `Precios_Mercado_Libre_${timestamp}.xlsx`; // Nombre del archivo con timestamp
+
+		const outputPath = path.join(__dirname, `../public/${fileName}`); // Usar el nuevo nombre de archivo
+
 		// Guardar el archivo actualizado en una ubicación pública
 		await workbook.xlsx.writeFile(outputPath);
 		//console.log("Archivo actualizado guardado en:", outputPath);
 
 		// Generar la URL pública del archivo
-		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/precios_mercado_libre.xlsx`;
+		const fileUrl = `https://three-2-10-megamoto-campania-whatsapp.onrender.com/public/${fileName}`;
 		console.log("Archivo de precios comparativos disponible en:", fileUrl);
 
 		// Enviar el archivo Excel por WhatsApp (opcional)
-		const fileName = "Precios Mercado Libre";
 		await sendExcelByWhatsApp(userPhone, fileUrl, fileName);
 		console.log("Excel enviado por WhatsApp a:", userPhone)
 
