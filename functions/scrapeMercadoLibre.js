@@ -157,7 +157,7 @@ export const scrapeMercadoLibre = async (userPhone) => {
 		console.log("Excel enviado por WhatsApp a:", userPhone)
 
 	} catch (error) {
-		console.log("Error en scrapeMercadoLibre.js:", error);
+		console.log("Error en scrapeMercadoLibre.js:", error.message);
 		let errorMessage;
 		if (error.response && error.response.data && error.response.data.error) {
 			// Si hay una respuesta de la API, usar el mensaje de error de la respuesta
