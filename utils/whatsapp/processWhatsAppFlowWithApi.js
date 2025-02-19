@@ -66,7 +66,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					// Se ejecuta la función de scrape de la API de scrapin de credicuotas
 					try {
 						const credito = await axios.post(
-							"https://three-2-13-web-scrapping.onrender.com/scrape/credicuotas",
+							'https://three-2-13-web-scrapping.onrender.com/scrape/credicuotas',
 							{ dni: notification.dni } // Enviando el dni en el cuerpo de la solicitud
 						);
 						console.log("Respuesta Credicuotas:", credito.data)
