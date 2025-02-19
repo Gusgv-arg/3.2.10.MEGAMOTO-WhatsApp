@@ -7,6 +7,7 @@ import { sendVendorDataToLead } from "../templates/sendVendorDataToLead.js";
 import { salesFlow_2Notification } from "../../flows/salesFlow_2Notification.js";
 import { extractFlowToken_1Responses } from "../../flows/extractFlowToken_1Responses.js";
 import { extractFlowToken_2Responses } from "../../flows/extractFlowToken_2Responses.js";
+import axios from "axios";
 
 export const processWhatsAppFlowWithApi = async (userMessage) => {
 	const type = userMessage.type;
@@ -16,8 +17,6 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 		if (type === "interactive") {
 			// ---- TOKEN 1 -------------------------------------//
 			if (userMessage.message.includes('"flow_token":"1"')) {
-				const flowToken = 1;
-
 				const notification = await extractFlowToken_1Responses(
 					userMessage.message
 				);
@@ -62,8 +61,33 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					log = `1-Se extrajo la respuesta del Flow 1 de ${userMessage.name}. 2-Se mandó whatsapp al lead de que un vendedor lo estará contactando.`;
 				}
 
-				return log;
+				// Si el lead paga financiado se busca en Credicuotas su capacidad de crédito
+				if (notification.dni !== "") {
+					// Se ejecuta la función de scrape de la API de scrapin de credicuotas
+					try {
+						const credito = await axios.post(
+							"https://three-2-13-web-scrapping.onrender.com/scrape/credicuotas",
+							{ dni: notification.dni } // Enviando el dni en el cuerpo de la solicitud
+						);
+						console.log("Respuesta Credicuotas:", credito.data)
+						log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name}. `
 
+					} catch (error) {
+						console.log(
+							`Error llamando a la APi de Credicuotas: ${
+								error?.response?.data
+									? JSON.stringify(error.response.data)
+									: error.message
+							}`
+						);
+						const errorMessage = error?.response?.data
+							? JSON.stringify(error.response.data)
+							: error.message;
+						throw errorMessage;
+					}
+				}
+
+				return log;
 			} else if (/\"flow_token\":\"2/.test(userMessage.message)) {
 				// ---- TOKEN 2 -------------------------------------//
 				let vendorPhone;
@@ -71,7 +95,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 
 				const notification = extractFlowToken_2Responses(userMessage.message);
 
-				log = `1-Se extrajo la respuesta del Flow 2 del vendedor ${userMessage.name}. `
+				log = `1-Se extrajo la respuesta del Flow 2 del vendedor ${userMessage.name}. `;
 
 				// Confirmar la respuesta al vendedor que envió la respuesta
 				await handleWhatsappMessage(
@@ -85,8 +109,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				) {
 					vendorPhone = userMessage.userPhone;
 					vendorName = userMessage.vendorName;
-					log += `La respuesta del vendedor fue ${notification.message}. `
-
+					log += `La respuesta del vendedor fue ${notification.message}. `;
 				} else if (notification.message.includes("Derivar a")) {
 					if (notification.delegate === "Derivar a Gustavo Glunz") {
 						vendorPhone = process.env.PHONE_GUSTAVO_GLUNZ;
@@ -101,7 +124,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 						vendorName = "Joana";
 					}
 
-					log += `La respuesta del vendedor fue ${notification.message}. `
+					log += `La respuesta del vendedor fue ${notification.message}. `;
 				}
 
 				// Buscar Lead x token 2 y Guardar en BD los datos
@@ -141,8 +164,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 						notification.flowToken
 					);
 
-					log += `Se lo notificó al vendedor ${vendorName} que le derivaron a ${customerName} y se le envió el Flow 2 con toda la info. `
-				
+					log += `Se lo notificó al vendedor ${vendorName} que le derivaron a ${customerName} y se le envió el Flow 2 con toda la info. `;
 				} else if (!notification.delegate) {
 					// Notificar datos del vendedor al cliente con template (pueden pasar +24hs)
 					await sendVendorDataToLead(
@@ -154,25 +176,26 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 
 					// Grabar en BD la notificación al cliente
 					const message = `*🔔 Notificación de Megamoto:*\n\n👋 Hola ${customerName}, tenemos buenas noticias! Tu consulta fue tomada por un vendedor:\n				Nombre: ${vendorName}. Celular: ${vendorPhone}\n❗ Te recomendamos agendar sus datos así lo reconoces cuando te contacte.\n¡Mucha suerte con tu compra!`;
-					
-					const notification = {message: message}
-					const userMessage = {userPhone: customerPhone}
 
-					await saveNotificationInDb(userMessage, notification)
+					const notification = { message: message };
+					const userMessage = { userPhone: customerPhone };
 
-					log += `Se lo notificó al lead ${customerName} que su vendedor asignado es ${vendorName}. `
+					await saveNotificationInDb(userMessage, notification);
+
+					log += `Se lo notificó al lead ${customerName} que su vendedor asignado es ${vendorName}. `;
 				}
 
-			return log;
+				return log;
 			}
-		} 
-		
+		}
 	} catch (error) {
 		console.error("Error en processWhatsAppFlowWithApi.js:", error.message);
-		const errorMessage = `Error en processWhatsAppFlowWithApi.js: ${error?.response?.data
-			? JSON.stringify(error.response.data)
-			: error.message}`;
-		
+		const errorMessage = `Error en processWhatsAppFlowWithApi.js: ${
+			error?.response?.data
+				? JSON.stringify(error.response.data)
+				: error.message
+		}`;
+
 		throw errorMessage;
 	}
 };
