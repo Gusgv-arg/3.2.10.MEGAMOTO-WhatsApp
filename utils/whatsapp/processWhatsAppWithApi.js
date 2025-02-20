@@ -36,7 +36,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			log = `1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD.`;
 			return log;
 		} else {
-			// Lead EXISTE -------------------------------------------------------------
+			// -------- Lead YA EXISTE ------------------------------------------------------
 
 			const lastFlow = existingLead.flows[existingLead.flows.length - 1];
 			const lastFlowStatus = lastFlow.client_status;
@@ -46,7 +46,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			let message;
 
 			if (lastFlowStatus !== "compró" && lastFlowStatus !== "no compró") {
-				// El Lead está en la Fila
+				// El Lead ya está en la Fila
 
 				if (lastFlowVendor) {
 					// El lead ya tiene un vendedor asignado

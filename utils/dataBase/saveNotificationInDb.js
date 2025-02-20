@@ -30,8 +30,8 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 
 			// Verificar el client_status del último flujo
 			if (
-				lastFlow.client_status !== "compró" &&
-				lastFlow.client_status !== "no compró"
+				lastFlow.client_status === "compró" ||
+				lastFlow.client_status === "no compró"
 			) {
 				// Crear un nuevo flujo y agregarlo al array
 				lastFlow = {
