@@ -63,15 +63,34 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 
 				// Si el lead paga financiado se busca en Credicuotas su capacidad de crédito
 				if (notification.dni !== "") {
-					// Se ejecuta la función de scrape de la API de scrapin de credicuotas
 					try {
+						// Se llama API de scrapin de Credicuotas
 						const credito = await axios.post(
-							'https://three-2-13-web-scrapping.onrender.com/scrape/credicuotas',
-							{ dni: notification.dni } // Enviando el dni en el cuerpo de la solicitud
+							"https://three-2-13-web-scrapping.onrender.com/scrape/credicuotas",
+							{ dni: notification.dni }
 						);
-						console.log("Respuesta Credicuotas:", credito.data)
-						log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name}. La respuesta fue: ${credito.data}`
 
+						console.log("Respuesta Credicuotas:", credito.data)
+						
+						if (credito.data.success === true){
+							// Si todo sale OK
+							log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name}. Monto: ${credito.data.data.monto}. Requisitos: ${credito.data.data.requisitos} `;
+							
+							// Se notifica al cliente con los resultados
+							const message = `*🔔 Notificación:*\n\n📣Estimado ${userMessage.name}; de acuerdo al DNI informado número ${notification.dni} los detalles de su crédito preaprobado son los siguientes:\nMonto: ${credito.data.data.monto}\nRequisitos: ${credito.data.data.requisitos}\n\n⚠️ Esta información está sujeta cambios y deberá ser confirmada por un vendedor.\n\n*Megamoto*`
+				
+							await handleWhatsappMessage(
+								userMessage.userPhone,
+								message
+							);
+							
+							// Se guarda la info en BD
+							
+						} else if (credito.data.success === false){
+							log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name} pero hubo un error: ${credito.data.error}`;
+
+						}
+					
 					} catch (error) {
 						console.log(
 							`Error llamando a la APi de Credicuotas: ${
@@ -80,9 +99,11 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 									: error.message
 							}`
 						);
-						const errorMessage = error?.response?.data
-							? JSON.stringify(error.response.data)
-							: error.message;
+						const errorMessage = `Error llamando a la APi de Credicuotas: ${
+							error?.response?.data
+								? JSON.stringify(error.response.data)
+								: error.message
+						}`;
 						throw errorMessage;
 					}
 				}

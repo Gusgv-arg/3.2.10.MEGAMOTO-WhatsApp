@@ -12,6 +12,7 @@ const flowDetailSchema = new mongoose.Schema({
 	payment: String,
 	otherProducts: String,
 	dni: Number,
+	credit: String,
 	questions: String,
 	messages: String,
 	vendor_name: {type: String, enum:["Gustavo_GV", "Gustavo_Glunz", "Joana", "Ernesto", "Joselin", "Darío", "José"]},
