@@ -70,7 +70,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 							{ dni: notification.dni } // Enviando el dni en el cuerpo de la solicitud
 						);
 						console.log("Respuesta Credicuotas:", credito.data)
-						log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name}. `
+						log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name}. La respuesta fue: ${credito.data}`
 
 					} catch (error) {
 						console.log(
