@@ -1,6 +1,6 @@
 const myPhone = process.env.MY_PHONE
 
-export const errorMessage1 = `*Notifiacón automática de error:*\nTe pedimos disculpas 🙏, en este momento no podemos procesar tu solicitud porque estamos haciendo mejoras en nuestro servicio. No te preocupes porque tu mensaje será enviado a un vendedor. Igual podes intentar más tarde o comunicate al ${myPhone}.\n¡Saludos de MegaMoto! 🙂`
+export const errorMessage1 = `🔔 *Notificación automática de error:*\nTe pedimos disculpas 🙏, en este momento no podemos procesar tu solicitud porque estamos haciendo mejoras en nuestro servicio. No te preocupes porque tu mensaje será enviado a un vendedor. Igual podes intentar más tarde o comunicate al ${myPhone}.\n*¡Saludos de MegaMoto!* 🙂`
 
 export const errorMessage2 = "Hay un problema en el servidor donde tengo la información de Megamoto; por lo que voy a comenzar una nueva conversación. ¿Por favor, me repetirías tu pregunta? 🙂"
 

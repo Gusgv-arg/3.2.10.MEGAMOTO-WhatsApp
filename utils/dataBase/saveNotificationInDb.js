@@ -1,7 +1,8 @@
 import Leads from "../../models/leads.js";
 
 export const saveNotificationInDb = async (userMessage, notification) => {
-	//console.log("extraction en saveNotification:", notification);
+	console.log("userMessage en saveNotification:", userMessage);
+	console.log("notification en saveNotification:", notification);
 
 	// Save the sent message to the database
 	try {
