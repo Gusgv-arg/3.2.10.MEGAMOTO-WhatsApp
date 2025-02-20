@@ -25,19 +25,20 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				second: "2-digit",
 			});
 
-			// Definir el Flow abierto actual
-			let lastFlow;
+			// Obtener el último flujo
+			let lastFlow = lead.flows[lead.flows.length - 1];
+
+			// Verificar el client_status del último flujo
 			if (
-				lead.flows[lead.flows.length - 1].client_status !== "compró" &&
-				lead.flows[lead.flows.length - 1].client_status !== "no compró"
+				lastFlow.client_status !== "compró" &&
+				lastFlow.client_status !== "no compró"
 			) {
-				lastFlow = lead.flows[lead.flows.length - 1];
-			} else {
-				const last = { 
+				// Crear un nuevo flujo y agregarlo al array
+				lastFlow = {
 					messages: "", 
+					history: "",
 				};
-				lastFlow = lead.flows.push(last)
-				await lead.save();
+				lead.flows.push(lastFlow); // Agrega el nuevo flujo al array
 			}
 
 			if (userMessage.message) {
