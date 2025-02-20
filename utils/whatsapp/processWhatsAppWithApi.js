@@ -33,8 +33,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			await saveNotificationInDb(userMessage, notification);
 
 			// Actualiza el log
-			log =
-				`1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD.`;
+			log = `1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD.`;
 			return log;
 		} else {
 			// Lead EXISTE -------------------------------------------------------------
@@ -65,18 +64,18 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					// Graba notificación al cliente en la BDs (falta grabar la del vendedor)
 					const notification = { message: message };
 					await saveNotificationInDb(userMessage, notification);
-					
+
 					// Actualiza el log
 					log = `1-Se notificó al lead ${userMessage.name} recordando su vendedor. 2-Alarma al vendedor ${lastFlowVendor}. `;
-					
+
 					return log;
 				} else {
 					// El Lead NO tiene un vendedor asignado
 					message = `*🔔 Notificación Automática:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
-					
+
 					// Envía notificación al Lead
 					await handleWhatsappMessage(userMessage.userPhone, message);
-					
+
 					// Graba la notificación en la base de datos
 					const notification = { message: message };
 					await saveNotificationInDb(userMessage, notification);
@@ -96,8 +95,15 @@ export const processWhatsAppWithApi = async (userMessage) => {
 
 				await handleWhatsappMessage(userMessage.userPhone, greeting2);
 
-				// Envía el Flow 1
-				await sendFlow_1ToLead(userMessage);
+				// Envía el Flow 1 al lead y me hago del wamId
+				const wamId_Flow1 = await sendFlow_1ToLead(userMessage);
+
+				// Agrego el wmId al objeto userMessage para traquear status FLOW1
+				userMessage.wamId_Flow1 = wamId_Flow1;
+
+				// Graba notificación al cliente en la BDs
+				const notification = { message: greeting2 };
+				await saveNotificationInDb(userMessage, notification);
 
 				// Actualiza el log
 				log = `1-Se volvió a saludar al lead ${userMessage.name} ya que estaba en BD y no tenía un Flow abierto. 2-Se le envió Flow 1.`;
@@ -113,9 +119,11 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				: error.message
 		);
 
-		const errorMessage = `Error en processWhatsAppWithApi.js: ${error?.response?.data
-			? JSON.stringify(error.response.data)
-			: error.message}`;
+		const errorMessage = `Error en processWhatsAppWithApi.js: ${
+			error?.response?.data
+				? JSON.stringify(error.response.data)
+				: error.message
+		}`;
 
 		throw errorMessage;
 	}
