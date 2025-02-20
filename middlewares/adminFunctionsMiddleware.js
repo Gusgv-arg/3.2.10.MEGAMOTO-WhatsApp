@@ -198,13 +198,8 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 
 			const notification = await pricesModelCreation();
-		} else if (message === "leads") {
-			
-			// Si es GGV que haga next porque es vendedor
-			if (userPhone === myPhone) {
-				next();
-			}
-			
+		
+		} else if (message === "flows") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			// Filtra de la BD los Leads disponibles para atender dentro del Flow
