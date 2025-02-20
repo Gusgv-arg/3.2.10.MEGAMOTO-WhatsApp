@@ -1,7 +1,6 @@
 import Leads from "../../models/leads.js";
 
 export const saveNotificationInDb = async (userMessage, notification) => {
-	
 	//console.log("extraction en saveNotification:", notification);
 
 	// Save the sent message to the database
@@ -25,12 +24,24 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				second: "2-digit",
 			});
 
-			// Actualizar mensajes
-			let lastFlow = lead.flows[lead.flows.length - 1];
+			// Definir el Flow abierto actual
+			let lastFlow;
+			if (
+				lead.flows[lead.flows.length - 1].client_status !== "compró" &&
+				lead.flows[lead.flows.length - 1].client_status !== "no compró"
+			) {
+				lastFlow = lead.flows[lead.flows.length - 1];
+			} else {
+				last = { 
+					messages: "", 
+					client_status: "", 
+					history: "", 
+				};
+				lastFlow = lead.flows.push(last)
+			}
 
-			if (userMessage.message){
+			if (userMessage.message) {
 				lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message}`;
-			
 			} else {
 				lastFlow.messages += `\n$${currentDateTime} - API: ${notification.message}`;
 			}
@@ -65,7 +76,6 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				lastFlow.questions = notification.questions;
 				lastFlow.client_status = "esperando";
 				lastFlow.history += `${currentDateTime} - Status: esperando. `;
-
 			} else if (userMessage.wamId_Flow1) {
 				// Grabo el wamId
 				lastFlow.wamId_flow1 = userMessage.wamId_Flow1;
@@ -78,7 +88,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 	} catch (error) {
 		const errorMessage = error?.response?.data
 			? JSON.stringify(error.response.data)
-			: error.message
+			: error.message;
 
 		console.log("error en saveNotificationInDb.js:", errorMessage);
 		throw new Error(errorMessage);

@@ -92,7 +92,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				// Lead ya existe y NO tiene un Flow abierto arranca el proceso de 0.
 
 				// Envía un mensaje previo de bienvenida x si no se ve el Flow
-				const greeting2 = `👋 Hola nuevamente, gracias por seguir confiando en Megamoto!\n📣 Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n*❗ Importante: entrá en tu celular para ver el segundo mensaje.* \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+				const greeting2 = `👋 Hola nuevamente, gracias por seguir confiando en Megamoto!\n\n📣 Para atenderte mejor, vas a recibir otro mensaje el cual te pedimos que completes.\n\n*❗ Importante: entrá en tu celular para ver el segundo mensaje.* \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 				await handleWhatsappMessage(userMessage.userPhone, greeting2);
 

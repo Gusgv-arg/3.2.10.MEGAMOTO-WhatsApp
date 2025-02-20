@@ -8,6 +8,7 @@ import { salesFlow_2Notification } from "../../flows/salesFlow_2Notification.js"
 import { extractFlowToken_1Responses } from "../../flows/extractFlowToken_1Responses.js";
 import { extractFlowToken_2Responses } from "../../flows/extractFlowToken_2Responses.js";
 import axios from "axios";
+import { saveCreditInDb } from "../dataBase/saveCreditInDb.js";
 
 export const processWhatsAppFlowWithApi = async (userMessage) => {
 	const type = userMessage.type;
@@ -58,7 +59,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					await saveNotificationInDb(userMessage, notification);
 
 					// Actualiza el log
-					log = `1-Se extrajo la respuesta del Flow 1 de ${userMessage.name}. 2-Se mandó whatsapp al lead de que un vendedor lo estará contactando.`;
+					log = `1-Se extrajo la respuesta del Flow 1 de ${userMessage.name}. 2-Se mandó whatsapp al lead de que un vendedor lo estará contactando. `;
 				}
 
 				// Si el lead paga financiado se busca en Credicuotas su capacidad de crédito
@@ -74,18 +75,21 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 						
 						if (credito.data.success === true){
 							// Si todo sale OK
-							log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name}. Monto: ${credito.data.data.monto}. Requisitos: ${credito.data.data.requisitos} `;
+							const credit = credito.data.data.monto
 							
 							// Se notifica al cliente con los resultados
-							const message = `*🔔 Notificación:*\n\n📣Estimado ${userMessage.name}; de acuerdo al DNI informado número ${notification.dni} los detalles de su crédito preaprobado son los siguientes:\nMonto: ${credito.data.data.monto}\nRequisitos: ${credito.data.data.requisitos}\n\n⚠️ Esta información está sujeta cambios y deberá ser confirmada por un vendedor.\n\n*Megamoto*`
-				
+							const message = `*🔔 Notificación:*\n\n📣 Estimado ${userMessage.name}; de acuerdo al DNI informado número ${notification.dni} los detalles de su crédito preaprobado son los siguientes:\n\nMonto: ${credit}\nRequisitos: ${credito.data.data.requisitos}\n\n⚠️ Esta información está sujeta cambios y deberá ser confirmada por un vendedor.\n\n*Megamoto*`
+							
 							await handleWhatsappMessage(
 								userMessage.userPhone,
 								message
 							);
 							
-							// Se guarda la info en BD
+							// Se guarda la info del crédito en BD
+							await saveCreditInDb(userMessage.userPhone,	message, credit)
 							
+							log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name}. Monto: ${credit}. Requisitos: ${credito.data.data.requisitos} `;
+						
 						} else if (credito.data.success === false){
 							log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name} pero hubo un error: ${credito.data.error}`;
 
