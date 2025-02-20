@@ -34,8 +34,6 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 			} else {
 				const last = { 
 					messages: "", 
-					client_status: "", 
-					history: "", 
 				};
 				lastFlow = lead.flows.push(last)
 				await lead.save();
