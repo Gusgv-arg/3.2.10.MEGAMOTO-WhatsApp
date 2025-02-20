@@ -38,6 +38,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 					history: "", 
 				};
 				lastFlow = lead.flows.push(last)
+				await lead.save();
 			}
 
 			if (userMessage.message) {
