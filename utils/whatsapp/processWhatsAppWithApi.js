@@ -35,6 +35,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			// Actualiza el log
 			log = `1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD.`;
 			return log;
+			
 		} else {
 			// -------- Lead YA EXISTE ------------------------------------------------------
 

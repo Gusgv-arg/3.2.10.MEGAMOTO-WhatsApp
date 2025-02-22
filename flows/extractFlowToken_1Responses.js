@@ -109,10 +109,10 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 			: precioOtro; // Formatear el precio
 			//const precioFormateado=1111
 			
-			response.message += `Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio: $ ${precioFormateado}\n`
+			response.message += `Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio contado: $ ${precioFormateado}\n`
 			
 			otrosProductos.push(
-				`Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio: $ ${precioFormateado}\n`
+				`Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio contado: $ ${precioFormateado}\n`
 			);
 		}
 		response.otherProducts = otrosProductos.join(""); // Unir otros productos en un solo string

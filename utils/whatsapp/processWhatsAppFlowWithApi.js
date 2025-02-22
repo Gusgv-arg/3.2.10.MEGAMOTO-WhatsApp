@@ -30,7 +30,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					notification.message = finalMessage;
 					//console.log("FinalMessage:", finalMessage);
 				} else {
-					const greet = `*👋 Hola ${userMessage.name}*, gracias por tu respuesta! En breve vas a recibir una notificación con los datos del vendedor que te estará contactando:\n\n${notification.message}`;
+					const greet = `*👋 Hola ${userMessage.name}*, gracias por tu respuesta! En breve vas a recibir una notificación con los datos del vendedor que te estará contactando por tu operación:\n\n${notification.message}`;
 					notification.message = greet;
 					//console.log("FinalMessage:", greet);
 				}

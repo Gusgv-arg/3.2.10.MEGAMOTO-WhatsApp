@@ -1,4 +1,5 @@
 import Leads from "../../models/leads.js";
+import { v4 as uuidv4 } from "uuid";
 
 export const saveNotificationInDb = async (userMessage, notification) => {
 	console.log("userMessage en saveNotification:", userMessage);
@@ -33,10 +34,18 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				lastFlow.client_status === "compró" ||
 				lastFlow.client_status === "no compró"
 			) {
-				// Crear un nuevo flujo y agregarlo al array
+				// Crear un token 2 y un nuevo flujo para agregarlo al array
+				const flowToken2 = `2${uuidv4()}`;
+				
 				lastFlow = {
-					messages: "", 
-					history: "",
+					flowName: process.env.FLOW_1,
+					flowDate: currentDateTime,
+					client_status: "primer contacto",
+					messages: "",
+					history: `${currentDateTime} - Status: primer contacto. `,
+					flow_2token: flowToken2,
+					flow_status: "activo",
+					origin: "API General",
 				};
 				lead.flows.push(lastFlow); // Agrega el nuevo flujo al array
 			}
