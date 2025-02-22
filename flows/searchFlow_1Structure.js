@@ -4,6 +4,7 @@ export const searchFlow_1Structure = (templateName) => {
 	
 	// Generate a flow token && parameters to identify the flow among others
 	const flowToken = 1;
+	//link: "https://github.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/blob/main/assets/foto_campa%C3%B1a_pedidosya.jpg?raw=true",
 	
 	const components = [
 		{
@@ -12,7 +13,7 @@ export const searchFlow_1Structure = (templateName) => {
 				{
 					type: "image",
 					image: {
-						link: "https://github.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/blob/main/assets/foto_campa%C3%B1a_pedidosya.jpg?raw=true",
+						link: "https://github.com/Gusgv-arg/3.2.10.MEGAMOTO-WhatsApp/blob/main/assets/Logo_APIWhatsApp_Megamoto.jpeg?raw=true",
 					},
 				},
 			],
