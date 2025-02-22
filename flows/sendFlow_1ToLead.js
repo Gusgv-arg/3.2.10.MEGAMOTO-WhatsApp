@@ -74,7 +74,7 @@ export const sendFlow_1ToLead = async (userMessage) => {
 		await lead.save();
 
 		// Notify Error to the Admin
-		const message = `🔔 *NOTIFICACION DE ERROR en sendFlow_1ToLead.js:* Hubo un error al enviar el Flow 1 al cliente ${userMessage.name}.\nError: ${errorMessage}`;
+		const message = `🔔 *NOTIFICACION DE ERROR en sendFlow_1ToLead.js:* Hubo un error al enviar el Flow 1 al cliente ${userMessage.name} con celular ${userMessage.userPhone}.\nError: ${errorMessage}`;
 
 		await adminWhatsAppNotification(adminPhone, message);
 	}
