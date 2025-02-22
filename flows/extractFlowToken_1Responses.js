@@ -3,7 +3,7 @@ import Prices from "../models/prices.js";
 export const extractFlowToken_1Responses = async (flowMessage) => {
 	// Paso del formato json a string
 	//flowMessage = JSON.stringify(flowMessage) // descomentar en localhost
-	
+
 	// Función que retorna este objeto
 	let response = {
 		message: "",
@@ -48,95 +48,111 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 			modelosEncontrados.push(match[1]);
 		}
 	});
-	//console.log("marcas",marcasEncontradas)
+
+	// Verificar si "No sé" está presente en el string
+	const noSeRegex = /"No s\\u00e9":"([^"]+)"/; // Regex para "No sé" con caracteres Unicode
+	if (noSeRegex.test(flowMessage)) {
+		marcasEncontradas.push("No sé");
+		modelosEncontrados.push("No sé");
+	}
+	//console.log("marcas", marcasEncontradas);
 	//console.log("modelos",modelosEncontrados)
 
 	// Función que busca los precios del modelo buscado x el lead
 	const buscarPrecios = async (modelo) => {
 		// Intentar encontrar el precio por el modelo principal
-		let precioData = await Prices.findOne({ 
-			$expr: { 
-				$eq: [{ $toLower: "$modelo" }, modelo.toLowerCase()] 
-			} 
+		let precioData = await Prices.findOne({
+			$expr: {
+				$eq: [{ $toLower: "$modelo" }, modelo.toLowerCase()],
+			},
 		});
-		
+
 		// Si no se encuentra, buscar en el campo de sinónimos
 		if (!precioData) {
-			precioData = await Prices.findOne({ 
-				sinónimos: { 
-					$elemMatch: { 
-						$eq: modelo.toLowerCase() 
-					} 
-				} 
+			precioData = await Prices.findOne({
+				sinónimos: {
+					$elemMatch: {
+						$eq: modelo.toLowerCase(),
+					},
+				},
 			});
 		}
-		
+
 		return precioData ? precioData.precio : "No disponible";
 	};
 
 	// Crear la notificación con la información extraída
 	if (marcasEncontradas.length > 0) {
+		
+		if (marcasEncontradas[0] === "No sé") {
+			response.brand = "No sé";
+			response.model = "No sé";
+			response.price = "";
+			response.message = `Marca: ${response.brand}\nModelo: ${response.model}\nPrecio: $ ${response.price}\n`;
+		
+		} else {
+			// Toma el 1 registro y guarda marca, modelo y precio
+			response.brand = marcasEncontradas[0];
+			response.model = modelosEncontrados[0];
+			const precio = await buscarPrecios(modelosEncontrados[0]); // Obtener el precio
+			response.price = precio; // Guardar el primer precio
 
-		// Toma el 1 registro y guarda marca, modelo y precio
-		response.brand = marcasEncontradas[0];
-		response.model = modelosEncontrados[0];
-		const precio = await buscarPrecios(modelosEncontrados[0]); // Obtener el precio
-		response.price = precio; // Guardar el primer precio
-		
-		// Formatear el precio del primer registro
-		const precioFormateado =
-		typeof precio === "number"
-		? precio.toLocaleString("es-AR", {
-			style: "decimal",
-			minimumFractionDigits: 0,
-		})
-		: precio; // Formatear el precio
-		
-		// Guardar el primer registro en response.message
-		response.message = `Marca: ${response.brand}\nModelo: ${response.model}\nPrecio: $ ${precioFormateado}\n`;
-		//console.log("response despues de precio", response)
-		
-		// Guardar los otros productos
-		let otrosProductos = [];
-		for (let i = 1; i < modelosEncontrados.length; i++) {
-			const precioOtro = await buscarPrecios(modelosEncontrados[i]); // Obtener el precio
+			// Formatear el precio del primer registro
 			const precioFormateado =
-			typeof precioOtro === "number"
-			? precioOtro.toLocaleString("es-AR", {
-				style: "decimal",
-				minimumFractionDigits: 0,
-			})
-			: precioOtro; // Formatear el precio
-			//const precioFormateado=1111
-			
-			response.message += `Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio contado: $ ${precioFormateado}\n`
-			
-			otrosProductos.push(
-				`Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio contado: $ ${precioFormateado}\n`
-			);
+				typeof precio === "number"
+					? precio.toLocaleString("es-AR", {
+							style: "decimal",
+							minimumFractionDigits: 0,
+					  })
+					: precio; // Formatear el precio
+
+			// Guardar el primer registro en response.message
+			response.message = `Marca: ${response.brand}\nModelo: ${response.model}\nPrecio: $ ${precioFormateado}\n`;
+			//console.log("response despues de precio", response)
+
+			// Guardar los otros productos
+			let otrosProductos = [];
+			for (let i = 1; i < modelosEncontrados.length; i++) {
+				const precioOtro = await buscarPrecios(modelosEncontrados[i]); // Obtener el precio
+				const precioFormateado =
+					typeof precioOtro === "number"
+						? precioOtro.toLocaleString("es-AR", {
+								style: "decimal",
+								minimumFractionDigits: 0,
+						  })
+						: precioOtro; // Formatear el precio
+				//const precioFormateado=1111
+
+				response.message += `Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio contado: $ ${precioFormateado}\n`;
+
+				otrosProductos.push(
+					`Marca: ${marcasEncontradas[i]}\nModelo: ${modelosEncontrados[i]}\nPrecio contado: $ ${precioFormateado}\n`
+				);
+			}
+			response.otherProducts = otrosProductos.join(""); // Unir otros productos en un solo string
+			//console.log("response despues de otros pro", response)
 		}
-		response.otherProducts = otrosProductos.join(""); // Unir otros productos en un solo string
-		//console.log("response despues de otros pro", response)
 	} else {
-		// Caso que el cliente no informa marca y modelo. Se lo notifica y se le vuelve a enviar el flow
+		// Caso que No informa marca y modelo (salvo en "No sé"). Se lo notifica y se le vuelve a enviar el flow1
+		console.log("modelo", model);
 		model = false;
 	}
-	
+
 	// Extraer el método de pago
 	const metodoPagoRegex = /"Seleccionar lo que corresponda":\[(.*?)\]/;
 	const metodoPagoMatch = flowMessage.match(metodoPagoRegex);
 	let metodoPagoArray = [];
-	
+
 	if (metodoPagoMatch) {
 		metodoPagoArray = metodoPagoMatch[1]
-		.split(",")
-		.map((item) => item.trim().replace(/"/g, ""))
-		.map((item) => item.replace(/\\u00e9/g, "é")); // Decodifica caracteres Unicode si es necesario
+			.split(",")
+			.map((item) => item.trim().replace(/"/g, ""))
+			.map((item) => item.replace(/\\u00e9/g, "é")); // Decodifica caracteres Unicode si es necesario
 		response.message += `Método de pago: ${metodoPagoArray.join(", ")}\n`;
 		response.payment = metodoPagoArray.join(", ");
 		//console.log("response despues de metodo de pago", response)
 	}
-	
+
 	// Extraer el DNI
 	const dniRegex = /"DNI":"([^"]+)"/;
 	const dniMatch = flowMessage.match(dniRegex);
@@ -145,7 +161,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		response.dni = dniMatch[1];
 		//console.log("response despues de dni", response)
 	}
-	
+
 	// Verificar si hay un préstamo y el DNI está vacío para volver a enviar el Flow
 	if (
 		metodoPagoArray.includes("Préstamo Personal") ||
@@ -155,7 +171,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 			DNI = false;
 		}
 	}
-	
+
 	// Extraer las preguntas o comentarios
 	const preguntasRegex = /"Preguntas":"([^"]+)"/;
 	const preguntasMatch = flowMessage.match(preguntasRegex);
@@ -174,27 +190,28 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	if (model === false && DNI === false) {
 		response.message =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
-		 
+
 		return response;
-	
 	} else if (model === false) {
 		response.message =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
-		
+
+		console.log("Response desde extractFlowToken_1Responses.js", response);
 		return response;
-	
 	} else if (DNI === false) {
 		response.message =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
 
 		return response;
-	
 	} else {
-		response.message +=	`\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
-		
-		//console.log("Response desde extractFlowToken_1Responses.js", response)
-		
+		response.message += `\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
+
+		console.log("Response desde extractFlowToken_1Responses.js", response);
+
 		return response;
 	}
 };
 /* extractFlowToken_1Responses('{"Seleccionar lo que corresponda":["Efectivo, Transferencia o Tarjeta de D\\u00e9bito"],"Motomel":"MAX 110 A\\/E","Benelli":"Leoncino 500 (todas AM2022)","Keeway":"KEEWAY K-Light 202","Teknial":"TK-REVOLT","flow_token":"1"}') */
+extractFlowToken_1Responses(
+	'{"Seleccionar lo que corresponda":["Efectivo, Transferencia o Tarjeta de D\\u00e9bito"],"No s\\u00e9":"No s\\u00e9","flow_token":"1"}'
+);
