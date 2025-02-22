@@ -6,7 +6,7 @@ const flowDetailSchema = new mongoose.Schema({
 	client_status: { type: String, enum: ["primer contacto","enviado", "leído","falló envío", "esperando", "falta DNI", "falta modelo", "faltan modelo y DNI", "error","transferido al vendedor", "vendedor", "a contactar", "vendedor derivado", "compró", "sin definición", "no compró"] },
 	toContact: Date,
 	origin: {enum :["API General", "Salón", "Referido"]},
-	brand: {type: String, enum : ["Benelli", "Suzuki", "Sym", "Motomel", "Keeway", "Tarpan", "Teknial eléctricas", "TVS", "No sé"]},
+	brand: {type: String, enum : ["Benelli", "Suzuki", "Sym", "Motomel", "Keeway", "Tarpan", "Teknial eléctricas", "Teknial", "TVS", "No sé"]},
 	model: String,
 	price: Number,
 	payment: String,
