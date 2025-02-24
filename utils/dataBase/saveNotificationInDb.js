@@ -43,6 +43,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 		// Envío completo del FLOW 1
 		status = "esperando";
 		history = `${currentDateTime} - Status: esperando. `;
+	} else if (userMessage.wamId_Flow1){
 		wamId_flow1 = userMessage.wamId_Flow1;
 	}
 
