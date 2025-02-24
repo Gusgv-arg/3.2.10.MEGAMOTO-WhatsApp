@@ -44,7 +44,12 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 		// Envío completo del FLOW 1
 		status = "esperando";
 		history = `${currentDateTime} - Status: esperando. `;
-	} else if (userMessage.wamId_Flow1) {
+	} else if (notification.message.includes("Hola nuevamente")) {
+		status = "primer contacto";
+		history = `${currentDateTime} - Status: primer contacto. `;
+	}
+
+	if (userMessage.wamId_Flow1) {
 		wamId_flow1 = userMessage.wamId_Flow1;
 	}
 
@@ -97,7 +102,8 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 
 				// Actualizo la información
 				(lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message}`),
-				lastFlow.brand = notification?.brand !== "" ? notification.brand : lastFlow.brand;
+					(lastFlow.brand =
+						notification?.brand !== "" ? notification.brand : lastFlow.brand);
 				lastFlow.model = notification?.model;
 				lastFlow.price = notification?.price;
 				lastFlow.otherProducts = notification?.otherProducts;
