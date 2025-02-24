@@ -190,26 +190,24 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	if (model === false && DNI === false) {
 		response.message =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes y tu DNI* si vas a sacar un préstamo. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
-
-		return response;
+		
 	} else if (model === false) {
 		response.message =
-			"\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
+			`\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes*. Si no sabés podes selecconar la opción "No sé". Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*`;
 
 		console.log("Response desde extractFlowToken_1Responses.js", response);
-		return response;
+		
 	} else if (DNI === false) {
 		response.message =
 			"\n*❗ IMPORTANTE:* 🙏 Por favor si vas a solicitar un préstamo indicanos tu *DNI*. Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*";
-
-		return response;
+		
 	} else {
 		response.message += `\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
 
 		console.log("Response desde extractFlowToken_1Responses.js", response);
 
-		return response;
 	}
+	return response;
 };
 /* extractFlowToken_1Responses('{"Seleccionar lo que corresponda":["Efectivo, Transferencia o Tarjeta de D\\u00e9bito"],"Motomel":"MAX 110 A\\/E","Benelli":"Leoncino 500 (todas AM2022)","Keeway":"KEEWAY K-Light 202","Teknial":"TK-REVOLT","flow_token":"1"}') */
 /* extractFlowToken_1Responses(
