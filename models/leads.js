@@ -25,7 +25,8 @@ const flowDetailSchema = new mongoose.Schema({
 		],
 	},
 	toContact: Date,
-	origin: { enum: ["API General", "Salón", "Referido"] },
+	origin: { type: String, enum: ["API General", "Salón", "Referido"] },
+	origen: String,
 	brand: {
 		type: String,
 		enum: [
