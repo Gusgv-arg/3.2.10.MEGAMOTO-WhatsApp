@@ -37,6 +37,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 			status = "falta modelo";
 			history = `${currentDateTime} - Status: falta modelo. `;
 		}
+		wamId_flow1 = userMessage.wamId_Flow1;
 	} else if (
 		notification.message.includes("¡Gracias por confiar en MEGAMOTO!")
 	) {
