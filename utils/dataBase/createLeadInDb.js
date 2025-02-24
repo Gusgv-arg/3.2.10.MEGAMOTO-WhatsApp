@@ -17,37 +17,33 @@ export const createLeadInDb = async (userMessage) => {
 	});
 	try {
 		// Create Lead
-		const flowDetail = {
-			flowName: process.env.FLOW_1,
-			flowDate: currentDateTime,
-			client_status: "primer contacto",
-			messages: "",
-			history: `${currentDateTime} - Status: primer contacto. `,
-			flow_2token: flowToken2,
-			flow_status: "activo",
-			origin: "API General",
-		};
-
 		const lead = await Leads.create({
 			name: userMessage.name,
 			id_user: userMessage.userPhone,
 			botSwitch: "ON",
 			channel: userMessage.channel,
-			flows: flowDetail,
+			flows: [
+				{
+					flowName: process.env.FLOW_1,
+					flowDate: currentDateTime,
+					client_status: "primer contacto",
+					messages: "",
+					history: `${currentDateTime} - Status: primer contacto. `,
+					flow_2token: flowToken2,
+					flow_status: "activo",
+					origin: "API General",
+				},
+			],
 		});
 
 		// Save thread in DB
 		await lead.save();
-	
 	} catch (error) {
 		const errorMessage = error?.response?.data
-		? JSON.stringify(error.response.data)
-		: error.message
-		
-		console.log(
-			"Error en createLeadInDb.js:",
-			errorMessage
-		);
+			? JSON.stringify(error.response.data)
+			: error.message;
+
+		console.log("Error en createLeadInDb.js:", errorMessage);
 
 		throw errorMessage;
 	}
