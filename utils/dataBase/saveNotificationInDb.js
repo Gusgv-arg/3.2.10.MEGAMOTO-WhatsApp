@@ -88,7 +88,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 					payment: notification.payment,
 					dni: notification.dni,
 					questions: notification.questions,
-					wamId_flow1: wamId_flow1,
+					wamId_flow1: wamId_flow1 ? wamId_flow1 : "",
 				};
 				lead.flows.push(lastFlow); // Agrega el nuevo flujo al array
 			
@@ -105,9 +105,9 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				lastFlow.dni = notification?.dni;
 				lastFlow.questions = notification?.questions;
 				lastFlow.client_status = status;
-				lastFlow.history += history;
+				lastFlow.history += history ? history : "";
 				// Grabo el wamId para oder traquearlo
-				lastFlow.wamId_flow1 = wamId_flow1;		
+				lastFlow.wamId_flow1 = wamId_flow1 ? wamId_flow1 : "";		
 			}
 
 			// Update lead
