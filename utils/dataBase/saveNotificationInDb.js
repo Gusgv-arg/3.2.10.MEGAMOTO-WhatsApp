@@ -78,7 +78,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 					flowDate: currentDateTime,
 					client_status: status,
 					messages: `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message}`,
-					history: history,
+					history: history ? history : "",
 					flow_2token: flowToken2,
 					flow_status: "activo",
 					origin: "API General",
