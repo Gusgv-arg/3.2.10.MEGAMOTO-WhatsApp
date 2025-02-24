@@ -15,15 +15,15 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 		minute: "2-digit",
 		second: "2-digit",
 	});
-	
+
 	// Defino status, history y el id del whatsapp
-	let status
-	let history
-	let wamId_flow1
+	let status;
+	let history;
+	let wamId_flow1;
 
 	if (notification.message.includes("IMPORTANTE")) {
 		// Casos de faltantes de informacion en el FLOW 1
-		
+
 		if (notification.message.includes("modelo de interes y tu DNI")) {
 			// Si falta el modelo y el DNI
 			status = "faltan modelo y DNI";
@@ -39,17 +39,17 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 		}
 	} else if (
 		notification.message.includes("¡Gracias por confiar en MEGAMOTO!")
-	) {					
+	) {
 		// Envío completo del FLOW 1
 		status = "esperando";
 		history = `${currentDateTime} - Status: esperando. `;
-	} else if (userMessage.wamId_Flow1){
+	} else if (userMessage.wamId_Flow1) {
 		wamId_flow1 = userMessage.wamId_Flow1;
 	}
 
-	console.log("Status:", status)
-	console.log("History:", history)
-	console.log("wabId:", wamId_flow1)
+	console.log("Status:", status);
+	console.log("History:", history);
+	console.log("wabId:", wamId_flow1);
 
 	// Save the sent message to the database
 	try {
@@ -61,7 +61,6 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 			console.log("¡¡ERROR: Lead not found in DB!!");
 			return;
 		} else {
-
 			// Obtener el último flujo
 			let lastFlow = lead.flows[lead.flows.length - 1];
 
@@ -92,13 +91,12 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 					wamId_flow1: wamId_flow1 ? wamId_flow1 : "",
 				};
 				lead.flows.push(lastFlow); // Agrega el nuevo flujo al array
-			
 			} else {
 				// Hay un Flow abierto
-				
+
 				// Actualizo la información
-				lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message}`,
-				lastFlow.brand = notification?.brand;
+				(lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message}`),
+				lastFlow.brand = notification?.brand !== "" ? notification.brand : lastFlow.brand;
 				lastFlow.model = notification?.model;
 				lastFlow.price = notification?.price;
 				lastFlow.otherProducts = notification?.otherProducts;
@@ -108,7 +106,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				lastFlow.client_status = status ? status : lastFlow.client_status;
 				lastFlow.history += history ? history : "";
 				// Grabo el wamId para oder traquearlo
-				lastFlow.wamId_flow1 = wamId_flow1 ? wamId_flow1 : "";		
+				lastFlow.wamId_flow1 = wamId_flow1 ? wamId_flow1 : "";
 			}
 
 			// Update lead
