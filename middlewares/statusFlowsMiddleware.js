@@ -29,11 +29,11 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 		let newStatus = body.entry[0].changes[0].value.statuses[0].status;
 
 		if (newStatus === "sent") {
-			newStatus = "enviado";
+			newStatus = "flow enviado";
 		} else if (newStatus === "delivered") {
-			newStatus = "primer contacto";
+			newStatus = "flow recibido";
 		} else if (newStatus === "read") {
-			newStatus = "leído";
+			newStatus = "flow leído";
 		} else if (newStatus === "failed") {
 			newStatus = "falló envío";
 		}

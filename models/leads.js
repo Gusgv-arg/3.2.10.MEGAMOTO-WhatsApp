@@ -7,8 +7,9 @@ const flowDetailSchema = new mongoose.Schema({
 		type: String,
 		enum: [
 			"primer contacto",
-			"enviado",
-			"leído",
+			"flow enviado",
+			"flow recibido",
+			"flow leído",
 			"falló envío",
 			"esperando",
 			"falta DNI",
