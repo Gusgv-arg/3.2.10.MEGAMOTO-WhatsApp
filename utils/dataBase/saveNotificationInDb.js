@@ -104,7 +104,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				lastFlow.payment = notification?.payment;
 				lastFlow.dni = notification?.dni;
 				lastFlow.questions = notification?.questions;
-				lastFlow.client_status = status;
+				lastFlow.client_status = status ? status : lastFlow.client_status;
 				lastFlow.history += history ? history : "";
 				// Grabo el wamId para oder traquearlo
 				lastFlow.wamId_flow1 = wamId_flow1 ? wamId_flow1 : "";		
