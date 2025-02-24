@@ -107,7 +107,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 					: precio; // Formatear el precio
 
 			// Guardar el primer registro en response.message
-			response.message = `Marca: ${response.brand}\nModelo: ${response.model}\nPrecio: $ ${precioFormateado}\n`;
+			response.message = `Marca: ${response.brand}\nModelo: ${response.model}\nPrecio Contado: $ ${precioFormateado}\n`;
 			//console.log("response despues de precio", response)
 
 			// Guardar los otros productos

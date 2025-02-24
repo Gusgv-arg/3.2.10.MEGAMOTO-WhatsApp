@@ -36,7 +36,7 @@ export const createLeadInDb = async (userMessage) => {
 			],
 		});
 
-		// Save thread in DB
+		// Save lead in DB
 		await lead.save();
 	} catch (error) {
 		const errorMessage = error?.response?.data

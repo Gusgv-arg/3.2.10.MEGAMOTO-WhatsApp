@@ -41,11 +41,12 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 					flowName: process.env.FLOW_1,
 					flowDate: currentDateTime,
 					client_status: "primer contacto",
-					messages: "",
+					messages: `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message}`,
 					history: `${currentDateTime} - Status: primer contacto. `,
 					flow_2token: flowToken2,
 					flow_status: "activo",
 					origin: "API General",
+					wamId_flow1: userMessage?.wamId_Flow1,
 				};
 				lead.flows.push(lastFlow); // Agrega el nuevo flujo al array
 			}
