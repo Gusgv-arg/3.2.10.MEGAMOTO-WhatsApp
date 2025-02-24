@@ -25,7 +25,7 @@ export const createLeadInDb = async (userMessage) => {
 			history: `${currentDateTime} - Status: primer contacto. `,
 			flow_2token: flowToken2,
 			flow_status: "activo",
-			origin: "API General"
+			origin: "API General",
 		};
 
 		const lead = await Leads.create({
