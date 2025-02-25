@@ -49,7 +49,7 @@ export class WhatsAppFlowMessageQueue {
 					const errorMessageToCustomer = errorMessage1;
 					handleWhatsappMessage(userMessage.userPhone, errorMessageToCustomer);
 				}
-				console.error("Error desde whatsAppFlowQueue.js:", errorMessage);
+				//console.error("Error desde whatsAppFlowQueue.js:", errorMessage);
 
 				// Change flag to allow next message processing
 				queue.processing = false;

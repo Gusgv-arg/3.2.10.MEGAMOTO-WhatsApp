@@ -103,7 +103,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 								: error.message
 						}`;
 
-						console.log(errorMessage);
+						//console.log(errorMessage);
 						
 						throw errorMessage;
 					}
@@ -212,7 +212,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 			}
 		}
 	} catch (error) {
-		console.log("error en processWhatsAppFlowWithApi.js", error)
+		//console.log("error en processWhatsAppFlowWithApi.js", error)
 		
 		let errorMessage
 
