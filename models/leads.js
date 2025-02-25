@@ -55,11 +55,15 @@ const flowDetailSchema = new mongoose.Schema({
 		enum: [
 			"Gustavo_GV",
 			"Gustavo_Glunz",
-			"Joana",
+			"Johanna",
 			"Ernesto",
 			"Joselin",
 			"Darío",
 			"José",
+			"Pablo",
+			"Lautaro",
+			"Reina",
+			"Mariano"
 		],
 	},
 	vendor_phone: Number,
