@@ -21,6 +21,7 @@ const expectedHeaders = [
 	"Otros Modelos",
 	"Forma de Pago",
 	"DNI",
+	"Crédito",
 	"Preguntas del Lead",
 	"Vendedor",
 	"Notas del Vendedor",
