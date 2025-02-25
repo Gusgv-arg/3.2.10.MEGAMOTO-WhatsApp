@@ -213,6 +213,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 			}
 		}
 	} catch (error) {
+		console.log("error en processWhatsAppFlowWithApi.js", error)
 		// Manejo de errores general
 		const errorMessage = handleApiError(error);
 		console.error(errorMessage);
