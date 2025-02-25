@@ -9,6 +9,7 @@ import { extractFlowToken_1Responses } from "../../flows/extractFlowToken_1Respo
 import { extractFlowToken_2Responses } from "../../flows/extractFlowToken_2Responses.js";
 import axios from "axios";
 import { saveCreditInDb } from "../dataBase/saveCreditInDb.js";
+import { saveVendorNotificationInDb } from "../dataBase/saveVendorNotificationInDb.js";
 
 export const processWhatsAppFlowWithApi = async (userMessage) => {
 	const type = userMessage.type;
@@ -206,7 +207,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					const notification = { message: message };
 					const userMessage = { userPhone: customerPhone };
 
-					await saveNotificationInDb(userMessage, notification);
+					await saveVendorNotificationInDb(userMessage, notification, vendorPhone, vendorName);
 
 					log += `Se lo notificó al lead ${customerName} que su vendedor asignado es ${vendorName}. `;
 				}
