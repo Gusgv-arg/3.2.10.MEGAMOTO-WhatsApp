@@ -10,7 +10,6 @@ import { extractFlowToken_1Responses } from "../../flows/extractFlowToken_1Respo
 import { extractFlowToken_2Responses } from "../../flows/extractFlowToken_2Responses.js";
 import { saveCreditInDb } from "../dataBase/saveCreditInDb.js";
 import { saveVendorNotificationInDb } from "../dataBase/saveVendorNotificationInDb.js";
-import {handleApiError} from "../errors/handleApiError.js"
 
 export const processWhatsAppFlowWithApi = async (userMessage) => {
 	const type = userMessage.type;
@@ -214,9 +213,17 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 		}
 	} catch (error) {
 		console.log("error en processWhatsAppFlowWithApi.js", error)
-		// Manejo de errores general
-		const errorMessage = handleApiError(error);
-		console.error(errorMessage);
+		
+		let errorMessage
+
+		if (error.includes("Error llamando a la APi de Credicuotas:")){
+			errorMessage = error
+		} else {
+			errorMessage = error?.response?.data
+			? JSON.stringify(error.response.data)
+			: error.message; 
+		}
+		
 		throw errorMessage;
 	}
 };

@@ -3,7 +3,6 @@ import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotific
 import { processWhatsAppFlowWithApi } from "../whatsapp/processWhatsAppFlowWithApi.js";
 import { errorMessage1 } from "../errors/errorMessages.js";
 import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
-import { handleApiError } from "../errors/handleApiError.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -38,16 +37,22 @@ export class WhatsAppFlowMessageQueue {
 			} catch (error) {
 				
 				// Manejo de errores centralizado
-				const errorMessage = handleApiError(error, userMessage);
-				console.error(errorMessage);
+				let errorMessage 
+				
+				if (error.includes("Error llamando a la APi de Credicuotas:")){
+					errorMessage = error
+				} else {
+					errorMessage = error?.response?.data
+					? JSON.stringify(error.response.data)
+					: error.message; 
+					// Send error message to customer
+					const errorMessageToCustomer = errorMessage1;
+					handleWhatsappMessage(userMessage.userPhone, errorMessageToCustomer);
+				}
+				console.error("Error desde whatsAppFlowQueue.js:", errorMessage);
 
 				// Change flag to allow next message processing
 				queue.processing = false;
-
-				// Error handlers
-				// Send error message to customer
-				const errorMessageToCustomer = errorMessage1;
-				handleWhatsappMessage(userMessage.userPhone, errorMessageToCustomer);
 
 				// Send WhatsApp error message to Admin
 				const message = `🔔 *NOTIFICACION DE ERROR en whatsAppFlowQueue.js:*\nLead ${userMessage.name} Cel. ${userMessage.userPhone}.\nError: ${errorMessage}.`;
