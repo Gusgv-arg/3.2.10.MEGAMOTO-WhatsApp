@@ -170,6 +170,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					price,
 					payment,
 					dni,
+					credit,
 					questions,
 				} = customerData;
 				//console.log("customer:", customerData);
@@ -181,7 +182,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					await handleWhatsappMessage(vendorPhone, message);
 
 					// Enviar el FLOW 2 al vendedor derivado
-					const myLead = `Nombre: ${customerName}. Teléfono: ${customerPhone}. Marca: ${brand}. Modelo: ${model}. Precio: ${price}. ${otherProducts} Método de Pago: ${payment}. DNI: ${dni}. Preguntas: ${questions}. Notas del vendedor: ${notification.notes}.`;
+					const myLead = `Nombre: ${customerName}. Teléfono: ${customerPhone}. Marca: ${brand}. Modelo: ${model}. Precio: ${price}. ${otherProducts} Método de Pago: ${payment}. DNI: ${dni}. Crédito: ${credit}. Preguntas: ${questions}. Notas del vendedor: ${notification.notes}.`;
 
 					await salesFlow_2Notification(
 						myLead,
