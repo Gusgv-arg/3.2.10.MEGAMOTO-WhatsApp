@@ -69,6 +69,7 @@ export const findLeadWithFlowToken2 = async (
 		const otherProducts = flow.otherProducts;
 		const payment = flow.payment;
 		const dni = flow.dni;
+		const credit = flow.credit;
 		const questions = flow.questions;
 
 		return {
@@ -80,6 +81,7 @@ export const findLeadWithFlowToken2 = async (
 			otherProducts,
 			payment,
 			dni,
+			credit,
 			questions,
 		};
 	} catch (error) {

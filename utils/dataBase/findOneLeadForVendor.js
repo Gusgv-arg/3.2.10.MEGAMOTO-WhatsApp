@@ -5,21 +5,28 @@ export const findOneLeadForVendor = (availableLeads) => {
 		if (!selectedLead) return current;
 
 		// Verificar si el modelo actual tiene prioridad
-		if (current.prioridad && typeof current.prioridad === 'number') {
+		if (current.prioridad && typeof current.prioridad === "number") {
 			// Si el lead seleccionado no tiene prioridad, seleccionamos el actual
-			if (!selectedLead.prioridad || typeof selectedLead.prioridad !== 'number') {
+			if (
+				!selectedLead.prioridad ||
+				typeof selectedLead.prioridad !== "number"
+			) {
 				return current;
 			}
 			// Comparar prioridades
-			return current.prioridad < selectedLead.prioridad ? current : selectedLead;
+			return current.prioridad < selectedLead.prioridad
+				? current
+				: selectedLead;
 		}
 
 		const currentDate = Date.parse(current.lastFlow.flowDate.replace(",", ""));
-		const oldestDate = Date.parse(selectedLead.lastFlow.flowDate.replace(",", ""));
+		const oldestDate = Date.parse(
+			selectedLead.lastFlow.flowDate.replace(",", "")
+		);
 
 		return currentDate < oldestDate ? current : selectedLead;
 	}, null);
-	
+
 	const lastFlow = lead.lastFlow;
 	//console.log("lastFlow:", lastFlow);
 
@@ -31,11 +38,11 @@ export const findOneLeadForVendor = (availableLeads) => {
 		lastFlow.model ? lastFlow.model : "No sabe"
 	}. Precio Informado: ${lastFlow.price ? lastFlow.price : "No informado"}. ${
 		lastFlow.otherProducts ? lastFlow.otherProducts : ""
-	} Método de Pago: ${lastFlow.payment ? lastFlow.payment : "No informado"}. DNI: ${
-		lastFlow.dni ? lastFlow.dni : "No informado"
-	}. Preguntas: ${
-		lastFlow.questions ? lastFlow.questions : "Sin preguntas"
-	}.`
+	} Método de Pago: ${
+		lastFlow.payment ? lastFlow.payment : "No informado"
+	}. DNI: ${lastFlow.dni ? lastFlow.dni : "No informado"}. Crédito: ${
+		lastFlow.credit ? lastFlow.credit : "Sin info."
+	}. Preguntas: ${lastFlow.questions ? lastFlow.questions : "Sin preguntas"}.`
 		.replace(/\n/g, " ")
 		.replace(/ {2,}/g, " ");
 

@@ -93,6 +93,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 					price: notification.price,
 					payment: notification.payment,
 					dni: notification.dni,
+					credit: "",
 					questions: notification.questions,
 					wamId_flow1: wamId_flow1 ? wamId_flow1 : "",
 				};

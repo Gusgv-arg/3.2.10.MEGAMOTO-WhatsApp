@@ -52,6 +52,7 @@ export const exportFlowLeadsToTemplate = async (leads) => {
                 lastFlow?.otherProducts,
                 lastFlow?.payment,
                 lastFlow?.dni,
+                lastFlow?.credit,
                 lastFlow?.questions,
                 lastFlow?.vendor_name,
                 lastFlow?.vendor_notes,

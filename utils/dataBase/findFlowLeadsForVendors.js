@@ -46,8 +46,9 @@ export const findFlowLeadsForVendors = async () => {
 						"flows.client_status": {
 							$in: [
 								"primer contacto",
-								"enviado",
-								"leído",
+								"flow enviado",
+								"flow leído",
+								"flow recibido",
 								"falló envío",
 								"falta DNI",
 								"falta modelo",
@@ -91,6 +92,7 @@ export const findFlowLeadsForVendors = async () => {
 								otherProducts: lastFlow.otherProducts,
 								payment: lastFlow.payment,
 								dni: lastFlow.dni,
+								credit: lastFlow.credit,
 								questions: lastFlow.questions,
 								messages: lastFlow.messages,
 								vendor_name: lastFlow.vendor_name,

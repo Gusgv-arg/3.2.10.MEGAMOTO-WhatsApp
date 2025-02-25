@@ -100,7 +100,7 @@ export const processExcelToChangeLeads = async (
 			const name = col[0] ? String(col[0]).trim() : "";
 			const id_user = String(col[1]).trim();
 			const toContact = col[4];
-			const flow_2token = col[16] ? String(col[16]).trim() : null;
+			const flow_2token = col[17] ? String(col[17]).trim() : null;
 
 			// Validar nombre
 			if (!name) {
@@ -168,7 +168,7 @@ export const processExcelToChangeLeads = async (
 
 			// Buscar al vendedor en el array de vendedores
 			const vendor = vendors.find(
-				(v) => v.name.toLowerCase() === col[12].toLowerCase()
+				(v) => v.name.toLowerCase() === col[13].toLowerCase()
 			); // Buscar el vendedor por nombre
 			const vendorPhone = vendor ? vendor.phone : userPhone; // Obtener el teléfono si existe
 
@@ -182,10 +182,11 @@ export const processExcelToChangeLeads = async (
 				"flows.$.otherProducts": col[8], // Columna I (índice 8)
 				"flows.$.payment": col[9], // Columna J (índice 9)
 				"flows.$.dni": col[10], // Columna K (índice 10)
-				"flows.$.vendor_name": col[12], // Columna M (índice 12)
+				"flows.$.credit": col[11], // Columna K (índice 11)
+				"flows.$.vendor_name": col[13], // Columna N (índice 13)
 				"flows.$.vendor_phone": vendorPhone, // Busca en array de vendedores
-				"flows.$.vendor_notes": col[13], // Columna N (índice 13)
-				"flows.$.origin": col[15], // Columna P (índice 15)
+				"flows.$.vendor_notes": col[14], // Columna O (índice 14)
+				"flows.$.origin": col[16], // Columna Q (índice 16)
 			};
 
 			// Remove undefined values
@@ -228,6 +229,7 @@ export const processExcelToChangeLeads = async (
 							otherProducts: updateData["flows.$.otherProducts"],
 							payment: updateData["flows.$.payment"],
 							dni: updateData["flows.$.dni"],
+							credit: updateData["flows.$.credit"],
 							vendor_name: vendorName,
 							vendor_phone: vendorPhone,
 							vendor_notes: updateData["flows.$.vendor_notes"],
@@ -292,6 +294,7 @@ export const processExcelToChangeLeads = async (
 							updateData["flows.$.otherProducts"],
 						[`flows.${flowIndex}.payment`]: updateData["flows.$.payment"],
 						[`flows.${flowIndex}.dni`]: updateData["flows.$.dni"],
+						[`flows.${flowIndex}.credit`]: updateData["flows.$.credit"],
 						[`flows.${flowIndex}.vendor_name`]:
 							updateData["flows.$.vendor_name"],
 						[`flows.${flowIndex}.vendor_notes`]:
