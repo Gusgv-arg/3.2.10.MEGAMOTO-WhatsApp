@@ -181,7 +181,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					vendorLeads = allLeads;
 				}
 				//console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
-
+				console.log("vendorLeads:", vendorLeads)
 				// Procesa solo los leads del vendedor
 				if (vendorLeads.length > 0) {
 					// Notificar al vendedor del proceso

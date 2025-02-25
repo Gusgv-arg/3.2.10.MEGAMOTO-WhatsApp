@@ -33,7 +33,8 @@ export const exportFlowLeadsToTemplate = async (leads) => {
         // Agregar los datos
         leads.forEach((lead, index) => {
             const lastFlow = lead.lastFlow;
-
+            console.log("lastflow:", lastFlow)
+            
             // Asegúrate de que la fila exista antes de agregar datos
             let newRow = worksheet.getRow(index + 2);
             if (!newRow) {
