@@ -132,7 +132,7 @@ export class WhatsAppMessageQueue {
 				handleWhatsappMessage(newMessage.userPhone, customerErrorMessage);
 
 				// Send WhatsApp error message to Admin
-				const message = `🔔 *NOTIFICACION DE ERROR:*\nFunción: whatsAppQueue.js\nRegistro de la Queue: ${newMessage}\nError:${errorMessage}`;
+				const message = `🔔 *NOTIFICACION DE ERROR AL ADMIN:*\nFunción: whatsAppQueue.js\nRegistro de la Queue: ${newMessage}\nError:${errorMessage}`;
 
 				await adminWhatsAppNotification(myPhone, message);
 			}

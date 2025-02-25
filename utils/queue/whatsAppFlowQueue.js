@@ -55,7 +55,7 @@ export class WhatsAppFlowMessageQueue {
 				queue.processing = false;
 
 				// Send WhatsApp error message to Admin
-				const message = `🔔 *NOTIFICACION DE ERROR en whatsAppFlowQueue.js:*\nLead ${userMessage.name} Cel. ${userMessage.userPhone}.\nError: ${errorMessage}.`;
+				const message = `🔔 *NOTIFICACION DE ERROR AL ADMIN en whatsAppFlowQueue.js:*\nLead ${userMessage.name} Cel. ${userMessage.userPhone}.\nError: ${errorMessage}.`;
 
 				await adminWhatsAppNotification(myPhone, message);
 			}
