@@ -1,3 +1,4 @@
+import axios from "axios";
 import Leads from "../../models/leads.js";
 import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 import { sendFlow_1ToLead } from "../../flows/sendFlow_1ToLead.js";
@@ -7,9 +8,9 @@ import { sendVendorDataToLead } from "../templates/sendVendorDataToLead.js";
 import { salesFlow_2Notification } from "../../flows/salesFlow_2Notification.js";
 import { extractFlowToken_1Responses } from "../../flows/extractFlowToken_1Responses.js";
 import { extractFlowToken_2Responses } from "../../flows/extractFlowToken_2Responses.js";
-import axios from "axios";
 import { saveCreditInDb } from "../dataBase/saveCreditInDb.js";
 import { saveVendorNotificationInDb } from "../dataBase/saveVendorNotificationInDb.js";
+import {handleApiError} from "../errors/handleApiError.js"
 
 export const processWhatsAppFlowWithApi = async (userMessage) => {
 	const type = userMessage.type;
@@ -212,13 +213,9 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 			}
 		}
 	} catch (error) {
-		const errorMessage = `Error en processWhatsAppFlowWithApi.js: ${
-			error?.response?.data
-				? JSON.stringify(error.response.data)
-				: error.message
-		}`;
+		// Manejo de errores general
+		const errorMessage = handleApiError(error);
 		console.error(errorMessage);
-
 		throw errorMessage;
 	}
 };

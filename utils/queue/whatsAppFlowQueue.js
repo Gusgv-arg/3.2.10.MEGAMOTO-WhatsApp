@@ -3,6 +3,7 @@ import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotific
 import { processWhatsAppFlowWithApi } from "../whatsapp/processWhatsAppFlowWithApi.js";
 import { errorMessage1 } from "../errors/errorMessages.js";
 import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
+import { handleApiError } from "../errors/handleApiError.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -35,11 +36,10 @@ export class WhatsAppFlowMessageQueue {
 				console.log(log);
 
 			} catch (error) {
-				const errorMessage = error?.response?.data
-					? JSON.stringify(error.response.data)
-					: error.message;
-
-				console.error(`Error in whatsAppFlowQueue.js: Lead ${userMessage.name}. Teléfono ${userMessage.userPhone}. Error: ${errorMessage}`);
+				
+				// Manejo de errores centralizado
+				const errorMessage = handleApiError(error, userMessage);
+				console.error(errorMessage);
 
 				// Change flag to allow next message processing
 				queue.processing = false;
