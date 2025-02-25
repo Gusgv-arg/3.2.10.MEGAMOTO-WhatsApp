@@ -195,7 +195,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		response.message =
 			`\n*❗ IMPORTANTE:* 🙏 Por favor informanos tu *modelo de interes*. Si no sabés podes selecconar la opción "No sé". Para atenderte mejor te volvemos a enviar el Formulario. 🙂\n\n*PD: Entrá en tu celular para ver el segundo mensaje.*`;
 
-		console.log("Response desde extractFlowToken_1Responses.js", response);
+		//console.log("Response desde extractFlowToken_1Responses.js", response);
 		
 	} else if (DNI === false) {
 		response.message =
@@ -204,7 +204,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 	} else {
 		response.message += `\n❗ Los precios informados no incluyen patentamiento ni sellados; están sujeto a modificaciones y deberán ser reconfirmados por el vendedor.\n\n*¡Gracias por confiar en MEGAMOTO!* 🏍️`;
 
-		console.log("Response desde extractFlowToken_1Responses.js", response);
+		//console.log("Response desde extractFlowToken_1Responses.js", response);
 
 	}
 	return response;
