@@ -182,7 +182,7 @@ export const processExcelToChangeLeads = async (
 				"flows.$.otherProducts": col[8], // Columna I (índice 8)
 				"flows.$.payment": col[9], // Columna J (índice 9)
 				"flows.$.dni": col[10], // Columna K (índice 10)
-				"flows.$.credit": col[11], // Columna K (índice 11)
+				"flows.$.credit": col[11], // Columna L (índice 11)
 				"flows.$.vendor_name": col[13], // Columna N (índice 13)
 				"flows.$.vendor_phone": vendorPhone, // Busca en array de vendedores
 				"flows.$.vendor_notes": col[14], // Columna O (índice 14)
