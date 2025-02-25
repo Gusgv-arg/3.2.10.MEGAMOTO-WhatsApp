@@ -207,7 +207,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 					const notification = { message: message };
 					const userMessage = { userPhone: customerPhone };
 
-					await saveVendorNotificationInDb(userMessage, notification, vendorPhone, vendorName);
+					await saveVendorNotificationInDb(userMessage, notification);
 
 					log += `Se lo notificó al lead ${customerName} que su vendedor asignado es ${vendorName}. `;
 				}

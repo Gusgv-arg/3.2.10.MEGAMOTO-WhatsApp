@@ -1,9 +1,9 @@
 import Leads from "../../models/leads.js";
 import { v4 as uuidv4 } from "uuid";
 
-export const saveVendorNotificationInDb = async (userMessage, notification, vendorPhone, vendorName) => {
-	console.log("userMessage en saveVendorNotification:", userMessage);
-	console.log("notification en saveVendorNotification:", notification);
+export const saveVendorNotificationInDb = async (userMessage, notification) => {
+	//console.log("userMessage en saveVendorNotification:", userMessage);
+	//console.log("notification en saveVendorNotification:", notification);
 
 	// Obtain current date and hour
 	const currentDateTime = new Date().toLocaleString("es-AR", {
@@ -32,10 +32,7 @@ export const saveVendorNotificationInDb = async (userMessage, notification, vend
 			// Actualizo la información
 			lastFlow.messages += `\n${currentDateTime} API: ${notification.message}`;
 			lastFlow.client_status = "vendedor";
-            lastFlow.vendor_name = vendorName;
-            lastFlow.vendor_phone = vendorPhone;
-			lastFlow.history += `${currentDateTime} Status: tomó vendedor ${vendorName}. `;			
-
+            
 			// Update lead
 			await lead.save();
 			return;
