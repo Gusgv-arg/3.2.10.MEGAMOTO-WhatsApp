@@ -34,7 +34,7 @@ export const saveVendorNotificationInDb = async (userMessage, notification, vend
 			lastFlow.client_status = "vendedor";
             lastFlow.vendor_name = vendorName;
             lastFlow.vendor_phone = vendorPhone;
-			lastFlow.history += `${currentDateTime} Status: vendedor ${vendorName}. `;			
+			lastFlow.history += `${currentDateTime} Status: tomó vendedor ${vendorName}. `;			
 
 			// Update lead
 			await lead.save();
