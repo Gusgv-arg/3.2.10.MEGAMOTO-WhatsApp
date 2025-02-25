@@ -35,11 +35,11 @@ export class WhatsAppFlowMessageQueue {
 				console.log(log);
 
 			} catch (error) {
-				console.error(`Error in whatsAppFlowQueue.js: Lead ${userMessage}. Error: ${error.message}`);
-
 				const errorMessage = error?.response?.data
 					? JSON.stringify(error.response.data)
 					: error.message;
+
+				console.error(`Error in whatsAppFlowQueue.js: Lead ${userMessage.name}. Teléfono ${userMessage.userPhone}. Error: ${errorMessage}`);
 
 				// Change flag to allow next message processing
 				queue.processing = false;
@@ -47,10 +47,10 @@ export class WhatsAppFlowMessageQueue {
 				// Error handlers
 				// Send error message to customer
 				const errorMessageToCustomer = errorMessage1;
-				handleWhatsappMessage(senderId, errorMessageToCustomer);
+				handleWhatsappMessage(userMessage.userPhone, errorMessageToCustomer);
 
 				// Send WhatsApp error message to Admin
-				const message = `🔔 *NOTIFICACION DE ERROR en whatsAppFlowQueue.js:*\nLead ${userMessage}.\nError: ${errorMessage}.`;
+				const message = `🔔 *NOTIFICACION DE ERROR en whatsAppFlowQueue.js:*\nLead ${userMessage.name} Cel. ${userMessage.userPhone}.\nError: ${errorMessage}.`;
 
 				await adminWhatsAppNotification(myPhone, message);
 			}

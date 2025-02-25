@@ -97,18 +97,14 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 						}
 					
 					} catch (error) {
-						console.log(
-							`Error llamando a la APi de Credicuotas: ${
-								error?.response?.data
-									? JSON.stringify(error.response.data)
-									: error.message
-							}`
-						);
 						const errorMessage = `Error llamando a la APi de Credicuotas: ${
 							error?.response?.data
 								? JSON.stringify(error.response.data)
 								: error.message
 						}`;
+
+						console.log(errorMessage);
+						
 						throw errorMessage;
 					}
 				}
@@ -216,12 +212,12 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 			}
 		}
 	} catch (error) {
-		console.error("Error en processWhatsAppFlowWithApi.js:", error.message);
 		const errorMessage = `Error en processWhatsAppFlowWithApi.js: ${
 			error?.response?.data
 				? JSON.stringify(error.response.data)
 				: error.message
 		}`;
+		console.error(errorMessage);
 
 		throw errorMessage;
 	}
