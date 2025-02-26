@@ -11,13 +11,21 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 		: null;
 
 	// Se prende web de Credicuotas
-	const crediCuotas = await axios.get(
-		"https://three-2-13-web-scrapping.onrender.com"
-	);
-	console.log("Credicuotas", crediCuotas?.status ? crediCuotas.status : "No hay credicuotas.status");
-	if (crediCuotas?.status === 200) {
-		req.crediCuotas = true;
-		console.log("req:", req.credicuotas);
+	try {
+		
+		const crediCuotas = await axios.get(
+			"https://three-2-13-web-scrapping.onrender.com"
+		);
+		console.log("Credicuotas", crediCuotas?.status ? crediCuotas.status : "No hay credicuotas.status");
+		if (crediCuotas?.status === 200) {
+			req.crediCuotas = true;
+			console.log("req:", req.credicuotas);
+		}
+	
+	} catch (error) {
+		console.log("Error prendiendo Credicuotas:", error?.response?.data
+			? JSON.stringify(error.response.data)
+			: error.message)
 	}
 
 	// Obtain current date and hour
@@ -50,6 +58,7 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 		}
 
 		try {
+			
 			// Look in leads for the last Campaign && check if its the id of the sent message
 			let lead = await Leads.findOne({ id_user: recipient_id });
 
