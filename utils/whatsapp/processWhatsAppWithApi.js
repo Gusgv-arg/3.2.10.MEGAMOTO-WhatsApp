@@ -74,14 +74,15 @@ export const processWhatsAppWithApi = async (userMessage) => {
 
 					await handleWhatsappMessage(lastFlowPhone, alarm);
 
-					// Graba notificación al cliente en la BDs (falta grabar la del vendedor)
-					lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} API: ${message}`
+					// Graba la pregunta del lead y notificación al mismo en la BDs
+					lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} API: ${message.replace(/\n/g, ' ')}`
 					await existingLead.save()
 
 					// Actualiza el log
 					log = `1-Se notificó al lead ${userMessage.name} recordando su vendedor. 2-Alarma al vendedor ${lastFlowVendor}. `;
 
 					return log;
+
 				} else {
 					// El Lead NO tiene un vendedor asignado
 					message = `*🔔 Notificación Automática:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
@@ -89,8 +90,8 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					// Envía notificación al Lead
 					await handleWhatsappMessage(userMessage.userPhone, message);
 
-					// Graba la notificación en la base de datos
-					lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} API: ${message}`
+					// Graba la pregunta del lead y notificación al mismo en la base de datos
+					lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} API: ${message.replace(/\n/g, ' ')}`
 					await existingLead.save()
 
 					// Actualiza el log
