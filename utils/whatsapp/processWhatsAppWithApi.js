@@ -75,9 +75,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await handleWhatsappMessage(lastFlowPhone, alarm);
 
 					// Graba notificación al cliente en la BDs (falta grabar la del vendedor)
-					//const notification = { message: message };
-					//await saveNotificationInDb(userMessage, notification);
-					lastFlow.messages += `${currentDateTime} API: ${message}`
+					lastFlow.messages += `\n${currentDateTime} API: ${message}`
 					await existingLead.save()
 
 					// Actualiza el log
@@ -92,11 +90,9 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await handleWhatsappMessage(userMessage.userPhone, message);
 
 					// Graba la notificación en la base de datos
-					//const notification = { message: message };
-					//await saveNotificationInDb(userMessage, notification);
-					lastFlow.messages += `${currentDateTime} API: ${message}`
+					lastFlow.messages += `\n${currentDateTime} API: ${message}`
 					await existingLead.save()
-					
+
 					// Actualiza el log
 					log = `1-Se notificó al Lead ${userMessage.name} que aún no tiene un vendedor asignado. `;
 
