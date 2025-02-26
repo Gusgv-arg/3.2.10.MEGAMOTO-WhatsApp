@@ -40,7 +40,7 @@ export const findOneLeadForVendor = (availableLeads) => {
 		lastFlow.otherProducts ? lastFlow.otherProducts : ""
 	} Método de Pago: ${
 		lastFlow.payment ? lastFlow.payment : "No informado"
-	}. DNI: ${lastFlow.dni ? lastFlow.dni : "No informado"}. Crédito: ${
+	}. DNI: ${lastFlow.dni ? lastFlow.dni : "No informado"}. Crédito: $ ${
 		lastFlow.credit ? lastFlow.credit : "Sin info."
 	}. Preguntas: ${lastFlow.questions ? lastFlow.questions : "Sin preguntas"}.`
 		.replace(/\n/g, " ")

@@ -5,6 +5,18 @@ import { saveNotificationInDb } from "../dataBase/saveNotificationInDb.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 
 export const processWhatsAppWithApi = async (userMessage) => {
+	
+	// Obtain current date and hour
+	const currentDateTime = new Date().toLocaleString("es-AR", {
+		timeZone: "America/Argentina/Buenos_Aires",
+		day: "2-digit",
+		month: "2-digit",
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+	});
+	
 	let existingLead;
 	let log;
 
@@ -63,8 +75,10 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await handleWhatsappMessage(lastFlowPhone, alarm);
 
 					// Graba notificación al cliente en la BDs (falta grabar la del vendedor)
-					const notification = { message: message };
-					await saveNotificationInDb(userMessage, notification);
+					//const notification = { message: message };
+					//await saveNotificationInDb(userMessage, notification);
+					lastFlow.messages += `${currentDateTime} API: ${message}`
+					await existingLead.save()
 
 					// Actualiza el log
 					log = `1-Se notificó al lead ${userMessage.name} recordando su vendedor. 2-Alarma al vendedor ${lastFlowVendor}. `;
@@ -78,9 +92,11 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await handleWhatsappMessage(userMessage.userPhone, message);
 
 					// Graba la notificación en la base de datos
-					const notification = { message: message };
-					await saveNotificationInDb(userMessage, notification);
-
+					//const notification = { message: message };
+					//await saveNotificationInDb(userMessage, notification);
+					lastFlow.messages += `${currentDateTime} API: ${message}`
+					await existingLead.save()
+					
 					// Actualiza el log
 					log = `1-Se notificó al Lead ${userMessage.name} que aún no tiene un vendedor asignado. `;
 
