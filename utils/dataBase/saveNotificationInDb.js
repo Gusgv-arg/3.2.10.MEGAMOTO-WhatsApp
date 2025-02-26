@@ -104,11 +104,12 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 					wamId_flow1: wamId_flow1 ? wamId_flow1 : "",
 				};
 				lead.flows.push(lastFlow); // Agrega el nuevo flujo al array
+			
 			} else {
 				// Hay un Flow abierto
 
 				// Actualizo la información
-				lastFlow.flow1Response = "si"
+				notification.brand !== "" ? lastFlow.flow1Response = "si" : lastFlow.flow1Response = "no"
 				lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message.replace(/\n/g," ")}`
 				lastFlow.brand = notification?.brand !== "" ? notification.brand : lastFlow.brand;
 				lastFlow.model = notification?.model;
