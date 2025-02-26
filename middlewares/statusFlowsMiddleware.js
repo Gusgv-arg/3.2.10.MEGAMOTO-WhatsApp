@@ -1,6 +1,6 @@
 import Leads from "../models/leads.js";
 import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppNotification.js";
-import axios from "axios"
+import axios from "axios";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -11,13 +11,15 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 		: null;
 
 	// Se prende web de Credicuotas
-	const crediCuotas = await axios.get("https://three-2-13-web-scrapping.onrender.com")
-	console.log("Credicuotas", crediCuotas?.status)
-	if (crediCuotas?.status === 200){
-		req.crediCuotas = crediCuotas.data
-		console.log("req:", req.credicuotas)
+	const crediCuotas = await axios.get(
+		"https://three-2-13-web-scrapping.onrender.com"
+	);
+	console.log("Credicuotas", crediCuotas?.status);
+	if (crediCuotas?.status === 200) {
+		req.crediCuotas = true;
+		console.log("req:", req.credicuotas);
 	}
-	
+
 	// Obtain current date and hour
 	const currentDateTime = new Date().toLocaleString("es-AR", {
 		timeZone: "America/Argentina/Buenos_Aires",
@@ -88,13 +90,13 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 			}
 		} catch (error) {
 			const errorMessage = error?.response?.data
-			? JSON.stringify(error.response.data)
-			: error.message
+				? JSON.stringify(error.response.data)
+				: error.message;
 
 			console.log("Error in statusFlowsMiddleware.js", errorMessage);
 
 			const message = `🔔 *NOTIFICACION DE ERROR en statusFlowsMiddleware.js:* Error: ${errorMessage}`;
-			
+
 			await adminWhatsAppNotification(myPhone, message);
 		}
 	} else {
