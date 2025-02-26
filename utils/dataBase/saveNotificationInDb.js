@@ -81,8 +81,14 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				lastFlow = {
 					flowName: process.env.FLOW_1,
 					flowDate: currentDateTime,
+					flow1Response: "si",
 					client_status: status,
-					messages: `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message.replace(/\n/g, ' ')}`,
+					messages: `\n${currentDateTime} ${userMessage.name}: ${
+						userMessage.message
+					}\n${currentDateTime} - API: ${notification.message.replace(
+						/\n/g,
+						" "
+					)}`,
 					history: history ? history : "",
 					flow_2token: flowToken2,
 					flow_status: "activo",
@@ -102,9 +108,9 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				// Hay un Flow abierto
 
 				// Actualizo la información
-				(lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message.replace(/\n/g, ' ')}`),
-					(lastFlow.brand =
-						notification?.brand !== "" ? notification.brand : lastFlow.brand);
+				lastFlow.flow1Response = "si"
+				lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message.replace(/\n/g," ")}`
+				lastFlow.brand = notification?.brand !== "" ? notification.brand : lastFlow.brand;
 				lastFlow.model = notification?.model;
 				lastFlow.price = notification?.price;
 				lastFlow.otherProducts = notification?.otherProducts;

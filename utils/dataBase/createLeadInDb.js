@@ -26,6 +26,7 @@ export const createLeadInDb = async (userMessage) => {
 				{
 					flowName: process.env.FLOW_1,
 					flowDate: currentDateTime,
+					flow1Response: "no",
 					origin: "API General",
 					client_status: "primer contacto",
 					messages: "",

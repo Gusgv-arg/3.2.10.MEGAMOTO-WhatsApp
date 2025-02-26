@@ -5,7 +5,6 @@ import { saveNotificationInDb } from "../dataBase/saveNotificationInDb.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 
 export const processWhatsAppWithApi = async (userMessage) => {
-	
 	// Obtain current date and hour
 	const currentDateTime = new Date().toLocaleString("es-AR", {
 		timeZone: "America/Argentina/Buenos_Aires",
@@ -16,7 +15,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 		minute: "2-digit",
 		second: "2-digit",
 	});
-	
+
 	let existingLead;
 	let log;
 
@@ -47,7 +46,6 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			// Actualiza el log
 			log = `1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD.`;
 			return log;
-			
 		} else {
 			// -------- Lead YA EXISTE ------------------------------------------------------
 
@@ -61,6 +59,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			if (lastFlowStatus !== "compró" && lastFlowStatus !== "no compró") {
 				// El Lead ya está en la Fila
 
+				
 				if (lastFlowVendor) {
 					// El lead ya tiene un vendedor asignado
 
@@ -75,24 +74,34 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await handleWhatsappMessage(lastFlowPhone, alarm);
 
 					// Graba la pregunta del lead y notificación al mismo en la BDs
-					lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} API: ${message.replace(/\n/g, ' ')}`
-					await existingLead.save()
+					lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${
+						userMessage.message
+					}\n${currentDateTime} API: ${message.replace(/\n/g, " ")}`;
+					await existingLead.save();
 
 					// Actualiza el log
 					log = `1-Se notificó al lead ${userMessage.name} recordando su vendedor. 2-Alarma al vendedor ${lastFlowVendor}. `;
-
+					
 					return log;
-
+				
 				} else {
-					// El Lead NO tiene un vendedor asignado
-					message = `*🔔 Notificación Automática:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
-
+					// El Lead NO tiene un vendedor asignado, pudo No haber enviado el Flow
+					
+					if (lastFlow.flow1Response === "si"){
+						message = `*🔔 Notificación Automática:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+						
+					} else {
+						message = `*🔔 Notificación Automática:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n❗ 🙏 Para una mejor atención te recordamos enviar el formulario con tu consulta. Revizá en el historial de conversaciones. ¡Muchas Gracias! \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+					}
+						
 					// Envía notificación al Lead
 					await handleWhatsappMessage(userMessage.userPhone, message);
 
 					// Graba la pregunta del lead y notificación al mismo en la base de datos
-					lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} API: ${message.replace(/\n/g, ' ')}`
-					await existingLead.save()
+					lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${
+						userMessage.message
+					}\n${currentDateTime} API: ${message.replace(/\n/g, " ")}`;
+					await existingLead.save();
 
 					// Actualiza el log
 					log = `1-Se notificó al Lead ${userMessage.name} que aún no tiene un vendedor asignado. `;

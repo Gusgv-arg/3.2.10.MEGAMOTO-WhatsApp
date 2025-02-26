@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const flowDetailSchema = new mongoose.Schema({
 	flowName: String,
 	flowDate: String,
+	flow1Response: { type: String, enum: ["si", "no"], default: "no" },
 	client_status: {
 		type: String,
 		enum: [
@@ -63,7 +64,7 @@ const flowDetailSchema = new mongoose.Schema({
 			"Pablo",
 			"Lautaro",
 			"Reina",
-			"Mariano"
+			"Mariano",
 		],
 	},
 	vendor_phone: Number,
