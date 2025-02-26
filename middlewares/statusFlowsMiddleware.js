@@ -13,7 +13,7 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 	// Se prende web de Credicuotas
 	const crediCuotas = await axios.get("https://three-2-13-web-scrapping.onrender.com")
 	console.log("Credicuotas", crediCuotas?.status)
-	if (crediCuotas?.status === "200"){
+	if (crediCuotas?.status === 200){
 		req.crediCuotas
 	}
 	

@@ -53,9 +53,9 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 		wamId_flow1 = userMessage.wamId_Flow1;
 	}
 
-	console.log("Status:", status);
-	console.log("History:", history);
-	console.log("wabId:", wamId_flow1);
+	//console.log("Status:", status);
+	//console.log("History:", history);
+	//console.log("wabId:", wamId_flow1);
 
 	// Save the sent message to the database
 	try {
