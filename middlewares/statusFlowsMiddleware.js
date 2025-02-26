@@ -14,7 +14,8 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 	const crediCuotas = await axios.get("https://three-2-13-web-scrapping.onrender.com")
 	console.log("Credicuotas", crediCuotas?.status)
 	if (crediCuotas?.status === 200){
-		req.crediCuotas
+		req.crediCuotas = crediCuotas.data
+		console.log("req:", req.credicuotas)
 	}
 	
 	// Obtain current date and hour
