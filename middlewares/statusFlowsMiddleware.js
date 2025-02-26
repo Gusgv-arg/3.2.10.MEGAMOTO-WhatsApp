@@ -19,7 +19,7 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 		console.log("Credicuotas", crediCuotas?.status ? crediCuotas.status : "No hay credicuotas.status");
 		if (crediCuotas?.status === 200) {
 			req.crediCuotas = true;
-			console.log("req:", req.credicuotas);
+			console.log("req:", req.crediCuotas);
 		}
 	
 	} catch (error) {

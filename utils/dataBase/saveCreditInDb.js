@@ -27,8 +27,8 @@ export const saveCreditInDb = async (userPhone, message, credit) => {
 			let lastFlow = lead.flows[lead.flows.length - 1];
 			
 			lastFlow.messages += `\n${currentDateTime} API: ${message}`;
-			lastFlow.credit = credit		
-
+			lastFlow.credit = Number(credit.replace(/[^0-9]/g, ""))
+			
 			// Update lead
 			await lead.save();
 			return;

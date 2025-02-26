@@ -47,7 +47,7 @@ const flowDetailSchema = new mongoose.Schema({
 	payment: String,
 	otherProducts: String,
 	dni: Number,
-	credit: String,
+	credit: Number,
 	questions: String,
 	messages: String,
 	vendor_name: {
