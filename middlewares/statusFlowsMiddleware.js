@@ -14,7 +14,7 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 	const crediCuotas = await axios.get(
 		"https://three-2-13-web-scrapping.onrender.com"
 	);
-	console.log("Credicuotas", crediCuotas?.status);
+	console.log("Credicuotas", crediCuotas?.status ? crediCuotas.status : "No hay credicuotas.status");
 	if (crediCuotas?.status === 200) {
 		req.crediCuotas = true;
 		console.log("req:", req.credicuotas);
