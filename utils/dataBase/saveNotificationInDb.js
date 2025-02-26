@@ -81,7 +81,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				lastFlow = {
 					flowName: process.env.FLOW_1,
 					flowDate: currentDateTime,
-					flow1Response: "si",
+					flow1Response: notification.brand !== "" ? "si" : "no",
 					client_status: status,
 					messages: `\n${currentDateTime} ${userMessage.name}: ${
 						userMessage.message
