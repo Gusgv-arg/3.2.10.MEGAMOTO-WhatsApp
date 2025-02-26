@@ -11,7 +11,7 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 		: null;
 
 	// Se prende web de Credicuotas
-	const crediCuotas = await axios.post("https://three-2-13-web-scrapping.onrender.com")
+	const crediCuotas = await axios.get("https://three-2-13-web-scrapping.onrender.com")
 	console.log("Credicuotas", crediCuotas)
 	if (crediCuotas === "Servidor de Scrapin en Render prendido!"){
 		req.crediCuotas
