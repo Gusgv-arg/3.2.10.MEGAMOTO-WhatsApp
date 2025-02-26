@@ -13,6 +13,11 @@ export const postWhatsappWebhookController = async (req, res) => {
 	const type = body?.entry[0]?.changes[0]?.value?.messages[0]?.type;
 	const vendorName = req.vendorName ? req.vendorName : ""
 
+	let crediCuotas = false
+	if (req.crediCuotas){
+		crediCuotas = true
+	}
+
 	let audioId;
 	let imageId;
 	let documentId;
@@ -76,6 +81,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 				audioId: audioId ? audioId : "",
 				imageId: imageId ? imageId : "",
 				documentId: documentId ? documentId : "",
+				crediCuotas: crediCuotas
 			};
 			console.log("Objeto userMessage que entra a la fila:", userMessage)
 

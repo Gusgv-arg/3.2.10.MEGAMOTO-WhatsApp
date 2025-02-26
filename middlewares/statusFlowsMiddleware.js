@@ -1,5 +1,6 @@
 import Leads from "../models/leads.js";
 import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppNotification.js";
+import axios from "axios"
 
 const myPhone = process.env.MY_PHONE;
 
@@ -9,6 +10,13 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 		? body.entry[0].changes[0].value.statuses[0]
 		: null;
 
+	// Se prende web de Credicuotas
+	const crediCuotas = await axios.post("https://three-2-13-web-scrapping.onrender.com")
+	console.log("Credicuotas", crediCuotas)
+	if (crediCuotas === "Servidor de Scrapin en Render prendido!"){
+		req.crediCuotas
+	}
+	
 	// Obtain current date and hour
 	const currentDateTime = new Date().toLocaleString("es-AR", {
 		timeZone: "America/Argentina/Buenos_Aires",

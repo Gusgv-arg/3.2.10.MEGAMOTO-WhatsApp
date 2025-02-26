@@ -64,7 +64,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				}
 
 				// Si el lead paga financiado se busca en Credicuotas su capacidad de crédito
-				if (notification.dni !== "") {
+				if (notification.dni !== "" && userMessage.crediCuotas === true) {
 					try {
 						// Se llama API de scrapin de Credicuotas
 						const credito = await axios.post(
