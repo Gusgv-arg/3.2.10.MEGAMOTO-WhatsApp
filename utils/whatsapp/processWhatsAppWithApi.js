@@ -75,7 +75,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await handleWhatsappMessage(lastFlowPhone, alarm);
 
 					// Graba notificación al cliente en la BDs (falta grabar la del vendedor)
-					lastFlow.messages += `\n${currentDateTime} API: ${message}`
+					lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} API: ${message}`
 					await existingLead.save()
 
 					// Actualiza el log
@@ -90,7 +90,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					await handleWhatsappMessage(userMessage.userPhone, message);
 
 					// Graba la notificación en la base de datos
-					lastFlow.messages += `\n${currentDateTime} API: ${message}`
+					lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} API: ${message}`
 					await existingLead.save()
 
 					// Actualiza el log
