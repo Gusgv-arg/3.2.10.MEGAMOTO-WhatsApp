@@ -1,5 +1,4 @@
 import Leads from "../../models/leads.js";
-import { v4 as uuidv4 } from "uuid";
 
 export const saveVendorNotificationInDb = async (userMessage, notification) => {
 	//console.log("userMessage en saveVendorNotification:", userMessage);
@@ -30,7 +29,7 @@ export const saveVendorNotificationInDb = async (userMessage, notification) => {
 			let lastFlow = lead.flows[lead.flows.length - 1];
 
 			// Actualizo la información
-			lastFlow.messages += `\n${currentDateTime} API: ${notification.message}`;
+			lastFlow.messages += `\n${currentDateTime} API: ${notification.message.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim()}`;
 			lastFlow.client_status = "vendedor";
             
 			// Update lead
