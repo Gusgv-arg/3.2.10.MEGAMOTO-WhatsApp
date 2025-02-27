@@ -173,6 +173,9 @@ export const processExcelToChangeLeads = async (
 				(v) => v.name.toLowerCase() === col[14].toLowerCase()
 			); // Buscar el vendedor por nombre
 			const vendorPhone = vendor ? vendor.phone : userPhone; // Obtener el teléfono si existe
+			console.log("vendor:", vendor)
+			console.log("vendorPhone:", vendorPhone)
+			console.log("process.env.PHONE_GUSTAVO_GLUNZ:", process.env.PHONE_GUSTAVO_GLUNZ)
 
 			// Crear objeto con los campos modificables
 			const updateData = {
