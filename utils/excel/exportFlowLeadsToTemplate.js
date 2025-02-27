@@ -47,6 +47,7 @@ export const exportFlowLeadsToTemplate = async (leads) => {
                 lastFlow?.client_status,
                 lastFlow?.flowDate,
                 lastFlow?.toContact,
+                lastFlow?.messages,
                 lastFlow?.brand,
                 lastFlow?.model,
                 lastFlow?.price,

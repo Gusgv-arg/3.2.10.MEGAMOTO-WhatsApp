@@ -15,6 +15,7 @@ const expectedHeaders = [
 	"Estado",
 	"Primer Contacto",
 	"Fecha a Contactar",
+	"Mensajes",
 	"Marca",
 	"Modelo",
 	"Precio informado",
@@ -101,7 +102,7 @@ export const processExcelToChangeLeads = async (
 			const name = col[0] ? String(col[0]).trim() : "";
 			const id_user = String(col[1]).trim();
 			const toContact = col[4];
-			const flow_2token = col[17] ? String(col[17]).trim() : null;
+			const flow_2token = col[18] ? String(col[18]).trim() : null;
 
 			// Validar nombre
 			if (!name) {
@@ -147,16 +148,16 @@ export const processExcelToChangeLeads = async (
 				}
 			}
 			
-			// Validar brand (columna F, índice 5) - EN TORIA NO HARIA FALTA X QUE ES UNA LISTA
-			const brand = col[5] ? String(col[5]).trim() : "";
+			// Validar brand (columna G, índice 6) - EN TORIA NO HARIA FALTA X QUE ES UNA LISTA
+			const brand = col[6] ? String(col[6]).trim() : "";
 			if (brand && !validBrands.includes(brand)) {
 				const errorMessage = `❌ Fila ${rowNumber}: ${name} (${id_user}) - Marca "${brand}" inválida`;
 				errorMessages.push(errorMessage);
 				continue;
 			}
 
-			// Validar precio (columna H, índice 7)
-			const price = col[7];
+			// Validar precio (columna I, índice 8)
+			const price = col[8];
 			if (price !== "" && price !== undefined && price !== null) {
 				// Convertir a string y limpiar caracteres no numéricos excepto punto decimal
 				const cleanPrice = String(price).replace(/[^0-9.]/g, "");
@@ -169,7 +170,7 @@ export const processExcelToChangeLeads = async (
 
 			// Buscar al vendedor en el array de vendedores
 			const vendor = vendors.find(
-				(v) => v.name.toLowerCase() === col[13].toLowerCase()
+				(v) => v.name.toLowerCase() === col[14].toLowerCase()
 			); // Buscar el vendedor por nombre
 			const vendorPhone = vendor ? vendor.phone : userPhone; // Obtener el teléfono si existe
 
@@ -177,17 +178,17 @@ export const processExcelToChangeLeads = async (
 			const updateData = {
 				"flows.$.client_status": client_status, // Usar el client_status validado
 				"flows.$.toContact": col[4] ? new Date(col[4]) : undefined, // Columna E (índice 4)
-				"flows.$.brand": col[5], // Columna F (índice 5)
-				"flows.$.model": col[6], // Columna G (índice 6)
-				"flows.$.price": col[7], // Columna H (índice 7)
-				"flows.$.otherProducts": col[8], // Columna I (índice 8)
-				"flows.$.payment": col[9], // Columna J (índice 9)
-				"flows.$.dni": col[10], // Columna K (índice 10)
-				"flows.$.credit": col[11], // Columna L (índice 11)
-				"flows.$.vendor_name": col[13], // Columna N (índice 13)
+				"flows.$.brand": col[6], // Columna G (índice 6)
+				"flows.$.model": col[7], // Columna H (índice 7)
+				"flows.$.price": col[8], // Columna I (índice 8)
+				"flows.$.otherProducts": col[9], // Columna J (índice 9)
+				"flows.$.payment": col[10], // Columna K (índice 10)
+				"flows.$.dni": col[11], // Columna L (índice 11)
+				"flows.$.credit": col[12], // Columna M (índice 12)
+				"flows.$.vendor_name": col[14], // Columna O (índice 14)
 				"flows.$.vendor_phone": vendorPhone, // Busca en array de vendedores
-				"flows.$.vendor_notes": col[14], // Columna O (índice 14)
-				"flows.$.origin": col[16], // Columna Q (índice 16)
+				"flows.$.vendor_notes": col[15], // Columna P (índice 15)
+				"flows.$.origin": col[17], // Columna R (índice 17)
 			};
 
 			// Remove undefined values
@@ -223,7 +224,9 @@ export const processExcelToChangeLeads = async (
 						{
 							client_status: updateData["flows.$.client_status"] || "vendedor",
 							flowDate: `${currentDateTime}`,
+							flow1Response: "si",
 							toContact: updateData["flows.$.toContact"],
+							messages: updateData["flows.$.messages"],
 							brand: updateData["flows.$.brand"],
 							model: updateData["flows.$.model"],
 							price: updateData["flows.$.price"],
@@ -288,6 +291,7 @@ export const processExcelToChangeLeads = async (
 						[`flows.${flowIndex}.client_status`]:
 							updateData["flows.$.client_status"],
 						[`flows.${flowIndex}.toContact`]: updateData["flows.$.toContact"],
+						[`flows.${flowIndex}.messages`]: updateData["flows.$.messages"],
 						[`flows.${flowIndex}.brand`]: updateData["flows.$.brand"],
 						[`flows.${flowIndex}.model`]: updateData["flows.$.model"],
 						[`flows.${flowIndex}.price`]: updateData["flows.$.price"],
