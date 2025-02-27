@@ -115,7 +115,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				let vendorPhone;
 				let vendorName;
 
-				const notification = extractFlowToken_2Responses(userMessage.message);
+				const notification = extractFlowToken_2Responses(userMessage.message, userMessage.name);
 
 				log = `1-Se extrajo la respuesta del Flow 2 del vendedor ${userMessage.name}. `;
 

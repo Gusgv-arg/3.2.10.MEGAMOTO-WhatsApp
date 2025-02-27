@@ -1,4 +1,4 @@
-export const extractFlowToken_2Responses = (flowMessage) => {
+export const extractFlowToken_2Responses = (flowMessage, name) => {
 	
 	let response = {
 		message: "*🔔 Notificación Automática:*\n\n✅ Tus respuestas fueron registradas.\n",
@@ -16,7 +16,7 @@ export const extractFlowToken_2Responses = (flowMessage) => {
 	
 	// Extraer la respuesta del vendedor
 	if ("Atención del Lead" in decodedMessage) {
-		response.message += `Atención Lead: ${decodedMessage["Atención del Lead"]}\n`;
+		response.message += `Atención Lead ${name}: ${decodedMessage["Atención del Lead"]}\n`;
 		response.status = "vendedor"
 		
 		if (decodedMessage["Atención del Lead"] === "Atender ahora" && ("A contactar en días" in decodedMessage) ){
