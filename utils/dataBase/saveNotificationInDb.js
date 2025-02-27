@@ -81,7 +81,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				lastFlow = {
 					flowName: process.env.FLOW_1,
 					flowDate: currentDateTime,
-					flow1Response: notification.brand !== "" ? "si" : "no",
+					flow1Response: notification.brand ? "si" : "no",
 					client_status: status,
 					messages: `\n${currentDateTime} ${userMessage.name}: ${
 						userMessage.message
@@ -109,7 +109,7 @@ export const saveNotificationInDb = async (userMessage, notification) => {
 				// Hay un Flow abierto
 
 				// Actualizo la información
-				notification.brand !== "" ? lastFlow.flow1Response = "si" : lastFlow.flow1Response = "no"
+				notification.brand ? lastFlow.flow1Response = "si" : lastFlow.flow1Response = "no"
 				lastFlow.messages += `\n${currentDateTime} ${userMessage.name}: ${userMessage.message}\n${currentDateTime} - API: ${notification.message.replace(/\n/g," ")}`
 				lastFlow.brand = notification?.brand !== "" ? notification.brand : lastFlow.brand;
 				lastFlow.model = notification?.model;
