@@ -305,6 +305,8 @@ export const processExcelToChangeLeads = async (
 						[`flows.${flowIndex}.credit`]: updateData["flows.$.credit"],
 						[`flows.${flowIndex}.vendor_name`]:
 							updateData["flows.$.vendor_name"],
+						[`flows.${flowIndex}.vendor_phone`]:
+							updateData["flows.$.vendor_phone"],
 						[`flows.${flowIndex}.vendor_notes`]:
 							updateData["flows.$.vendor_notes"],
 						[`flows.${flowIndex}.origin`]: updateData["flows.$.origin"],
