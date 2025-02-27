@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export const saveNotificationInDb = async (userMessage, notification) => {
 	//console.log("userMessage en saveNotification:", userMessage);
-	//console.log("notification en saveNotification:", notification);
+	console.log("notification en saveNotification:", notification);
 
 	// Obtain current date and hour
 	const currentDateTime = new Date().toLocaleString("es-AR", {
