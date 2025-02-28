@@ -173,10 +173,7 @@ export const processExcelToChangeLeads = async (
 				(v) => v.name.toLowerCase() === col[14].toLowerCase()
 			); // Buscar el vendedor por nombre
 			const vendorPhone = vendor ? vendor.phone : userPhone; // Obtener el teléfono si existe
-			console.log("vendor:", vendor)
-			console.log("vendorPhone:", vendorPhone)
-			console.log("process.env.PHONE_GUSTAVO_GLUNZ:", process.env.PHONE_GUSTAVO_GLUNZ)
-
+			
 			// Crear objeto con los campos modificables
 			const updateData = {
 				"flows.$.client_status": client_status, // Usar el client_status validado
@@ -226,6 +223,7 @@ export const processExcelToChangeLeads = async (
 					flows: [
 						{
 							client_status: updateData["flows.$.client_status"] || "vendedor",
+							statusDate: `${currentDateTime}`,
 							flowDate: `${currentDateTime}`,
 							flow1Response: "si",
 							toContact: updateData["flows.$.toContact"],
@@ -283,6 +281,9 @@ export const processExcelToChangeLeads = async (
 				updateData["flows.$.client_status"]
 			} `;
 
+			// Check if client_status has changed
+			const statusChanged = existingLead.flows[flowIndex].client_status !== updateData["flows.$.client_status"];
+			
 			// Update the matching flow directly using the positional $ operator
 			const result = await Leads.updateOne(
 				{
@@ -293,6 +294,7 @@ export const processExcelToChangeLeads = async (
 					$set: {
 						[`flows.${flowIndex}.client_status`]:
 							updateData["flows.$.client_status"],
+						[`flows.${flowIndex}.statusDate`]: statusChanged ? currentDateTime : existingLead.flows[flowIndex].statusDate,
 						[`flows.${flowIndex}.toContact`]: updateData["flows.$.toContact"],
 						[`flows.${flowIndex}.messages`]: updateData["flows.$.messages"],
 						[`flows.${flowIndex}.brand`]: updateData["flows.$.brand"],

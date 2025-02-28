@@ -48,6 +48,7 @@ export const saveVendorFlow_2Response = async (
 			) {
 				flowToUpdate.messages += `\n${currentDateTime} - API: se envió WhatsApp al cliente que será atendido por ${name}`;
 				flowToUpdate.client_status = "vendedor";
+				flowToUpdate.statusDate = currentDateTime;
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
 				flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} `;
@@ -60,6 +61,7 @@ export const saveVendorFlow_2Response = async (
 			) {
 				flowToUpdate.messages += `\n${currentDateTime} - API: se envió WhatsApp al cliente que será atendido más tarde por ${name}`;
 				flowToUpdate.client_status = "vendedor más tarde";
+				flowToUpdate.statusDate = currentDateTime;
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
 				flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} más tarde. `;
@@ -74,25 +76,27 @@ export const saveVendorFlow_2Response = async (
 				)[0];
 				//console.log("customerQuestion:", customerQuestion);
 
-				if (notification.includes("Gustavo Glunz")) {
+				if (notification.includes("Gustavo_Glunz")) {
 					flowToUpdate.client_status = "vendedor derivado";
+					flowToUpdate.statusDate = currentDateTime;
 					flowToUpdate.vendor_phone = process.env.PHONE_GUSTAVO_GLUNZ;
-					flowToUpdate.vendor_name = "Gustavo Glunz";
+					flowToUpdate.vendor_name = "Gustavo_Glunz";
 					flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} derivó su cliente a Gustavo Glunz. `;
 					//console.log(`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustavo Glunz.`);
 
 					vendorPhone = process.env.PHONE_GUSTAVO_GLUNZ;
-					vendorName = "Gustavo Glunz";
+					vendorName = "Gustavo_Glunz";
 
-				} else if (notification.includes("Gustavo Gómez Villafañe")) {
+				} else if (notification.includes("Gustavo_GV")) {
 					flowToUpdate.client_status = "vendedor derivado";
+					flowToUpdate.statusDate = currentDateTime;
 					flowToUpdate.vendor_phone = process.env.MY_PHONE;
-					flowToUpdate.vendor_name = "Gustavo Gómez Villafañe";
+					flowToUpdate.vendor_name = "Gustavo_GV";
 					flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} derivó su cliente a Gustavo Gómez Villafañe. `;
 					//console.log(`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustvo Gómez Villafañe.`);
 					
 					vendorPhone = process.env.MY_PHONE;
-					vendorName = "Gustavo Gómez Villafañe";
+					vendorName = "Gustavo_GV";
 				}
 				
 			} else {

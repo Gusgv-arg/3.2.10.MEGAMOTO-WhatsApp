@@ -31,7 +31,8 @@ export const saveVendorNotificationInDb = async (userMessage, notification) => {
 			// Actualizo la información
 			lastFlow.messages += `\n${currentDateTime} API: ${notification.message.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim()}`;
 			lastFlow.client_status = "vendedor";
-            
+            lastFlow.statusDate = currentDateTime;
+			
 			// Update lead
 			await lead.save();
 			return;
