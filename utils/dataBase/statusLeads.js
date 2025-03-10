@@ -6,17 +6,17 @@ export const statusLeads = async () => {
         timeZone: "America/Argentina/Buenos_Aires"
     }));
     
-    const currentDateFormatted = new Date(currentDate).toLocaleString("es-AR", {
+	const currentDateFormatted = new Date().toLocaleString("es-AR", {
 		timeZone: "America/Argentina/Buenos_Aires",
+		day: "2-digit",
+		month: "2-digit",
 		year: "numeric",
-		month: "numeric",
-		day: "numeric",
 		hour: "2-digit",
 		minute: "2-digit",
 		second: "2-digit",
 		hour12: false
-	}).replace(/(\d+)\/(\d+)\/(\d+),/, "$3-$2-$1,");
-	
+	  });
+		  
 	const fourWeeksAgo = new Date(currentDate);
 	fourWeeksAgo.setDate(currentDate.getDate() - 28);
 	const sevenDaysAgo = new Date(currentDate);
