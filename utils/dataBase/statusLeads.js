@@ -1,7 +1,16 @@
 import Leads from "../../models/leads.js";
 
 export const statusLeads = async () => {
-	const currentDate = new Date();
+	
+	const currentDate = new Date().toLocaleString("es-AR", {
+		timeZone: "America/Argentina/Buenos_Aires",
+		day: "2-digit",
+		month: "2-digit",
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+	});
 	const fourWeeksAgo = new Date(currentDate);
 	fourWeeksAgo.setDate(currentDate.getDate() - 28);
 	const sevenDaysAgo = new Date(currentDate);
