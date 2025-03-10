@@ -328,26 +328,26 @@ export const statusLeads = async () => {
 		diarioUltimos7Dias: days,
 	};
 
-	const status = `*🔔 Estado de Leads:*\n\n*Totales:*\n- Total de Leads: ${totalRecords}\n- Leads con vendedor: ${withVendor} (${(
+	const status = `*🔔 Leads al ${currentDate}:*\n\n- Leads: ${totalRecords}\n- Con vendedor: ${withVendor} (${(
 		(withVendor / totalRecords) *
 		100
-	).toFixed(2)}%)\n- Leads sin vendedor: ${withoutVendor} (${(
+	).toFixed(2)}%)\n- Sin vendedor: ${withoutVendor} (${(
 		(withoutVendor / totalRecords) *
 		100
-	).toFixed(2)}%)\n\n*Últimos 7 días:*\n${days
+	).toFixed(2)}%)\n\n*leads últimos 7 días:*\n${days
 		.map((day, index) => {
 			const dayKey = `dia${index + 1}`;
-			return `Leads día ${index + 1}: ${day[dayKey].total} - Compradores: ${
+			return `D${index + 1}: ${day[dayKey].total} - Compradores: ${
 				day[dayKey].compradores
 			}`;
 		})
 		.join("\n")}
 
-*Últimas 4 semanas:*
+*Leads últimas 4 semanas:*
 ${weeks
 	.map((week, index) => {
 		const weekKey = `semana${index + 1}`;
-		return `Leads Semana ${index + 1}: ${week[weekKey].total} - Compradores: ${
+		return `Sem. ${index + 1}: ${week[weekKey].total} - Compradores: ${
 			week[weekKey].compradores
 		}`;
 	})
