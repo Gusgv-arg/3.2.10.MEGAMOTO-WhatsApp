@@ -2,15 +2,20 @@ import Leads from "../../models/leads.js";
 
 export const statusLeads = async () => {
 	
-	const currentDate = new Date().toLocaleString("es-AR", {
-		timeZone: "America/Argentina/Buenos_Aires",
-		day: "2-digit",
-		month: "2-digit",
-		year: "numeric",
-		hour: "2-digit",
-		minute: "2-digit",
-		second: "2-digit",
-	});
+	const currentDate = new Date(new Date().toLocaleString("es-AR", {
+        timeZone: "America/Argentina/Buenos_Aires"
+    }));
+    
+    const currentDateFormatted = currentDate.toLocaleString("es-AR", {
+        timeZone: "America/Argentina/Buenos_Aires",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+    });
+	
 	const fourWeeksAgo = new Date(currentDate);
 	fourWeeksAgo.setDate(currentDate.getDate() - 28);
 	const sevenDaysAgo = new Date(currentDate);
@@ -337,7 +342,7 @@ export const statusLeads = async () => {
 		diarioUltimos7Dias: days,
 	};
 
-	const status = `*🔔 Leads al ${currentDate}:*\n\n- Leads: ${totalRecords}\n- Con vendedor: ${withVendor} (${(
+	const status = `*🔔 Leads al ${currentDateFormatted}:*\n\n- Leads: ${totalRecords}\n- Con vendedor: ${withVendor} (${(
 		(withVendor / totalRecords) *
 		100
 	).toFixed(2)}%)\n- Sin vendedor: ${withoutVendor} (${(
