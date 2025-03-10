@@ -1,6 +1,5 @@
 import Leads from "../../models/leads.js";
 
-// ... existing code ...
 export const statusLeads = async () => {
 	const currentDate = new Date();
 	const fourWeeksAgo = new Date(currentDate);
@@ -27,16 +26,16 @@ export const statusLeads = async () => {
 		{ semana1: { total: 0, compradores: 0 } },
 		{ semana2: { total: 0, compradores: 0 } },
 		{ semana3: { total: 0, compradores: 0 } },
-		{ semana4: { total: 0, compradores: 0 } }
+		{ semana4: { total: 0, compradores: 0 } },
 	];
 
 	const weeklyData = await Leads.aggregate([
 		{
-			$unwind: "$flows"
+			$unwind: "$flows",
 		},
 		{
 			$addFields: {
-				cleanDate: {
+				cleanFlowDate: {
 					$concat: [
 						{ $substr: ["$flows.flowDate", 0, 10] },
 						", ",
@@ -44,53 +43,126 @@ export const statusLeads = async () => {
 						":",
 						{ $substr: ["$flows.flowDate", 15, 2] },
 						":",
-						{ $substr: ["$flows.flowDate", 18, 2] }
-					]
-				}
-			}
+						{ $substr: ["$flows.flowDate", 18, 2] },
+					],
+				},
+				cleanStatusDate: {
+					$concat: [
+						{ $substr: ["$flows.statusDate", 0, 10] },
+						", ",
+						{ $substr: ["$flows.statusDate", 12, 2] },
+						":",
+						{ $substr: ["$flows.statusDate", 15, 2] },
+						":",
+						{ $substr: ["$flows.statusDate", 18, 2] },
+					],
+				},
+			},
 		},
 		{
 			$addFields: {
 				"flows.flowDate": {
 					$dateFromString: {
-						dateString: "$cleanDate",
-						format: "%d/%m/%Y, %H:%M:%S"
-					}
-				}
-			}
+						dateString: "$cleanFlowDate",
+						format: "%d/%m/%Y, %H:%M:%S",
+					},
+				},
+				"flows.statusDate": {
+					$dateFromString: {
+						dateString: "$cleanStatusDate",
+						format: "%d/%m/%Y, %H:%M:%S",
+					},
+				},
+			},
 		},
 		{
 			$match: {
-				"flows.flowDate": { $gte: fourWeeksAgo }
-			}
+				$or: [
+					{ "flows.flowDate": { $gte: fourWeeksAgo } },
+					{
+						$and: [
+							{ "flows.statusDate": { $gte: fourWeeksAgo } },
+							{ "flows.client_status": "compró" },
+						],
+					},
+				],
+			},
 		},
 		{
-			$group: {
-				_id: {
-					week: { $subtract: [{ $week: "$flows.flowDate" }, { $week: fourWeeksAgo }] }
-				},
-				totalCount: { $sum: 1 },
-				purchasedCount: {
-					$sum: {
-						$cond: [{ $eq: ["$flows.client_status", "compró"] }, 1, 0]
-					}
-				}
-			}
+			$facet: {
+				totals: [
+					{
+						$match: {
+							"flows.flowDate": { $gte: fourWeeksAgo },
+						},
+					},
+					{
+						$group: {
+							_id: {
+								week: {
+									$floor: {
+										$divide: [
+											{ $subtract: [currentDate, "$flows.flowDate"] },
+											1000 * 60 * 60 * 24 * 7,
+										],
+									},
+								},
+							},
+							totalCount: { $sum: 1 },
+						},
+					},
+				],
+				purchases: [
+					{
+						$match: {
+							"flows.client_status": "compró",
+							"flows.statusDate": { $gte: fourWeeksAgo },
+						},
+					},
+					{
+						$group: {
+							_id: {
+								week: {
+									$floor: {
+										$divide: [
+											{ $subtract: [currentDate, "$flows.statusDate"] },
+											1000 * 60 * 60 * 24 * 7,
+										],
+									},
+								},
+							},
+							purchasedCount: { $sum: 1 },
+						},
+					},
+				],
+			},
 		},
-		{
-			$sort: { "_id.week": 1 }
-		}
 	]);
 
-	// Asignar los resultados a la estructura de weeks
-	weeklyData.forEach((data) => {
-		const weekIndex = data._id.week;
-		if (weekIndex >= 0 && weekIndex < weeks.length) {
-			const weekKey = `semana${weekIndex + 1}`;
-			weeks[weekIndex][weekKey].total = data.totalCount;
-			weeks[weekIndex][weekKey].compradores = data.purchasedCount;
+	// Procesar los resultados semanales
+	const processedWeeklyData = Array(4)
+		.fill()
+		.map((_, i) => ({
+			[`semana${i + 1}`]: { total: 0, compradores: 0 },
+		}));
+
+	weeklyData[0].totals.forEach((total) => {
+		const weekIndex = total._id.week;
+		if (weekIndex >= 0 && weekIndex < 4) {
+			processedWeeklyData[weekIndex][`semana${weekIndex + 1}`].total =
+				total.totalCount;
 		}
 	});
+
+	weeklyData[0].purchases.forEach((purchase) => {
+		const weekIndex = purchase._id.week;
+		if (weekIndex >= 0 && weekIndex < 4) {
+			processedWeeklyData[weekIndex][`semana${weekIndex + 1}`].compradores =
+				purchase.purchasedCount;
+		}
+	});
+
+	weeks = processedWeeklyData;
 
 	// 4. Totales de los últimos 7 días
 	let days = [
@@ -100,16 +172,16 @@ export const statusLeads = async () => {
 		{ dia4: { total: 0, compradores: 0 } },
 		{ dia5: { total: 0, compradores: 0 } },
 		{ dia6: { total: 0, compradores: 0 } },
-		{ dia7: { total: 0, compradores: 0 } }
+		{ dia7: { total: 0, compradores: 0 } },
 	];
 
 	const dailyData = await Leads.aggregate([
 		{
-			$unwind: "$flows"
+			$unwind: "$flows",
 		},
 		{
 			$addFields: {
-				cleanDate: {
+				cleanFlowDate: {
 					$concat: [
 						{ $substr: ["$flows.flowDate", 0, 10] },
 						", ",
@@ -117,65 +189,172 @@ export const statusLeads = async () => {
 						":",
 						{ $substr: ["$flows.flowDate", 15, 2] },
 						":",
-						{ $substr: ["$flows.flowDate", 18, 2] }
-					]
-				}
-			}
+						{ $substr: ["$flows.flowDate", 18, 2] },
+					],
+				},
+				cleanStatusDate: {
+					$concat: [
+						{ $substr: ["$flows.statusDate", 0, 10] },
+						", ",
+						{ $substr: ["$flows.statusDate", 12, 2] },
+						":",
+						{ $substr: ["$flows.statusDate", 15, 2] },
+						":",
+						{ $substr: ["$flows.statusDate", 18, 2] },
+					],
+				},
+			},
 		},
 		{
 			$addFields: {
 				"flows.flowDate": {
 					$dateFromString: {
-						dateString: "$cleanDate",
-						format: "%d/%m/%Y, %H:%M:%S"
-					}
-				}
-			}
+						dateString: "$cleanFlowDate",
+						format: "%d/%m/%Y, %H:%M:%S",
+					},
+				},
+				"flows.statusDate": {
+					$dateFromString: {
+						dateString: "$cleanStatusDate",
+						format: "%d/%m/%Y, %H:%M:%S",
+					},
+				},
+			},
 		},
 		{
 			$match: {
-				"flows.flowDate": { $gte: sevenDaysAgo }
-			}
+				$or: [
+					{ "flows.flowDate": { $gte: sevenDaysAgo } },
+					{
+						$and: [
+							{ "flows.statusDate": { $gte: sevenDaysAgo } },
+							{ "flows.client_status": "compró" },
+						],
+					},
+				],
+			},
 		},
 		{
-			$group: {
-				_id: { $dayOfWeek: "$flows.flowDate" },
-				totalCount: { $sum: 1 },
-				purchasedCount: {
-					$sum: {
-						$cond: [{ $eq: ["$flows.client_status", "compró"] }, 1, 0]
-					}
-				}
-			}
+			$facet: {
+				totals: [
+					{
+						$match: {
+							"flows.flowDate": { $gte: sevenDaysAgo },
+						},
+					},
+					{
+						$group: {
+							_id: {
+								daysAgo: {
+									$subtract: [
+										{
+											$trunc: {
+												$divide: [
+													{ $subtract: [currentDate, "$flows.flowDate"] },
+													1000 * 60 * 60 * 24,
+												],
+											},
+										},
+										0,
+									],
+								},
+							},
+							totalCount: { $sum: 1 },
+						},
+					},
+				],
+				purchases: [
+					{
+						$match: {
+							"flows.client_status": "compró",
+							"flows.statusDate": { $gte: sevenDaysAgo },
+						},
+					},
+					{
+						$group: {
+							_id: {
+								daysAgo: {
+									$subtract: [
+										{
+											$trunc: {
+												$divide: [
+													{ $subtract: [currentDate, "$flows.statusDate"] },
+													1000 * 60 * 60 * 24,
+												],
+											},
+										},
+										0,
+									],
+								},
+							},
+							purchasedCount: { $sum: 1 },
+						},
+					},
+				],
+			},
 		},
-		{
-			$sort: { _id: 1 }
-		}
 	]);
 
-	// Asignar los resultados a la estructura de days
-	dailyData.forEach((data) => {
-		const dayIndex = data._id - 1;
-		if (dayIndex >= 0 && dayIndex < days.length) {
-			const dayKey = `dia${dayIndex + 1}`;
-			days[dayIndex][dayKey].total = data.totalCount;
-			days[dayIndex][dayKey].compradores = data.purchasedCount;
+	// Procesar los resultados diarios
+	const processedDailyData = Array(7)
+		.fill()
+		.map((_, i) => ({
+			[`dia${i + 1}`]: { total: 0, compradores: 0 },
+		}));
+
+	dailyData[0].totals.forEach((total) => {
+		if (total._id.daysAgo >= 0 && total._id.daysAgo < 7) {
+			processedDailyData[total._id.daysAgo][
+				`dia${total._id.daysAgo + 1}`
+			].total = total.totalCount;
 		}
 	});
+
+	dailyData[0].purchases.forEach((purchase) => {
+		if (purchase._id.daysAgo >= 0 && purchase._id.daysAgo < 7) {
+			processedDailyData[purchase._id.daysAgo][
+				`dia${purchase._id.daysAgo + 1}`
+			].compradores = purchase.purchasedCount;
+		}
+	});
+
+	days = processedDailyData;
 
 	const object = {
 		leadsActivos: totalRecords,
 		leadsConVendedor: withVendor,
 		leadsSinVendedor: withoutVendor,
 		semanalUltimas4Semanas: weeks,
-		diarioUltimos7Dias: days
+		diarioUltimos7Dias: days,
 	};
 
-	//console.log(object);
-	console.log(object.diarioUltimos7Dias);
-	console.log(object.semanalUltimas4Semanas);
-	return object;
+	const status = `*🔔 Estado de Leads:*\n\n*Totales:*\n- Total de Leads: ${totalRecords}\n- Leads con vendedor: ${withVendor} (${(
+		(withVendor / totalRecords) *
+		100
+	).toFixed(2)}%)\n- Leads sin vendedor: ${withoutVendor} (${(
+		(withoutVendor / totalRecords) *
+		100
+	).toFixed(2)}%)\n\n*Últimos 7 días:*\n${days
+		.map((day, index) => {
+			const dayKey = `dia${index + 1}`;
+			return `Leads día ${index + 1}: ${day[dayKey].total} - Compradores: ${
+				day[dayKey].compradores
+			}`;
+		})
+		.join("\n")}
+
+*Últimas 4 semanas:*
+${weeks
+	.map((week, index) => {
+		const weekKey = `semana${index + 1}`;
+		return `Leads Semana ${index + 1}: ${week[weekKey].total} - Compradores: ${
+			week[weekKey].compradores
+		}`;
+	})
+	.join("\n")}`;
+
+	console.log(status);
+	return status;
 };
 
-//statusLeads()
-
+//statusLeads();
