@@ -349,7 +349,7 @@ export const statusLeads = async () => {
 	).toFixed(2)}%)\n- Sin vendedor: ${withoutVendor} (${(
 		(withoutVendor / totalRecords) *
 		100
-	).toFixed(2)}%)\n\n*leads últimos 7 días:*\n${days
+	).toFixed(2)}%)\n\n*Leads últimos 7 días:*\n${days
 		.map((day, index) => {
 			const dayKey = `dia${index + 1}`;
 			return `D${index + 1}: ${day[dayKey].total} - Compradores: ${
@@ -362,7 +362,7 @@ export const statusLeads = async () => {
 ${weeks
 	.map((week, index) => {
 		const weekKey = `semana${index + 1}`;
-		return `Sem. ${index + 1}: ${week[weekKey].total} - Compradores: ${
+		return `S${index + 1}: ${week[weekKey].total} - Compradores: ${
 			week[weekKey].compradores
 		}`;
 	})
