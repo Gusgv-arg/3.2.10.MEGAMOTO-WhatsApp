@@ -51,7 +51,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			let botSwitch = await BotSwitch.findOne();
 
 			if (botSwitch?.alarmSwitch === "ON") {
-				const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}`;
+				const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}\n\nMegamoto`;
 				await adminWhatsAppNotification(myPhone, message);
 			}
 
@@ -141,7 +141,7 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				let botSwitch = await BotSwitch.findOne();
 
 				if (botSwitch?.alarmSwitch === "ON") {
-					const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}`;
+					const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}\n\nMegamoto`;
 					await adminWhatsAppNotification(myPhone, message);
 				}
 
