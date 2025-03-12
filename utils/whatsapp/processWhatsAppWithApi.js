@@ -1,8 +1,12 @@
 import { sendFlow_1ToLead } from "../../flows/sendFlow_1ToLead.js";
 import Leads from "../../models/leads.js";
+import BotSwitch from "../../models/botSwitch.js";
 import { createLeadInDb } from "../dataBase/createLeadInDb.js";
 import { saveNotificationInDb } from "../dataBase/saveNotificationInDb.js";
+import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
+
+const myPhone = process.env.MY_PHONE;
 
 export const processWhatsAppWithApi = async (userMessage) => {
 	// Obtain current date and hour
@@ -43,8 +47,16 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			const notification = { message: greeting };
 			await saveNotificationInDb(userMessage, notification);
 
+			// Si la alarma está prendida notifica al Admin de un nuevo lead
+			let botSwitch = await BotSwitch.findOne();
+
+			if (botSwitch?.alarmSwitch === "ON") {
+				const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}`;
+				await adminWhatsAppNotification(myPhone, message);
+			}
+
 			// Actualiza el log
-			log = `1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD.`;
+			log = `1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD. 5-Si la alarma esta en "ON" se notificó al admin.`;
 			return log;
 		} else {
 			// -------- Lead YA EXISTE ------------------------------------------------------
@@ -59,7 +71,6 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			if (lastFlowStatus !== "compró" && lastFlowStatus !== "no compró") {
 				// El Lead ya está en la Fila
 
-				
 				if (lastFlowVendor) {
 					// El lead ya tiene un vendedor asignado
 
@@ -81,19 +92,17 @@ export const processWhatsAppWithApi = async (userMessage) => {
 
 					// Actualiza el log
 					log = `1-Se notificó al lead ${userMessage.name} recordando su vendedor. 2-Alarma al vendedor ${lastFlowVendor}. `;
-					
+
 					return log;
-				
 				} else {
 					// El Lead NO tiene un vendedor asignado, pudo No haber enviado el Flow
-					
-					if (lastFlow.flow1Response === "si"){
+
+					if (lastFlow.flow1Response === "si") {
 						message = `*🔔 Notificación Automática:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
-						
 					} else {
 						message = `*🔔 Notificación Automática:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n❗ 🙏 Para una mejor atención te recordamos enviar el formulario con tu consulta. Revizá en el historial de conversaciones. ¡Muchas Gracias! \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 					}
-						
+
 					// Envía notificación al Lead
 					await handleWhatsappMessage(userMessage.userPhone, message);
 
@@ -128,8 +137,16 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				const notification = { message: greeting2 };
 				await saveNotificationInDb(userMessage, notification);
 
+				// Si la alarma está prendida notifica al Admin de un nuevo lead
+				let botSwitch = await BotSwitch.findOne();
+
+				if (botSwitch?.alarmSwitch === "ON") {
+					const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}`;
+					await adminWhatsAppNotification(myPhone, message);
+				}
+
 				// Actualiza el log
-				log = `1-Se volvió a saludar al lead ${userMessage.name} ya que estaba en BD y no tenía un Flow abierto. 2-Se le envió Flow 1.`;
+				log = `1-Se volvió a saludar al lead ${userMessage.name} ya que estaba en BD y no tenía un Flow abierto. 2-Se le envió Flow 1. 3-Se grabó en BD. 4-Si la alarma esta en "ON" se notificó al admin.`;
 
 				return log;
 			}
