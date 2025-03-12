@@ -4,8 +4,8 @@ import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppN
 const myPhone = process.env.MY_PHONE;
 
 export const changeAlarmSwitch = async () => {
-	let alarm;
     try {
+        let alarm;
 		let botSwitch = await BotSwitch.findOne();
 
 		if (botSwitch.alarmSwitch === "ON") {
@@ -19,6 +19,7 @@ export const changeAlarmSwitch = async () => {
             alarm = "ON"
 			await botSwitch.save();
 		}
+        console.log("alarm en changeAlarmSwitch:", alarm)
 		return alarm;
 	
     } catch (error) {
