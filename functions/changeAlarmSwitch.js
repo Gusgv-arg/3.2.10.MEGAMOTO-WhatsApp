@@ -13,14 +13,16 @@ export const changeAlarmSwitch = async () => {
 			botSwitch.alarmSwitch = "OFF";
 			await botSwitch.save();
             alarm = "OFF"
+            console.log("alarm en changeAlarmSwitch:", alarm)
+            return alarm;
 		} else if (botSwitch.alarmSwitch === "OFF") {
             // Change Alarm Switch
 			botSwitch.alarmSwitch = "ON";
 			await botSwitch.save();
             alarm = "ON"
+            console.log("alarm en changeAlarmSwitch:", alarm)
+            return alarm;
 		}
-        console.log("alarm en changeAlarmSwitch:", alarm)
-		return alarm;
 	
     } catch (error) {
 		console.log("Error in changeAlarmSwitch", error.message);
