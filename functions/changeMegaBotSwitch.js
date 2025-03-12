@@ -1,4 +1,3 @@
-import { newErrorWhatsAppNotification } from "../utils/notifications/newErrorWhatsAppNotification.js";
 import BotSwitch from "../models/botSwitch.js";
 import { adminWhatsAppNotification } from "../utils/notifications/adminWhatsAppNotification.js";
 

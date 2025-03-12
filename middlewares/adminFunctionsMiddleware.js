@@ -23,6 +23,7 @@ import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
 import { handleWhatsappMessage } from "../utils/whatsapp/handleWhatsappMessage.js";
 import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTemplate.js";
 import { statusLeads } from "../utils/dataBase/statusLeads.js";
+import { changeAlarmSwitch } from "../functions/changeAlarmSwitch.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
@@ -68,6 +69,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			await adminWhatsAppNotification(userPhone, botSwitchOnNotification);
 
 			console.log(`${userPhone} prendió la API.`);
+		
 		} else if (message === "no responder") {
 			res.status(200).send("EVENT_RECEIVED");
 
@@ -78,6 +80,15 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			await adminWhatsAppNotification(userPhone, botSwitchOffNotification);
 
 			console.log(`${userPhone} apagó la API.`);
+		
+		} else if (message === "alarma") {
+			// Función para que me llegue una notificación cuando entra un nuevo lead
+			const alarm = await changeAlarmSwitch();
+
+			const message = `*🔔 Notificación:*\n\nLa alarma de nuevos leads fue puesta en ${alarm}.\n\nMegamoto`;
+
+			await adminWhatsAppNotification(userPhone, message);
+
 		} else if (message === "megamoto") {
 			res.status(200).send("EVENT_RECEIVED");
 			// WhatsApp Admin notification
@@ -199,43 +210,40 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 
 			const notification = await pricesModelCreation();
-		
 		} else if (message === "flows") {
 			res.status(200).send("EVENT_RECEIVED");
-			
+
 			// Filtra de la BD los Leads disponibles para atender dentro del Flow
 			const queue = await findFlowLeadsForVendors();
 			//console.log("Queue", queue);
-			
+
 			// Chequea que haya leads en la fila
 			if (queue.length > 0) {
 				// Genera un Excel con los datos
 				const excelFile = await exportFlowLeadsToTemplate(queue);
 				//console.log("excel:", excelFile);
-				
+
 				// Se envía el Excel por WhatsApp
 				await sendExcelByWhatsApp(userPhone, excelFile, "Leads");
-				
+
 				console.log(`Admin ${userPhone} recibió un excel con los leads.`);
 			} else {
 				const message = `*🔔 Notificación Automática:*\n\n⚠️ No hay Leads de ningún vendedor que estén pendientes.\n\n*Megamoto*`;
-				
+
 				// Se notifica de que no hay Leads
 				await handleWhatsappMessage(userPhone, message);
-				
+
 				console.log(
 					`Admin ${userPhone} recibió un mensaje de que no hay leads x lo que no recibió el excel.`
 				);
 			}
-			
-		} else if (message === "status"){
+		} else if (message === "status") {
 			// Función que envía estadíticas de los leads.
 			res.status(200).send("EVENT_RECEIVED");
-			
-			const status = await statusLeads()
-			
+
+			const status = await statusLeads();
+
 			await handleWhatsappMessage(userPhone, status);
-			
 		} else {
 			// Does next if its an admin message but is not an instruction
 			next();
