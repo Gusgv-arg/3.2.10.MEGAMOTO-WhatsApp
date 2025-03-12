@@ -7,17 +7,17 @@ export const changeAlarmSwitch = async () => {
     try {
         let alarm;
 		let botSwitch = await BotSwitch.findOne();
-
+        console.log("botSwitch:", botSwitch)
 		if (botSwitch.alarmSwitch === "ON") {
 			// Change Alarm Switch
 			botSwitch.alarmSwitch = "OFF";
-            alarm = "OFF"
 			await botSwitch.save();
+            alarm = "OFF"
 		} else if (botSwitch.alarmSwitch === "OFF") {
             // Change Alarm Switch
 			botSwitch.alarmSwitch = "ON";
-            alarm = "ON"
 			await botSwitch.save();
+            alarm = "ON"
 		}
         console.log("alarm en changeAlarmSwitch:", alarm)
 		return alarm;
