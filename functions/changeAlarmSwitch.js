@@ -8,7 +8,13 @@ export const changeAlarmSwitch = async () => {
         let alarm;
 		let botSwitch = await BotSwitch.findOne();
         console.log("botSwitch:", botSwitch)
-        console.log("botSwitch.alarmSwitch:", botSwitch.alarmSwitch)
+        console.log("Tipo de botSwitch:", typeof botSwitch);
+        console.log("Es instancia de mongoose?:", botSwitch instanceof require('mongoose').Document);
+        console.log("Propiedades disponibles:", Object.keys(botSwitch._doc || botSwitch));
+        console.log("botSwitch.alarmSwitch:", botSwitch.alarmSwitch);
+        console.log("Acceso directo a _doc:", botSwitch._doc?.alarmSwitch);
+
+        
 		if (botSwitch.alarmSwitch === "ON") {
 			// Change Alarm Switch
 			botSwitch.alarmSwitch = "OFF";

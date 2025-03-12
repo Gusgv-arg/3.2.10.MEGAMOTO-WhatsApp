@@ -3,9 +3,7 @@ import mongoose from "mongoose";
 const botSwitchSchema = new mongoose.Schema(
 	{
 		generalSwitch: { type: String, enum: ['ON', 'OFF'], required: true },
-	},
-	{
-		alarmSwitch: { type: String, enum: ['ON', 'OFF'], required: true },
+		alarmSwitch: { type: String, enum: ['ON', 'OFF'] },
 	},
 	{
 		timestamps: true,
