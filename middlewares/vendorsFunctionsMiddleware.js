@@ -125,6 +125,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 			// Chequear si el mensaje es un teléfono para verificar el lead
 			const verifyMessage = await verifyLead(userPhone, vendorName, message);
+			console.log("verifyMessage:", verifyMessage);
 
 			if (
 				message !== "lead" &&
@@ -142,8 +143,9 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				console.log(
 					`El vendedor ${vendorName} envió un mensaje que la API no procesa y fue notificado con lo que puede realizar.`
 				);
+
+				res.status(200).send("EVENT_RECEIVED");
 			}
-			res.status(200).send("EVENT_RECEIVED");
 		} else if (typeOfWhatsappMessage === "document") {
 			message =
 				body.entry[0].changes[0].value.messages[0].document.caption.toLowerCase();
@@ -313,11 +315,11 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				vendorName
 			);
 		} else {
-			console.log("hizo next1")
+			console.log("hizo next1");
 			next();
 		}
 	} else {
-		console.log("hizo next2")
+		console.log("hizo next2");
 		next();
 	}
 };
