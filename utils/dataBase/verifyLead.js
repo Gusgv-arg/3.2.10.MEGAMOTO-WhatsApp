@@ -14,7 +14,7 @@ const currentDateTime = new Date().toLocaleString("es-AR", {
 });
 
 // Función que verifica si el vendedor envió un teléfono para verificar el lead
-export const verifyLead = async (userPhone, message) => {
+export const verifyLead = async (userPhone, vendorName, message) => {
 	// Verificar si el mensaje contiene un número con al menos 5 cifras
 	const regexContainsNumber = /\d{5,}/;
 	const regexStartsWith549 = /^(549\d{2,})(.*)/;
@@ -54,9 +54,9 @@ export const verifyLead = async (userPhone, message) => {
 						flowName: "registro manual",
 						flowDate: currentDateTime,
 						client_status: "vendedor",
-						statusDate: currentDate.toISOString(),
-						vendor_phone: "",
-						vendor_name: "",
+						statusDate: currentDateTime,
+						vendor_phone: userPhone,
+						vendor_name: vendorName,
 						origin: "Salón",
 						history: "Alta manual",
 						flow_2token,
@@ -98,7 +98,9 @@ export const verifyLead = async (userPhone, message) => {
 					client_status: "vendedor",
 					statusDate: currentDateTime,
 					origin: "Salón",
-					history: `${currentDateTime} Alta manual`,
+                    vendor_phone: userPhone,
+					vendor_name: vendorName,
+					history: `${currentDateTime} Alta manual por ${vendorName}.`,
 					flow_2token,
 					flow_status: "activo",
 				};
