@@ -146,7 +146,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (verifyMessage === true) {
-				res.status(200).send("EVENT_RECEIVED");
+				return res.status(200).send("EVENT_RECEIVED");
 			}
 		} else if (typeOfWhatsappMessage === "document") {
 			message =
