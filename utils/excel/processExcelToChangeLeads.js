@@ -196,7 +196,15 @@ export const processExcelToChangeLeads = async (
 				(key) => updateData[key] === undefined && delete updateData[key]
 			);
 
-			// Primero verificamos si existe el documento
+			// Primero verificamos: 
+			// -Si existe el lead x su número de teléfono 
+			// -Si existe el número, chequear el flowToken2.
+				// -Si SI es el flowToken2 se actualiza ese lead en ese flow.
+				// -Si No es el del flowToken2, se verifica el status del lead.
+					// Si el status es distinto a compró o no compró, quiere decir que hay una operación en curso, devolver error con los datos del vendedor.
+					// Si el status es igual a compró o no compró, se crea un registro en el array de flows.
+			// Si No existe el número de teléfono, se crea un nuevo lead. 
+
 			const existingLead = await Leads.findOne({
 				id_user: id_user,
 				...(flow_2token ? { "flows.flow_2token": flow_2token } : {}),

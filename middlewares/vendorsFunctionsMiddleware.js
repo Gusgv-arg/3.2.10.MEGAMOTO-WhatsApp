@@ -5,7 +5,8 @@ import { salesFlow_2Notification } from "../flows/salesFlow_2Notification.js";
 import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
 import { getMediaWhatsappUrl } from "../utils/media/getMediaWhatsappUrl.js";
 import { downloadWhatsAppMedia } from "../utils/media/downloadWhatsAppMedia.js";
-import { processExcelToChangeLeads } from "../utils/excel/processExcelToChangeLeads.js";
+//import { processExcelToChangeLeads } from "../utils/excel/processExcelToChangeLeads.js";
+import { processExcelToChangeLeads } from "../utils/excel/processExcelToChangeLeads2.js";
 import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTemplate.js";
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
@@ -289,7 +290,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			(message === "lead" && typeOfWhatsappMessage === "document") ||
 			typeOfWhatsappMessage === "document"
 		) {
-			// Función para que el vendedor envíe un Excel para cambiar estados
+			// Función para que el vendedor envíe un Excel para cambiar datos (estados, etc)
 			res.status(200).send("EVENT_RECEIVED");
 
 			// Get the Document URL from WhatsApp
