@@ -49,7 +49,8 @@ export const verifyLead = async (userPhone, vendorName, message) => {
 				id_user,
 				name,
 				channel: "whatsapp",
-				flows: [
+				botSwitch: "ON",
+                flows: [
 					{
 						flowName: "registro manual",
 						flowDate: currentDateTime,
