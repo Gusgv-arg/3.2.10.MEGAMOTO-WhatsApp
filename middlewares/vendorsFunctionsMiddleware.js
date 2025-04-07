@@ -313,9 +313,11 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				vendorName
 			);
 		} else {
+			console.log("hizo next1")
 			next();
 		}
 	} else {
+		console.log("hizo next2")
 		next();
 	}
 };
