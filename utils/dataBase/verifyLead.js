@@ -1,5 +1,6 @@
 import Leads from "../../models/leads.js";
 import { v4 as uuidv4 } from "uuid";
+import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 
 // Obtain current date and hour
 const currentDateTime = new Date().toLocaleString("es-AR", {
@@ -12,13 +13,14 @@ const currentDateTime = new Date().toLocaleString("es-AR", {
     second: "2-digit",
 });
 
-export const verifyLead = async (message) => {
+// Función que verifica si el vendedor envió un teléfono para verificar el lead
+export const verifyLead = async (userPhone, message) => {
     // Verificar si el mensaje comienza con al menos 5 cifras
     const regex = /^(\d{5,})(.*)/;
     const match = message.match(regex);
 
     if (!match) {
-        return;
+        return false; // Si no hay coincidencia, retornar false
     }
 
     // Extraer el id_user y el nombre del mensaje
@@ -55,18 +57,25 @@ export const verifyLead = async (message) => {
 
             await user.save();
             console.log(`Nuevo registro creado para id_user: ${id_user}`);
-            return user;
+
+            // Notificar al usuario que se ha creado un nuevo registro
+            const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Tu lead con el teléfono ${id_user} fue creado exitosamente. Para completar el resto de los datos podés enviar la palabra "leads", recibir el Excel y volver a enviarlo con toda la información de la operación.\n\n*Megamoto*`;
+
+            await handleWhatsappMessage(userPhone, message)
+            return;
+
         } else {
             // Si el usuario ya existe, verificar el último flow_status
             const lastFlow = user.flows[user.flows.length - 1];
 
             if (lastFlow && lastFlow.flow_status !== "compró" && lastFlow.flow_status !== "no compró") {
                 // Si el último flow_status es distinto de "compró" o "no compró"
-                return {
-                    message: "El lead tiene una operación en curso.",
-                    vendor_name: user.vendor_name,
-                    vendor_phone: user.vendor_phone,
-                };
+                const message = `*🔔 Notificación MEGAMOTO:*\n\n❌ El lead tiene una operación en curso. Vendedor: ${lastFlow.vendor_name}, Teléfono: ${lastFlow.vendor_phone}\n\n*Megamoto*`;
+
+                await handleWhatsappMessage(userPhone, message)
+                
+                return
+
             } else {
                 // Si el último flow_status es "compró" o "no compró", agregar un nuevo registro en flows
                 const flow_2token = `2+${uuidv4()}`;
@@ -86,11 +95,19 @@ export const verifyLead = async (message) => {
                 await user.save();
 
                 console.log(`Nuevo flow agregado para id_user: ${id_user}`);
-                return user;
+                
+                const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Tu lead con el teléfono ${id_user} fue creado exitosamente y NO es la primera vez que nos consulta. Para completar el resto de los datos podés enviar la palabra "leads", recibir el Excel y volver a enviarlo con toda la información de la operación.\n\n*Megamoto*`;
+
+                await handleWhatsappMessage(userPhone, message)
+                return
             }
         }
     } catch (error) {
-        console.error("Error al verificar o crear el id_user en la base de datos:", error);
-        throw new Error("Error al verificar o crear el id_user");
+        console.error("Error en verifyLead.js:", error);
+        const errorMessage = error?.response?.data
+		? JSON.stringify(error.response.data)
+		: error.message
+        
+        throw new Error(errorMessage);
     }
 };

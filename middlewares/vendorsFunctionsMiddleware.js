@@ -8,6 +8,7 @@ import { downloadWhatsAppMedia } from "../utils/media/downloadWhatsAppMedia.js";
 //import { processExcelToChangeLeads } from "../utils/excel/processExcelToChangeLeads.js";
 import { processExcelToChangeLeads } from "../utils/excel/processExcelToChangeLeads2.js";
 import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTemplate.js";
+import { verifyLead } from "../utils/dataBase/verifyLead.js";
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
@@ -119,17 +120,22 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 		let documentId;
 
 		if (typeOfWhatsappMessage === "text") {
+			res.status(200).send("EVENT_RECEIVED");
+
 			message =
 				body.entry[0].changes[0].value.messages[0].text.body.toLowerCase();
+
+			// Chequear si el mensaje es un teléfono para verificar el lead
+			const verifyMessage = await verifyLead(userPhone, message);
 
 			if (
 				message !== "lead" &&
 				message !== "leads" &&
 				userPhone !== vendor1 &&
-				userPhone !== vendor2
+				userPhone !== vendor2 &&
+				verifyMessage === false
 			) {
 				// Caso que el vendedor manda un texto con algo que la API no procesa
-				res.status(200).send("EVENT_RECEIVED");
 
 				const notification = `*🔔 Notificación MEGAMOTO:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
 
