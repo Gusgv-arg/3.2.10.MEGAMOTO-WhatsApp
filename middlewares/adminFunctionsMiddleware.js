@@ -69,7 +69,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			await adminWhatsAppNotification(userPhone, botSwitchOnNotification);
 
 			console.log(`${userPhone} prendió la API.`);
-		
 		} else if (message === "no responder") {
 			res.status(200).send("EVENT_RECEIVED");
 
@@ -80,7 +79,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			await adminWhatsAppNotification(userPhone, botSwitchOffNotification);
 
 			console.log(`${userPhone} apagó la API.`);
-		
 		} else if (message === "alarma") {
 			res.status(200).send("EVENT_RECEIVED");
 			// Función para que me llegue una notificación cuando entra un nuevo lead
@@ -89,7 +87,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			const message = `*🔔 Notificación:*\n\nLa alarma de nuevos leads fue puesta en *${alarm}*.\n\nMegamoto`;
 
 			await adminWhatsAppNotification(userPhone, message);
-
 		} else if (message === "megamoto") {
 			res.status(200).send("EVENT_RECEIVED");
 			// WhatsApp Admin notification
@@ -229,7 +226,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 				console.log(`Admin ${userPhone} recibió un excel con los leads.`);
 			} else {
-				const message = `*🔔 Notificación Automática:*\n\n⚠️ No hay Leads de ningún vendedor que estén pendientes.\n\n*Megamoto*`;
+				const message = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ No hay Leads de ningún vendedor que estén pendientes.\n\n*Megamoto*`;
 
 				// Se notifica de que no hay Leads
 				await handleWhatsappMessage(userPhone, message);

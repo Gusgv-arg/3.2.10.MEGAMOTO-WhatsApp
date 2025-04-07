@@ -74,13 +74,13 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				if (lastFlowVendor) {
 					// El lead ya tiene un vendedor asignado
 
-					message = `*🔔 Notificación Automática:*\n\n📣 Estimado ${userMessage.name}; le enviaremos tu consulta a tu vendedor asignado que te recordamos es ${lastFlowVendor} con el celular ${lastFlowPhone}.\n❗ Agendalo para identificarlo cuando te contacte.\n🙏 Te pedimos un poco de paciencia.\n¡Haremos lo posible para atenderte cuanto antes!\n\n*MEGAMOTO* `;
+					message = `*🔔 Notificación MEGAMOTO:*\n\n📣 Estimado ${userMessage.name}; le enviaremos tu consulta a tu vendedor asignado que te recordamos es ${lastFlowVendor} con el celular ${lastFlowPhone}.\n❗ Agendalo para identificarlo cuando te contacte.\n🙏 Te pedimos un poco de paciencia.\n¡Haremos lo posible para atenderte cuanto antes!\n\n*MEGAMOTO* `;
 
 					// Envía notificación de recordatorio al Lead
 					await handleWhatsappMessage(userMessage.userPhone, message);
 
 					// Envía alarma al vendedor con la pregunta del cliente
-					const alarm = `*🔔 Notificación Automática:*\n\n📣 El cliente ${userMessage.name} cel: ${userMessage.userPhone} envió el siguiente mensaje: ${userMessage.message}.\n\n*MEGAMOTO*`;
+					const alarm = `*🔔 Notificación MEGAMOTO:*\n\n📣 El cliente ${userMessage.name} cel: ${userMessage.userPhone} envió el siguiente mensaje: ${userMessage.message}.\n\n*MEGAMOTO*`;
 
 					await handleWhatsappMessage(lastFlowPhone, alarm);
 
@@ -98,9 +98,9 @@ export const processWhatsAppWithApi = async (userMessage) => {
 					// El Lead NO tiene un vendedor asignado, pudo No haber enviado el Flow
 
 					if (lastFlow.flow1Response === "si") {
-						message = `*🔔 Notificación Automática:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+						message = `*🔔 Notificación MEGAMOTO:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 					} else {
-						message = `*🔔 Notificación Automática:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n❗ 🙏 Para una mejor atención te recordamos enviar el formulario con tu consulta. Revizá en el historial de conversaciones. ¡Muchas Gracias! \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+						message = `*🔔 Notificación MEGAMOTO:*\n\n📣 Estimado ${userMessage.name}; le estaremos enviando tu consulta a un vendedor. Haremos lo posible para asignarte uno cuando antes y te notificaremos con sus datos.\n\n❗ 🙏 Para una mejor atención te recordamos enviar el formulario con tu consulta. Revizá en el historial de conversaciones. ¡Muchas Gracias! \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 					}
 
 					// Envía notificación al Lead

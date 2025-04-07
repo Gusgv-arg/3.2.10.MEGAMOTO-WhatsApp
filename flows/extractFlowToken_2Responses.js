@@ -1,7 +1,7 @@
 export const extractFlowToken_2Responses = (flowMessage, name) => {
 	
 	let response = {
-		message: "*🔔 Notificación Automática:*\n\n✅ Tus respuestas fueron registradas.\n",
+		message: "*🔔 Notificación MEGAMOTO:*\n\n✅ Tus respuestas fueron registradas.\n",
 		flowToken: "",
 		days: 0,
 		delegate: "",

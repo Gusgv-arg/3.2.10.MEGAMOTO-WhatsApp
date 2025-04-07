@@ -72,30 +72,24 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 							{ dni: notification.dni }
 						);
 
-						console.log("Respuesta Credicuotas:", credito.data)
-						
-						if (credito.data.success === true){
-							// Si todo sale OK
-							const credit = credito.data.data.monto
-							
-							// Se notifica al cliente con los resultados
-							const message = `*🔔 Notificación:*\n\n📣 Estimado ${userMessage.name}; de acuerdo al DNI informado número ${notification.dni} los detalles de su crédito preaprobado son los siguientes:\n\nMonto: ${credit}\nRequisitos: ${credito.data.data.requisitos}\n\n⚠️ Esta información está sujeta cambios y deberá ser confirmada por un vendedor.\n\n*Megamoto*`
-							
-							await handleWhatsappMessage(
-								userMessage.userPhone,
-								message
-							);
-							
-							// Se guarda la info del crédito en BD
-							await saveCreditInDb(userMessage.userPhone,	message, credit)
-							
-							log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name}. Monto: ${credit}. Requisitos: ${credito.data.data.requisitos} `;
-						
-						} else if (credito.data.success === false){
-							log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name} pero hubo un error: ${credito.data.error}`;
+						console.log("Respuesta Credicuotas:", credito.data);
 
+						if (credito.data.success === true) {
+							// Si todo sale OK
+							const credit = credito.data.data.monto;
+
+							// Se notifica al cliente con los resultados
+							const message = `*🔔 Notificación:*\n\n📣 Estimado ${userMessage.name}; de acuerdo al DNI informado número ${notification.dni} los detalles de su crédito preaprobado son los siguientes:\n\nMonto: ${credit}\nRequisitos: ${credito.data.data.requisitos}\n\n⚠️ Esta información está sujeta cambios y deberá ser confirmada por un vendedor.\n\n*Megamoto*`;
+
+							await handleWhatsappMessage(userMessage.userPhone, message);
+
+							// Se guarda la info del crédito en BD
+							await saveCreditInDb(userMessage.userPhone, message, credit);
+
+							log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name}. Monto: ${credit}. Requisitos: ${credito.data.data.requisitos} `;
+						} else if (credito.data.success === false) {
+							log += `Se buscó en Credicuotas el monto de crédito para ${userMessage.name} pero hubo un error: ${credito.data.error}`;
 						}
-					
 					} catch (error) {
 						const errorMessage = `Error llamando a la APi de Credicuotas: ${
 							error?.response?.data
@@ -104,7 +98,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 						}`;
 
 						//console.log(errorMessage);
-						
+
 						throw errorMessage;
 					}
 				}
@@ -115,7 +109,10 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 				let vendorPhone;
 				let vendorName;
 
-				const notification = extractFlowToken_2Responses(userMessage.message, userMessage.name);
+				const notification = extractFlowToken_2Responses(
+					userMessage.message,
+					userMessage.name
+				);
 
 				log = `1-Se extrajo la respuesta del Flow 2 del vendedor ${userMessage.name}. `;
 
@@ -174,7 +171,7 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 
 				if (notification.delegate) {
 					// Notificar al vendedor derivado
-					const message = `*🔔 Notificación Automática:*\n\n📣 El vendedor ${userMessage.name} te derivó al cliente ${customerName}\n❗ Importante: entrá en tu celular para tomar el Lead.\n\n*Megamoto*`;
+					const message = `*🔔 Notificación MEGAMOTO:*\n\n📣 El vendedor ${userMessage.name} te derivó al cliente ${customerName}\n❗ Importante: entrá en tu celular para tomar el Lead.\n\n*Megamoto*`;
 
 					await handleWhatsappMessage(vendorPhone, message);
 
@@ -213,17 +210,17 @@ export const processWhatsAppFlowWithApi = async (userMessage) => {
 		}
 	} catch (error) {
 		//console.log("error en processWhatsAppFlowWithApi.js", error)
-		
-		let errorMessage
 
-		if (error.includes("Error llamando a la APi de Credicuotas:")){
-			errorMessage = error
+		let errorMessage;
+
+		if (error.includes("Error llamando a la APi de Credicuotas:")) {
+			errorMessage = error;
 		} else {
 			errorMessage = error?.response?.data
-			? JSON.stringify(error.response.data)
-			: error.message; 
+				? JSON.stringify(error.response.data)
+				: error.message;
 		}
-		
+
 		throw errorMessage;
 	}
 };

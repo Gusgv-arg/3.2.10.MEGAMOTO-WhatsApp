@@ -76,7 +76,7 @@ export const processExcelToChangeLeads = async (
 			const actualHeader = headers[i] ? String(headers[i]).trim() : "";
 			if (actualHeader !== expectedHeaders[i]) {
 				const errorMessage =
-					"🔔 *Notificación Automática:*\n\n❌ El archivo Excel no respeta la estructura de la plantilla original. Por favor, utilice la plantilla correcta sin modificar los encabezados ni agregar o sacar columnas.\n\n*Megamoto*";
+					"🔔 *Notificación MEGAMOTO:*\n\n❌ El archivo Excel no respeta la estructura de la plantilla original. Por favor, utilice la plantilla correcta sin modificar los encabezados ni agregar o sacar columnas.\n\n*Megamoto*";
 
 				console.log(
 					`El usuario ${vendorName} envió el archivo Leads incorrecto.`
@@ -359,7 +359,7 @@ export const processExcelToChangeLeads = async (
 
 		if (errorMessages.length > 0) {
 			const combinedErrorMessage = errorMessages.join("\n");
-			const finalMessage = `🔔 *Notificación Automática:*\n\nError al actualizar Leads:\n${combinedErrorMessage}\n\n*Megamoto*`;
+			const finalMessage = `🔔 *Notificación MEGAMOTO:*\n\nError al actualizar Leads:\n${combinedErrorMessage}\n\n*Megamoto*`;
 
 			await handleWhatsappMessage(userPhone, finalMessage);
 
@@ -369,7 +369,7 @@ export const processExcelToChangeLeads = async (
 		} else {
 			await handleWhatsappMessage(
 				userPhone,
-				`🔔 *Notificación Automática:*\n\n✅ ¡Se actualizaron ${dataRows.length} Leads!\n\n*Megamoto*`
+				`🔔 *Notificación MEGAMOTO:*\n\n✅ ¡Se actualizaron ${dataRows.length} Leads!\n\n*Megamoto*`
 			);
 
 			console.log(

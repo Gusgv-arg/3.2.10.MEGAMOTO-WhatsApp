@@ -88,7 +88,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 		res.status(200).send("EVENT_RECEIVED");
 
-		const notification = `*🔔 Notificación Automática:*\n\n❗ Estimado /a ${name}, esta es una línea de WhatsApp que *solo procesa mensajes de texto* y sirve para que los vendedores puedan atenderte más rápido.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+		const notification = `*🔔 Notificación MEGAMOTO:*\n\n❗ Estimado /a ${name}, esta es una línea de WhatsApp que *solo procesa mensajes de texto* y sirve para que los vendedores puedan atenderte más rápido.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 		await handleWhatsappMessage(userPhone, notification);
 
@@ -103,7 +103,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	) {
 		res.status(200).send("EVENT_RECEIVED");
 
-		const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1. Enviar palabra "lead" para recibir un Lead.\n2. Enviar palabra "leads" para recibir un excel con sus leads.\n3. Adjuntar el mismo excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
+		const notification = `*🔔 Notificación MEGAMOTO:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1. Enviar palabra "lead" para recibir un Lead.\n2. Enviar palabra "leads" para recibir un excel con sus leads.\n3. Adjuntar el mismo excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
 
 		await handleWhatsappMessage(userPhone, notification);
 
@@ -131,7 +131,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				// Caso que el vendedor manda un texto con algo que la API no procesa
 				res.status(200).send("EVENT_RECEIVED");
 
-				const notification = `*🔔 Notificación Automática:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
+				const notification = `*🔔 Notificación MEGAMOTO:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
 
 				await handleWhatsappMessage(userPhone, notification);
 
@@ -182,11 +182,11 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					vendorLeads = allLeads;
 				}
 				//console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
-				console.log("vendorLeads:", vendorLeads)
+				console.log("vendorLeads:", vendorLeads);
 				// Procesa solo los leads del vendedor
 				if (vendorLeads.length > 0) {
 					// Notificar al vendedor del proceso
-					const message = `*🔔 Notificación Automática:*\n\n✅ Vas a recibir tus Leads en un Excel. Al abrir el archivo NO le des importancia a los mensajes de error. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\n*Megamoto*`;
+					const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Vas a recibir tus Leads en un Excel. Al abrir el archivo NO le des importancia a los mensajes de error. Si no llega en menos de 1 minuto, volvé a enviar la palabra leads.\n\n*Megamoto*`;
 
 					await handleWhatsappMessage(userPhone, message);
 
@@ -204,13 +204,13 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					// Como no hay Leads en la fila del VENDEDOR se lo notifica
 					let message;
 					if (available === true) {
-						message = `*🔔 Notificación Automática:*\n\n⚠️ No tenés Leads que estés atendiendo. Hay *${availableLeads}* leads para atender asique enviá la palabra "lead" para que se te asigne uno. ¡A vender!\n\n*Megamoto*`;
+						message = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ No tenés Leads que estés atendiendo. Hay *${availableLeads}* leads para atender asique enviá la palabra "lead" para que se te asigne uno. ¡A vender!\n\n*Megamoto*`;
 
 						console.log(
 							`El vendedor ${vendorName} recibió un mensaje de que envíe la palabra lead para atender a alguien.`
 						);
 					} else {
-						message = `*🔔 Notificación Automática:*\n\n⚠️ No tenés Leads que estés atendiendo y por el momento no hay leads disponibles para atender.\n\n*Megamoto*`;
+						message = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ No tenés Leads que estés atendiendo y por el momento no hay leads disponibles para atender.\n\n*Megamoto*`;
 
 						console.log(
 							`El vendedor ${vendorName} recibió un mensaje de que no tiene y de que no hay leads para atender.`
@@ -221,7 +221,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				}
 			} else {
 				// Como no hay Leads en la fila notificar al vendedor
-				const message = `*🔔 Notificación Automática:*\n\n⚠️ No hay Leads de ningún vendedor que estén pendientes.\n\n*Megamoto*`;
+				const message = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ No hay Leads de ningún vendedor que estén pendientes.\n\n*Megamoto*`;
 
 				await handleWhatsappMessage(userPhone, message);
 
@@ -251,7 +251,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					//console.log("myLead:", myLead)
 
 					// Se notifica al vendedor por si no ve el Flow
-					const notification = `*🔔 Notificación Automática:*\n\n✅ Entrá en tu celular para tomar un Lead. Hay ${availableLeads.length} leads esperando.\n\n*Megamoto*`;
+					const notification = `*🔔 Notificación MEGAMOTO:*\n\n✅ Entrá en tu celular para tomar un Lead. Hay ${availableLeads.length} leads esperando.\n\n*Megamoto*`;
 					const vendorPhone = userPhone;
 
 					await handleWhatsappMessage(vendorPhone, notification);
@@ -265,7 +265,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				} else {
 					const vendorPhone = userPhone;
 					const notification =
-						"*🔔 Notificación Automática:*\n\n⚠️ Por el momento no hay Leads que atender.\n\n*Megamoto*";
+						"*🔔 Notificación MEGAMOTO:*\n\n⚠️ Por el momento no hay Leads que atender.\n\n*Megamoto*";
 
 					await handleWhatsappMessage(vendorPhone, notification);
 
@@ -277,7 +277,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			} else {
 				const vendorPhone = userPhone;
 				const notification =
-					"*🔔 Notificación Automática:*\n\n⚠️ Por el momento no hay Leads que atender.\n\n*Megamoto*";
+					"*🔔 Notificación MEGAMOTO:*\n\n⚠️ Por el momento no hay Leads que atender.\n\n*Megamoto*";
 
 				await handleWhatsappMessage(vendorPhone, notification);
 

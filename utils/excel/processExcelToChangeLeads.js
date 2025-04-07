@@ -77,7 +77,7 @@ export const processExcelToChangeLeads = async (
 			const actualHeader = headers[i] ? String(headers[i]).trim() : "";
 			if (actualHeader !== expectedHeaders[i]) {
 				const errorMessage =
-					"🔔 *Notificación Automática:*\n\n❌ El archivo Excel no respeta la estructura de la plantilla original. Por favor, utilice la plantilla correcta sin modificar los encabezados ni agregar o sacar columnas.\n\n*Megamoto*";
+					"🔔 *Notificación MEGAMOTO:*\n\n❌ El archivo Excel no respeta la estructura de la plantilla original. Por favor, utilice la plantilla correcta sin modificar los encabezados ni agregar o sacar columnas.\n\n*Megamoto*";
 
 				console.log(
 					`El usuario ${vendorName} envió el archivo Leads incorrecto.`
@@ -147,7 +147,7 @@ export const processExcelToChangeLeads = async (
 					continue;
 				}
 			}
-			
+
 			// Validar brand (columna G, índice 6) - EN TORIA NO HARIA FALTA X QUE ES UNA LISTA
 			const brand = col[6] ? String(col[6]).trim() : "";
 			if (brand && !validBrands.includes(brand)) {
@@ -173,7 +173,7 @@ export const processExcelToChangeLeads = async (
 				(v) => v.name.toLowerCase() === col[14].toLowerCase()
 			); // Buscar el vendedor por nombre
 			const vendorPhone = vendor ? vendor.phone : userPhone; // Obtener el teléfono si existe
-			
+
 			// Crear objeto con los campos modificables
 			const updateData = {
 				"flows.$.client_status": client_status, // Usar el client_status validado
@@ -196,14 +196,14 @@ export const processExcelToChangeLeads = async (
 				(key) => updateData[key] === undefined && delete updateData[key]
 			);
 
-			// Primero verificamos: 
-			// -Si existe el lead x su número de teléfono 
+			// Primero verificamos:
+			// -Si existe el lead x su número de teléfono
 			// -Si existe el número, chequear el flowToken2.
-				// -Si SI es el flowToken2 se actualiza ese lead en ese flow.
-				// -Si No es el del flowToken2, se verifica el status del lead.
-					// Si el status es distinto a compró o no compró, quiere decir que hay una operación en curso, devolver error con los datos del vendedor.
-					// Si el status es igual a compró o no compró, se crea un registro en el array de flows.
-			// Si No existe el número de teléfono, se crea un nuevo lead. 
+			// -Si SI es el flowToken2 se actualiza ese lead en ese flow.
+			// -Si No es el del flowToken2, se verifica el status del lead.
+			// Si el status es distinto a compró o no compró, quiere decir que hay una operación en curso, devolver error con los datos del vendedor.
+			// Si el status es igual a compró o no compró, se crea un registro en el array de flows.
+			// Si No existe el número de teléfono, se crea un nuevo lead.
 
 			const existingLead = await Leads.findOne({
 				id_user: id_user,
@@ -290,8 +290,10 @@ export const processExcelToChangeLeads = async (
 			} `;
 
 			// Check if client_status has changed
-			const statusChanged = existingLead.flows[flowIndex].client_status !== updateData["flows.$.client_status"];
-			
+			const statusChanged =
+				existingLead.flows[flowIndex].client_status !==
+				updateData["flows.$.client_status"];
+
 			// Update the matching flow directly using the positional $ operator
 			const result = await Leads.updateOne(
 				{
@@ -302,7 +304,9 @@ export const processExcelToChangeLeads = async (
 					$set: {
 						[`flows.${flowIndex}.client_status`]:
 							updateData["flows.$.client_status"],
-						[`flows.${flowIndex}.statusDate`]: statusChanged ? currentDateTime : existingLead.flows[flowIndex].statusDate,
+						[`flows.${flowIndex}.statusDate`]: statusChanged
+							? currentDateTime
+							: existingLead.flows[flowIndex].statusDate,
 						[`flows.${flowIndex}.toContact`]: updateData["flows.$.toContact"],
 						[`flows.${flowIndex}.messages`]: updateData["flows.$.messages"],
 						[`flows.${flowIndex}.brand`]: updateData["flows.$.brand"],
@@ -339,29 +343,36 @@ export const processExcelToChangeLeads = async (
 		// Si hay mensajes de error, enviarlos al usuario
 		if (errorMessages.length > 0) {
 			const combinedErrorMessage = errorMessages.join("\n");
-			const finalMessage = `🔔 *Notificación Automática:*\n\nError al actualizar Leads:\n${combinedErrorMessage}\n\n*Megamoto*`;
+			const finalMessage = `🔔 *Notificación MEGAMOTO:*\n\nError al actualizar Leads:\n${combinedErrorMessage}\n\n*Megamoto*`;
 
 			await handleWhatsappMessage(userPhone, finalMessage);
-		
-			console.log(`El vendedor ${vendorName} envió su Excel con sus leads y hubo un error: ${combinedErrorMessage}`)
 
+			console.log(
+				`El vendedor ${vendorName} envió su Excel con sus leads y hubo un error: ${combinedErrorMessage}`
+			);
 		} else {
 			// Notificar el éxito del proceso al usuario
 			await handleWhatsappMessage(
 				userPhone,
-				`🔔 *Notificación Automática:*\n\n✅ ¡Se actualizaron ${dataRows.length} Leads!\n\n*Megamoto*`
+				`🔔 *Notificación MEGAMOTO:*\n\n✅ ¡Se actualizaron ${dataRows.length} Leads!\n\n*Megamoto*`
 			);
 
-			console.log(`El vendedor ${vendorName} envió sus leads en Excel y se procesaron exitosamente ${dataRows.length} registros.`)
+			console.log(
+				`El vendedor ${vendorName} envió sus leads en Excel y se procesaron exitosamente ${dataRows.length} registros.`
+			);
 		}
 	} catch (error) {
-		console.error(`Error en processExcelToChangeLeads.js: Vendedor: ${vendorName}. Error: ${error?.response?.data
-			? JSON.stringify(error.response.data)
-			: error.message}`);
-		
-		const errorMessage = error?.response?.data
+		console.error(
+			`Error en processExcelToChangeLeads.js: Vendedor: ${vendorName}. Error: ${
+				error?.response?.data
 					? JSON.stringify(error.response.data)
-					: error.message;
+					: error.message
+			}`
+		);
+
+		const errorMessage = error?.response?.data
+			? JSON.stringify(error.response.data)
+			: error.message;
 
 		await adminWhatsAppNotification(
 			userPhone,
