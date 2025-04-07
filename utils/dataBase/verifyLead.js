@@ -15,16 +15,27 @@ const currentDateTime = new Date().toLocaleString("es-AR", {
 
 // Función que verifica si el vendedor envió un teléfono para verificar el lead
 export const verifyLead = async (userPhone, message) => {
-    // Verificar si el mensaje comienza con al menos 5 cifras
-    const regex = /^(\d{5,})(.*)/;
-    const match = message.match(regex);
+    
+    // Verificar si el mensaje contiene un número con al menos 5 cifras
+    const regexContainsNumber = /\d{5,}/;
+    const regexStartsWith549 = /^(549\d{2,})(.*)/;
+
+    if (!regexContainsNumber.test(message)) {
+        return false; // Si no contiene un número con al menos 5 cifras, retornar false
+    }
+
+    const match = message.match(regexStartsWith549);
 
     if (!match) {
-        return false; // Si no hay coincidencia, retornar false
+        // Si contiene un número pero no comienza con "549", notificar al usuario
+        const errorMessage = `*🔔 Notificación MEGAMOTO:*\n\n❌ Error: El número debe comenzar con "549" + código de área + número. Por favor, verifica el formato e intenta nuevamente.\n\n*Megamoto*`;
+        
+        await handleWhatsappMessage(userPhone, errorMessage);
+        return false;
     }
 
     // Extraer el id_user y el nombre del mensaje
-    const id_user = match[1].trim(); // Primer grupo: las 5 cifras
+    const id_user = match[1].trim(); // Primer grupo: las 5 o más cifras
     const name = match[2].trim(); // Segundo grupo: el resto del mensaje
 
     try {
@@ -70,7 +81,7 @@ export const verifyLead = async (userPhone, message) => {
 
             if (lastFlow && lastFlow.flow_status !== "compró" && lastFlow.flow_status !== "no compró") {
                 // Si el último flow_status es distinto de "compró" o "no compró"
-                const message = `*🔔 Notificación MEGAMOTO:*\n\n❌ El lead tiene una operación en curso. Vendedor: ${lastFlow.vendor_name}, Teléfono: ${lastFlow.vendor_phone}\n\n*Megamoto*`;
+                const message = `*🔔 Notificación MEGAMOTO:*\n\n❌ El lead tiene una operación en curso.\nVendedor: ${lastFlow.vendor_name}\nTeléfono: ${lastFlow.vendor_phone}\n\n*Megamoto*`;
 
                 await handleWhatsappMessage(userPhone, message)
                 
@@ -107,7 +118,7 @@ export const verifyLead = async (userPhone, message) => {
         const errorMessage = error?.response?.data
 		? JSON.stringify(error.response.data)
 		: error.message
-        
+
         throw new Error(errorMessage);
     }
 };
