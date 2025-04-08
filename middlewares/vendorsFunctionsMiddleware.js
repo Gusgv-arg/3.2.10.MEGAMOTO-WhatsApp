@@ -125,7 +125,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 			// Chequear si el mensaje es un teléfono para verificar el lead
 			const verifyMessage = await verifyLead(userPhone, vendorName, message);
-			console.log("verifyMessage:", verifyMessage);
+			//console.log("verifyMessage:", verifyMessage);
 
 			if (
 				message !== "lead" &&
@@ -136,7 +136,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			) {
 				// Caso que el vendedor manda un texto con algo que la API no procesa
 
-				const notification = `*🔔 Notificación MEGAMOTO:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
+				const notification = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n5. Enviar un número de celular + nombre para dar de alta o verificar de quien es el lead.\n\n*Megamoto*`;
 
 				await handleWhatsappMessage(userPhone, notification);
 
@@ -238,6 +238,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					`El vendedor ${vendorName} recibió un mensaje de que no hay leads pendientes de nadie.`
 				);
 			}
+
 		} else if (message === "lead" && typeOfWhatsappMessage === "text") {
 			// Función que envía un lead para atender
 			res.status(200).send("EVENT_RECEIVED");
@@ -294,6 +295,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					`El vendedor ${vendorName} recibió un mensaje de que no hay leads para atender.`
 				);
 			}
+
 		} else if (
 			(message === "leads" && typeOfWhatsappMessage === "document") ||
 			(message === "lead" && typeOfWhatsappMessage === "document") ||
@@ -317,11 +319,9 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				vendorName
 			);
 		} else {
-			console.log("hizo next1");
 			next();
 		}
 	} else {
-		console.log("hizo next2");
 		next();
 	}
 };
