@@ -171,6 +171,7 @@ export const processExcelToChangeLeads = async (
 			const vendorPhone = vendor ? vendor.phone : userPhone;
 
 			const updateData = {
+				"flows.$.name": name,
 				"flows.$.client_status": client_status,
 				"flows.$.toContact": col[4] ? new Date(col[4]) : undefined,
 				"flows.$.brand": col[6],
@@ -278,6 +279,8 @@ export const processExcelToChangeLeads = async (
 					},
 					{
 						$set: {
+							[`flows.${flowIndex}.name`]:
+								updateData["flows.$.name"],
 							[`flows.${flowIndex}.client_status`]:
 								updateData["flows.$.client_status"],
 							[`flows.${flowIndex}.statusDate`]: statusChanged
@@ -330,6 +333,7 @@ export const processExcelToChangeLeads = async (
 				});
 
 				existingLead.flows.push({
+					name: updateData["flows.$.name"],
 					client_status: updateData["flows.$.client_status"] || "vendedor",
 					statusDate: `${currentDateTime}`,
 					flowDate: `${currentDateTime}`,
