@@ -46,7 +46,7 @@ export const verifyLead = async (vendorPhone, vendorName, message) => {
 
 	try {
 		// Buscar en la base de datos si el id_user existe
-		let user = await Leads.findOne({ customerPhone });
+		let user = await Leads.findOne({ id_user: customerPhone });
 
 		if (!user) {
 			// Si no existe, verificar el número enviando whatsapp al lead
