@@ -84,7 +84,7 @@ export const verifyLead = async (vendorPhone, vendorName, message) => {
 				console.log(`Nuevo registro creado para id_user: ${customerPhone} por parte del vendedor ${vendorName}`);
 
 				// Notificar al usuario que se ha creado un nuevo registro
-				const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Tu lead con el teléfono *${id_user}* y nombre *${name ? name : "Sin nombre"}* fue creado exitosamente. Para completar el resto de los datos podés enviar la palabra "leads", recibir el Excel y volver a enviarlo con toda la información de la operación.\n\n*Megamoto*`;
+				const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Tu lead con el teléfono *${customerPhone}* y nombre *${name ? name : "Sin nombre"}* fue creado exitosamente. Para completar el resto de los datos podés enviar la palabra "leads", recibir el Excel y volver a enviarlo con toda la información de la operación.\n\n*Megamoto*`;
 
 				await handleWhatsappMessage(vendorPhone, message);
 				return true;
