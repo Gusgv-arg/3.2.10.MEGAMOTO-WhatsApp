@@ -60,7 +60,7 @@ export const verifyLead = async (vendorPhone, vendorName, message) => {
 				const flow_2token = `2${uuidv4()}`;
 
 				user = new Leads({
-					customerPhone,
+					id_user: customerPhone,
 					name,
 					channel: "whatsapp",
 					botSwitch: "ON",
