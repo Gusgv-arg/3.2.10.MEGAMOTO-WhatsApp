@@ -98,7 +98,7 @@ export const processExcelToChangeLeads = async (
 			const id_user = String(col[1]).trim();
 			const toContact = col[4];
 			const flow_2token = col[18] ? String(col[18]).trim() : null;
-
+			console.log("name", name);
 			// Validar nombre
 			if (!name) {
 				errorMessages.push(
@@ -232,8 +232,7 @@ export const processExcelToChangeLeads = async (
 					},
 					{
 						$set: {
-							[`flows.${flowIndex}.name`]:
-								updateData["flows.$.name"],
+							name: updateData["flows.$.name"],
 							[`flows.${flowIndex}.client_status`]:
 								updateData["flows.$.client_status"],
 							[`flows.${flowIndex}.statusDate`]: statusChanged
