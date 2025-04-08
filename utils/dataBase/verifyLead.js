@@ -35,7 +35,7 @@ export const verifyLead = async (userPhone, vendorName, message) => {
 	}
 
 	// Extraer el id_user y el nombre del mensaje
-	const id_user = match[1].trim(); // Primer grupo: las 5 o más cifras
+	let id_user = match[1].trim(); // Primer grupo: las 5 o más cifras
 
 	// Agregar el prefijo "549" si no está presente
 	if (!id_user.startsWith("549")) {
