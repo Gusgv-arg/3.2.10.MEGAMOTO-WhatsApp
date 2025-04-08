@@ -309,56 +309,12 @@ export const processExcelToChangeLeads = async (
 				);
 				
 			} else {
-				// Si no encuentra el flowToken
-				const lastFlow = existingLead.flows[existingLead.flows.length - 1];
-
-				// Si el último flow tiene un estado diferente a "compró" o "no compró" registra el error y salta a la siguiente fila
-				if (
-					lastFlow.client_status !== "compró" &&
-					lastFlow.client_status !== "no compró"
-				) {
-					errorMessages.push(
-						`❌ Fila ${rowNumber}: ${name} (${id_user}) - El Lead NO se puede agregar porque tiene una operación en curso. Vendedor: ${lastFlow.vendor_name}.`
-					);
-					continue; // salta a la siguiente fila
-				}
-
-				const currentDateTime = new Date().toLocaleString("es-AR", {
-					timeZone: "America/Argentina/Buenos_Aires",
-					day: "2-digit",
-					month: "2-digit",
-					year: "numeric",
-					hour: "2-digit",
-					minute: "2-digit",
-					second: "2-digit",
-				});
-
-				existingLead.flows.push({
-					name: updateData["flows.$.name"],
-					client_status: updateData["flows.$.client_status"] || "vendedor",
-					statusDate: `${currentDateTime}`,
-					flowDate: `${currentDateTime}`,
-					flow1Response: "si",
-					toContact: updateData["flows.$.toContact"],
-					messages: updateData["flows.$.messages"],
-					brand: updateData["flows.$.brand"],
-					model: updateData["flows.$.model"],
-					price: updateData["flows.$.price"],
-					otherProducts: updateData["flows.$.otherProducts"],
-					payment: updateData["flows.$.payment"],
-					dni: updateData["flows.$.dni"],
-					credit: updateData["flows.$.credit"],
-					vendor_name: vendorName,
-					vendor_phone: vendorPhone,
-					vendor_notes: updateData["flows.$.vendor_notes"],
-					origin: updateData["flows.$.origin"] || "Salón",
-					flow_2token: `2${uuidv4()}`,
-					history: `${currentDateTime} Alta manual de ${vendorName}. Status - ${
-						updateData["flows.$.client_status"] || "vendedor"
-					}`,
-				});
-
-				await existingLead.save();
+				// Si no encuentra el flowToken salta a la siguiente fila y registra el error
+				errorMessages.push(
+					`❌ Fila ${rowNumber}: ${name} (${id_user}) - NO se pueden agregar Leads desde el Excel. Para ello envíe el teléfono por WhatsApp y espere la confirmación del sistema.`
+				);
+				continue; // salta a la siguiente fila
+				
 			}
 		}
 
