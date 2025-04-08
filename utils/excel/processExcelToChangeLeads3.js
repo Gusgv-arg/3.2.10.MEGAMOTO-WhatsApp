@@ -171,7 +171,7 @@ export const processExcelToChangeLeads = async (
 			const vendorPhone = vendor ? vendor.phone : userPhone;
 
 			const updateData = {
-				"flows.$.name": name,
+				"flows.$.name": col[0],
 				"flows.$.client_status": client_status,
 				"flows.$.toContact": col[4] ? new Date(col[4]) : undefined,
 				"flows.$.brand": col[6],
@@ -201,6 +201,7 @@ export const processExcelToChangeLeads = async (
 						(flow) => flow.flow_2token === flow_2token
 				  )
 				: -1;
+			console.log(`Flows para id_user ${id_user}:`, existingLead.flows);
 
 			// Si encuentra el flowToken, actualiza el flow correspondiente			
 			if (flowIndex !== -1) {
