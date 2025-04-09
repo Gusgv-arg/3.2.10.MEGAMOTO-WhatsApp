@@ -206,6 +206,17 @@ export const processExcelToChangeLeads = async (
 
 			// Si encuentra el flowToken, actualiza el flow correspondiente
 			if (flowIndex !== -1) {
+				const flow = existingLead.flows[flowIndex];
+
+				// Verificar si el vendedor tiene permiso para actualizar el registro
+				if (flow.vendor_phone !== userPhone) {
+					
+					messages.push(
+						`❌ Fila ${rowNumber}: ${name} (${id_user}) - El lead pertenece a ${flow.vendor_name}.`
+					);
+					continue; // Saltar a la siguiente fila
+				}
+				
 				const currentDateTime = new Date().toLocaleString("es-AR", {
 					timeZone: "America/Argentina/Buenos_Aires",
 					day: "2-digit",
@@ -286,7 +297,6 @@ export const processExcelToChangeLeads = async (
 		console.log(
 			`El vendedor ${vendorName} envió su Excel con sus leads y recibió este mensaje: ${finalMessage}`
 		);
-
 	} catch (error) {
 		console.error(
 			`Error en processExcelToChangeLeads.js: Vendedor: ${vendorName}. Error: ${
