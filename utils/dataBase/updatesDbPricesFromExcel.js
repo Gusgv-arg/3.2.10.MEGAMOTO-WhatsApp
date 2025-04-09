@@ -62,15 +62,16 @@ export const updateDbPricesFromExcel = async () => {
 
 			const cilindradas = entrada.D ? entrada.D : "";
 			const url = entrada.E ? entrada.E : "";
+			const marca = entrada.A ? entrada.A : "";
 
 			// Verifica si el precio es un número válido antes de actualizar el modelo
 			if (!isNaN(precio) && precio > 0) {
 				const vigencia = fechaActual;
 				try {
-					// Actualiza el precio y la vigencia, o crea un nuevo documento si no existe. Tambien actualiza url  cilindradas si están en el excel
+					// Actualiza el precio, marca y la vigencia, o crea un nuevo documento si no existe. Tambien actualiza url  cilindradas si están en el excel
 					const updatedPrice = await Prices.findOneAndUpdate(
 						{ modelo: modelo },
-						{ precio: precio, vigencia: vigencia },
+						{ precio: precio, vigencia: vigencia, marca: marca },
 						{ new: true, upsert: true, rawResult: true }
 					);
 
@@ -114,7 +115,6 @@ export const updateDbPricesFromExcel = async () => {
 			} registros en el Excel y se actualizaron ${updates} modelos. Faltó actualizar: ${noPrice}.`
 		);
 
-		
 		// Busca y cambia isActive a false a los registros que están en la base pero no en el Excel
 		try {
 			// Crear una lista de modelos presentes en el Excel
@@ -127,7 +127,7 @@ export const updateDbPricesFromExcel = async () => {
 				{ $set: { isActive: true } }
 			);
 			console.log(`Se activaron ${resultActivation.modifiedCount} modelos`);
-			
+
 			// Primero, obtengo todos los modelos activos
 			const modelosActivos = await Prices.find({ isActive: true });
 			console.log(
