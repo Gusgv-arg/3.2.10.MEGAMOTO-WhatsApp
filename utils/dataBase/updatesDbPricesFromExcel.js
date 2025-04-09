@@ -115,12 +115,12 @@ export const updateDbPricesFromExcel = async () => {
 		);
 
 		// Crear una lista de modelos presentes en el Excel
-		let modelosEnExcel = dataExcel.map((entrada) => entrada.B);
+		let modelosEnExcel = dataExcel.map((entrada) => entrada.B.trim().toLowerCase());
 
-		// Busca y cambia isActive false a los registros que están en la base pero no en el Excel
+		// Busca y cambia isActive a false a los registros que están en la base pero no en el Excel
 		try {
 			await Prices.updateMany(
-				{ modelo: { $nin: modelosEnExcel } },
+				{ modelo: { $nin: modelosEnExcel.map((modelo) => modelo.trim().toLowerCase()) } },
 				{ $set: { isActive: false } }
 			);
 		} catch (error) {
