@@ -44,6 +44,8 @@ export const updateDbPricesFromExcel = async () => {
 		for (let i = 1; i < dataExcel.length; i++) {
 			const entrada = dataExcel[i];
 			const modelo = entrada.B;
+			console.log(`Procesando registro del Excel:`, entrada); 
+
 			let precio = 0; // Valor predeterminado
 			const precioStr =
 				typeof entrada.C === "string" ? entrada.C.replace(/\./g, "") : ""; // Elimina puntos solo si es una cadena
@@ -55,7 +57,7 @@ export const updateDbPricesFromExcel = async () => {
 			const url = entrada.E ? entrada.E : "";
 
 			// Verifica si el precio es un número válido antes de actualizar el modelo
-			if (!isNaN(precio)) {
+			if (!isNaN(precio) && precio > 0) {
 				const vigencia = fechaActual;
 				try {
 					// Actualiza el precio y la vigencia, o crea un nuevo documento si no existe. Tambien actualiza url  cilindradas si están en el excel
@@ -96,7 +98,7 @@ export const updateDbPricesFromExcel = async () => {
 				}
 			} else {
 				console.error("Precio no válido para el modelo:", modelo);
-				(noPrice = noPrice + " "), +modelo;
+				noPrice = `${noPrice}, ${modelo}`;
 			}
 		}
 		console.log(
@@ -129,11 +131,11 @@ export const updateDbPricesFromExcel = async () => {
 			console.error("Error al buscar registros desactivados:", error);
 		}
 
-		notification = `*NOTIFICACION de actualización de Precios:*\nHay ${
+		notification = `*🔔 NOTIFICACION de actualización de Precios:*\nHay ${
 			dataExcel.length - 1
-		} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nHay ${qNewModels} modelos nuevos.\nSe desactivó: ${registrosDesactivados.map(
+		} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nHay ${qNewModels} modelos nuevos: ${newModels.join(", ")}.\nSe desactivó: ${registrosDesactivados.map(
 			(modelo) => modelo.modelo
-		)}.`;
+		)}.\n\n*Megamoto*`;
 
 		return notification;
 	
