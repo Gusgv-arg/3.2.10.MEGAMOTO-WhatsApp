@@ -212,7 +212,7 @@ export const processExcelToChangeLeads = async (
 				console.log("vendorPhone:", flow.vendor_phone)
 
 				// Verificar si el vendedor tiene permiso para actualizar el registro
-				if (flow.vendor_phone !== userPhone) {
+				if (String(flow.vendor_phone) !== String(userPhone)) {
 					messages.push(
 						`❌ Fila ${rowNumber}: ${name} (${id_user}) - El lead pertenece a ${flow.vendor_name}.`
 					);
