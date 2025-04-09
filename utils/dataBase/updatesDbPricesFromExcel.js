@@ -44,7 +44,7 @@ export const updateDbPricesFromExcel = async () => {
 		for (let i = 1; i < dataExcel.length; i++) {
 			const entrada = dataExcel[i];
 			const modelo = entrada.B;
-			console.log(`Procesando registro del Excel:`, entrada); 
+			//console.log(`Procesando registro del Excel:`, entrada); 
 
 			let precio = 0; // Valor predeterminado
 
@@ -58,7 +58,7 @@ export const updateDbPricesFromExcel = async () => {
 				precio = entrada.C; // Si ya es un número, úsalo directamente
 			}
 		
-			console.log(`Modelo: ${modelo}, Precio procesado: ${precio}`); // Log del precio procesado
+			//console.log(`Modelo: ${modelo}, Precio procesado: ${precio}`); // Log del precio procesado
 			
 			const cilindradas = entrada.D ? entrada.D : "";
 			const url = entrada.E ? entrada.E : "";
@@ -121,7 +121,16 @@ export const updateDbPricesFromExcel = async () => {
 		// Busca y cambia isActive a false a los registros que están en la base pero no en el Excel
 		try {
 			const result = await Prices.updateMany(
-				{ modelo: { $nin: modelosEnExcel } },
+				{
+					$and: [
+						{ isActive: true }, // Solo afecta los registros activos
+						{
+							$nor: modelosEnExcel.map((modelo) => ({
+								modelo: { $regex: new RegExp(`^${modelo}$`, "i") }, // Comparación insensible a mayúsculas/minúsculas
+							})),
+						},
+					],
+				},
 				{ $set: { isActive: false } }
 			);
 		} catch (error) {
