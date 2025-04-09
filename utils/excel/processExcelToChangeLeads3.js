@@ -100,7 +100,7 @@ export const processExcelToChangeLeads = async (
 			const id_user = String(col[1]).trim();
 			const toContact = col[4];
 			const flow_2token = col[18] ? String(col[18]).trim() : null;
-			console.log("name", name);
+			
 			// Validar nombre
 			if (!name) {
 				messages.push(
@@ -207,6 +207,9 @@ export const processExcelToChangeLeads = async (
 			// Si encuentra el flowToken, actualiza el flow correspondiente
 			if (flowIndex !== -1) {
 				const flow = existingLead.flows[flowIndex];
+
+				console.log("userPhone:", userPhone)
+				console.log("vendorPhone:", flow.vendor_phone)
 
 				// Verificar si el vendedor tiene permiso para actualizar el registro
 				if (flow.vendor_phone !== userPhone) {
