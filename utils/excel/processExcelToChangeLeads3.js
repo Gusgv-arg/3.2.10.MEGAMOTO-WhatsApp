@@ -210,13 +210,23 @@ export const processExcelToChangeLeads = async (
 
 				// Verificar si el vendedor tiene permiso para actualizar el registro
 				if (flow.vendor_phone !== userPhone) {
-					
 					messages.push(
 						`❌ Fila ${rowNumber}: ${name} (${id_user}) - El lead pertenece a ${flow.vendor_name}.`
 					);
 					continue; // Saltar a la siguiente fila
 				}
-				
+
+				// Verificar si el status ya era de una operación cerrada
+				if (
+					flow.client_status === "compró" ||
+					flow.client_status === "no compró"
+				) {
+					messages.push(
+						`❌ Fila ${rowNumber}: ${name} (${id_user}) - NO se puede actualizar un lead con estado "${flow.client_status}. Comuníquese con Gustavo GV.".`
+					);
+					continue; // Saltar a la siguiente fila
+				}
+
 				const currentDateTime = new Date().toLocaleString("es-AR", {
 					timeZone: "America/Argentina/Buenos_Aires",
 					day: "2-digit",
