@@ -143,7 +143,7 @@ export const updateDbPricesFromExcel = async () => {
 			registrosDesactivados = await Prices.find({
 				isActive: false,
 			});
-			console.log("Registros desactivados:", registrosDesactivados);
+			//console.log("Registros desactivados:", registrosDesactivados);
 		} catch (error) {
 			console.error("Error al buscar registros desactivados:", error);
 		}
