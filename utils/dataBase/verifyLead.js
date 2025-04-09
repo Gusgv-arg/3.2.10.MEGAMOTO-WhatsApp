@@ -31,6 +31,8 @@ export const verifyLead = async (vendorPhone, vendorName, message) => {
 		const errorMessage = `*🔔 Notificación MEGAMOTO:*\n\n❌ Parece que estas queriendo verificar un celular. El número debe comenzar con código de área sin 0 + número sin el 15 adelante (10 cifras como mínimo). Por favor, verifica el formato e intenta nuevamente.\n\n*Megamoto*`;
 
 		await handleWhatsappMessage(vendorPhone, errorMessage);
+
+		console.log(`El vendedor ${vendorName} recibió el siguiente mensaje: ${errorMessage}`);
 		return true;
 	}
 
@@ -81,7 +83,7 @@ export const verifyLead = async (vendorPhone, vendorName, message) => {
 				});
 
 				await user.save();
-				console.log(`Nuevo registro creado para id_user: ${customerPhone} por parte del vendedor ${vendorName}`);
+				console.log(`Nuevo lead creado para id_user ${customerPhone} ${name ? name : "sin nombre"} por parte del vendedor ${vendorName}`);
 
 				// Notificar al usuario que se ha creado un nuevo registro
 				const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Tu lead con el teléfono *${customerPhone}* y nombre *${name ? name : "Sin nombre"}* fue creado exitosamente. Para completar el resto de los datos podés enviar la palabra "leads", recibir el Excel y volver a enviarlo con toda la información de la operación.\n\n*Megamoto*`;
@@ -94,6 +96,8 @@ export const verifyLead = async (vendorPhone, vendorName, message) => {
 				const errorMessage = `*🔔 Notificación MEGAMOTO:*\n\n❌ El teléfono ${customerPhone} no pudo ser enviado al cliente. Por favor verificá el formato e intentá nuevamente.\n\n*Megamoto*`;
 
 				await handleWhatsappMessage(vendorPhone, errorMessage);
+
+				console.log(`El vendedor ${vendorName} recibió el siguiente mensaje: ${errorMessage}`);
 				return true;
 			}
 		} else {
@@ -109,11 +113,13 @@ export const verifyLead = async (vendorPhone, vendorName, message) => {
 				const message = `*🔔 Notificación MEGAMOTO:*\n\n❌ El lead tiene una operación en curso.\nVendedor: ${lastFlow.vendor_name}\nTeléfono: ${lastFlow.vendor_phone}\n\n*Megamoto*`;
 
 				await handleWhatsappMessage(vendorPhone, message);
-
+				
+				console.log(`El vendedor ${vendorName} recibió el siguiente mensaje: ${message}`);
+				
 				return true;
 			} else {
 				// Si el último flow_status es "compró" o "no compró", agregar un nuevo registro en flows
-				const flow_2token = `2+${uuidv4()}`;
+				const flow_2token = `2${uuidv4()}`;
 
 				const newFlow = {
 					flowName: "registro manual",
