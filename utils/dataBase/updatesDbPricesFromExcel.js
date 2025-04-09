@@ -47,12 +47,19 @@ export const updateDbPricesFromExcel = async () => {
 			console.log(`Procesando registro del Excel:`, entrada); 
 
 			let precio = 0; // Valor predeterminado
-			const precioStr =
-				typeof entrada.C === "string" ? entrada.C.replace(/\./g, "") : ""; // Elimina puntos solo si es una cadena
 
-			if (!isNaN(precioStr) && precioStr.trim() !== "") {
-				precio = Math.round(parseFloat(precioStr)); // Convierte a número si es válido
+			// Asegúrate de que entrada.C sea una cadena y elimina caracteres no numéricos
+			if (typeof entrada.C === "string") {
+				const precioStr = entrada.C.replace(/[^0-9]/g, ""); // Elimina cualquier carácter que no sea un número
+				if (precioStr.trim() !== "") {
+					precio = parseFloat(precioStr); // Convierte a número
+				}
+			} else if (typeof entrada.C === "number") {
+				precio = entrada.C; // Si ya es un número, úsalo directamente
 			}
+		
+			console.log(`Modelo: ${modelo}, Precio procesado: ${precio}`); // Log del precio procesado
+			
 			const cilindradas = entrada.D ? entrada.D : "";
 			const url = entrada.E ? entrada.E : "";
 
