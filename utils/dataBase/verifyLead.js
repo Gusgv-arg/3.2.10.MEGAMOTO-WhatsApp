@@ -102,8 +102,8 @@ export const verifyLead = async (vendorPhone, vendorName, message) => {
 
 			if (
 				lastFlow &&
-				lastFlow.flow_status !== "compró" &&
-				lastFlow.flow_status !== "no compró"
+				lastFlow.client_status !== "compró" &&
+				lastFlow.client_status !== "no compró"
 			) {
 				// Si el último flow_status es distinto de "compró" o "no compró"
 				const message = `*🔔 Notificación MEGAMOTO:*\n\n❌ El lead tiene una operación en curso.\nVendedor: ${lastFlow.vendor_name}\nTeléfono: ${lastFlow.vendor_phone}\n\n*Megamoto*`;
