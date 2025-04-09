@@ -88,7 +88,9 @@ export const processExcelToChangeLeads = async (
 			}
 		}
 
-		const errorMessages = [];
+		const messages = [];
+		let successMessage = "✅ Filas actualizadas:";
+
 		let rowNumber = 1;
 		const dataRows = data.slice(1);
 
@@ -101,7 +103,7 @@ export const processExcelToChangeLeads = async (
 			console.log("name", name);
 			// Validar nombre
 			if (!name) {
-				errorMessages.push(
+				messages.push(
 					`❌ Fila ${rowNumber}: Nombre vacío - Teléfono (${id_user})`
 				);
 				continue;
@@ -109,7 +111,7 @@ export const processExcelToChangeLeads = async (
 
 			// Validar teléfono
 			if (!id_user || !/^\d+$/.test(id_user) || id_user.length < 6) {
-				errorMessages.push(
+				messages.push(
 					`❌ Fila ${rowNumber}: ${name} - Teléfono "${id_user}" inválido`
 				);
 				continue;
@@ -126,7 +128,7 @@ export const processExcelToChangeLeads = async (
 				}
 
 				if (!validClientStatuses.includes(client_status)) {
-					errorMessages.push(
+					messages.push(
 						`❌ Fila ${rowNumber}: ${name} (${id_user}) - Status "${originalClientStatus}" inválido`
 					);
 					continue;
@@ -137,7 +139,7 @@ export const processExcelToChangeLeads = async (
 			if (toContact) {
 				const date = new Date(toContact);
 				if (isNaN(date.getTime())) {
-					errorMessages.push(
+					messages.push(
 						`❌ Fila ${rowNumber}: ${name} - Fecha a contactar "${toContact}" inválida`
 					);
 					continue;
@@ -147,7 +149,7 @@ export const processExcelToChangeLeads = async (
 			// Validar marca
 			const brand = col[6] ? String(col[6]).trim() : "";
 			if (brand && !validBrands.includes(brand)) {
-				errorMessages.push(
+				messages.push(
 					`❌ Fila ${rowNumber}: ${name} (${id_user}) - Marca "${brand}" inválida`
 				);
 				continue;
@@ -158,7 +160,7 @@ export const processExcelToChangeLeads = async (
 			if (price !== "" && price !== undefined && price !== null) {
 				const cleanPrice = String(price).replace(/[^0-9.]/g, "");
 				if (isNaN(cleanPrice) || cleanPrice !== String(price)) {
-					errorMessages.push(
+					messages.push(
 						`❌ Fila ${rowNumber}: ${name} (${id_user}) - Precio "${price}" inválido`
 					);
 					continue;
@@ -193,7 +195,7 @@ export const processExcelToChangeLeads = async (
 
 			const existingLead = await Leads.findOne({
 				id_user: id_user,
-			});			
+			});
 
 			// Si encuentra el lead, busca el flowToken en el array de flows
 			const flowIndex = flow_2token
@@ -201,9 +203,8 @@ export const processExcelToChangeLeads = async (
 						(flow) => flow.flow_2token === flow_2token
 				  )
 				: -1;
-			console.log(`Flows para id_user ${id_user}:`, existingLead.flows);
 
-			// Si encuentra el flowToken, actualiza el flow correspondiente			
+			// Si encuentra el flowToken, actualiza el flow correspondiente
 			if (flowIndex !== -1) {
 				const currentDateTime = new Date().toLocaleString("es-AR", {
 					timeZone: "America/Argentina/Buenos_Aires",
@@ -259,36 +260,33 @@ export const processExcelToChangeLeads = async (
 						},
 					}
 				);
-				
+
+				// Concatenar fila exitosa al mensaje
+				successMessage += ` ${rowNumber},`;
 			} else {
 				// Si no encuentra el flowToken salta a la siguiente fila y registra el error
-				errorMessages.push(
-					`❌ Fila ${rowNumber}: ${name} (${id_user}) - NO se pueden agregar Leads desde el Excel. Para ello envíe el teléfono por WhatsApp y espere la confirmación del sistema.`
+				messages.push(
+					`❌ Fila ${rowNumber}: ${name} (${id_user}) - NO se pueden agregar Leads desde el Excel. Para ello envíe el teléfono del Lead por WhatsApp y espere la confirmación.`
 				);
 				continue; // salta a la siguiente fila
-				
 			}
 		}
 
-		if (errorMessages.length > 0) {
-			const combinedErrorMessage = errorMessages.join("\n");
-			const finalMessage = `🔔 *Notificación MEGAMOTO:*\n\nError al actualizar Leads:\n${combinedErrorMessage}\n\n*Megamoto*`;
-
-			await handleWhatsappMessage(userPhone, finalMessage);
-
-			console.log(
-				`El vendedor ${vendorName} envió su Excel con sus leads y hubo un error: ${combinedErrorMessage}`
-			);
-		} else {
-			await handleWhatsappMessage(
-				userPhone,
-				`🔔 *Notificación MEGAMOTO:*\n\n✅ ¡Se actualizaron ${dataRows.length} Leads!\n\n*Megamoto*`
-			);
-
-			console.log(
-				`El vendedor ${vendorName} envió sus leads en Excel y se procesaron exitosamente ${dataRows.length} registros.`
-			);
+		// Eliminar la última coma del mensaje de éxito si hay filas exitosas
+		if (successMessage.endsWith(",")) {
+			successMessage = successMessage.slice(0, -1);
 		}
+
+		// Mensaje al usario con los resultados de la actualización
+		const combinedMessages = messages.join("\n");
+		const finalMessage = `🔔 *Notificación MEGAMOTO:*\n\nResultados actualización de Leads:\n${successMessage}\n${combinedMessages}\n\n*Megamoto*`;
+
+		await handleWhatsappMessage(userPhone, finalMessage);
+
+		console.log(
+			`El vendedor ${vendorName} envió su Excel con sus leads y recibió este mensaje: ${finalMessage}`
+		);
+
 	} catch (error) {
 		console.error(
 			`Error en processExcelToChangeLeads.js: Vendedor: ${vendorName}. Error: ${
