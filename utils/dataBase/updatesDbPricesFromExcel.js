@@ -44,7 +44,7 @@ export const updateDbPricesFromExcel = async () => {
 		for (let i = 1; i < dataExcel.length; i++) {
 			const entrada = dataExcel[i];
 			const modelo = entrada.B;
-			//console.log(`Procesando registro del Excel:`, entrada); 
+			//console.log(`Procesando registro del Excel:`, entrada);
 
 			let precio = 0; // Valor predeterminado
 
@@ -57,9 +57,9 @@ export const updateDbPricesFromExcel = async () => {
 			} else if (typeof entrada.C === "number") {
 				precio = entrada.C; // Si ya es un número, úsalo directamente
 			}
-		
+
 			//console.log(`Modelo: ${modelo}, Precio procesado: ${precio}`); // Log del precio procesado
-			
+
 			const cilindradas = entrada.D ? entrada.D : "";
 			const url = entrada.E ? entrada.E : "";
 
@@ -114,23 +114,46 @@ export const updateDbPricesFromExcel = async () => {
 			} registros en el Excel y se actualizaron ${updates} modelos. Faltó actualizar: ${noPrice}.`
 		);
 
-		// Crear una lista de modelos presentes en el Excel
-		let modelosEnExcel = dataExcel.map((entrada) => entrada.B.trim().toLowerCase());
-		console.log("Modelos en Excel (normalizados):", modelosEnExcel);
-
+		
 		// Busca y cambia isActive a false a los registros que están en la base pero no en el Excel
 		try {
-			const result = await Prices.updateMany(
-				{
-					isActive: true,
-					modelo: {
-						$nin: modelosEnExcel.map(modelo => 
-							new RegExp(`^${modelo}$`, "i")
-						)
-					}
-				},
-				{ $set: { isActive: false } }
+			// Crear una lista de modelos presentes en el Excel
+			let modelosEnExcel = dataExcel.map((entrada) => entrada.B.trim());
+			//console.log("Modelos en Excel (normalizados):", modelosEnExcel);
+
+			// Primero, activo todos los modelos
+			const resultActivation = await Prices.updateMany(
+				{}, // Sin filtro para actualizar todos los documentos
+				{ $set: { isActive: true } }
 			);
+			console.log(`Se activaron ${resultActivation.modifiedCount} modelos`);
+			
+			// Primero, obtengo todos los modelos activos
+			const modelosActivos = await Prices.find({ isActive: true });
+			console.log(
+				"Modelos activos antes de actualizar:",
+				modelosActivos.map((m) => m.modelo)
+			);
+
+			// Filtra los modelos que no están en el Excel
+			const modelosADesactivar = modelosActivos.filter((modeloDB) => {
+				return !modelosEnExcel.some(
+					(modeloExcel) =>
+						modeloExcel.toLowerCase() === modeloDB.modelo.toLowerCase()
+				);
+			});
+
+			// Actualiza solo los modelos que no están en el Excel
+			if (modelosADesactivar.length > 0) {
+				const result = await Prices.updateMany(
+					{
+						modelo: {
+							$in: modelosADesactivar.map((m) => m.modelo),
+						},
+					},
+					{ $set: { isActive: false } }
+				);
+			}
 		} catch (error) {
 			console.error("Error al desactivar registros antiguos:", error);
 		}
@@ -148,16 +171,17 @@ export const updateDbPricesFromExcel = async () => {
 
 		notification = `*🔔 NOTIFICACION de actualización de Precios:*\nHay ${
 			dataExcel.length - 1
-		} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nHay ${qNewModels} modelos nuevos: ${newModels.join(", ")}.\nSe desactivó: ${registrosDesactivados.map(
+		} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nHay ${qNewModels} modelos nuevos: ${newModels.join(
+			", "
+		)}.\nSe desactivó: ${registrosDesactivados.map(
 			(modelo) => modelo.modelo
 		)}.\n\n*Megamoto*`;
 
 		return notification;
-	
 	} catch (error) {
 		const errorMessage = error?.response?.data
-		? JSON.stringify(error.response.data)
-		: error.message
+			? JSON.stringify(error.response.data)
+			: error.message;
 
 		console.log("Error en updatesDbPricesFromExcel.js", errorMessage);
 		throw errorMessage;
