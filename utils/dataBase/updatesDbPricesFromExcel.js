@@ -122,14 +122,12 @@ export const updateDbPricesFromExcel = async () => {
 		try {
 			const result = await Prices.updateMany(
 				{
-					$and: [
-						{ isActive: true }, // Solo afecta los registros activos
-						{
-							$nor: modelosEnExcel.map((modelo) => ({
-								modelo: { $regex: new RegExp(`^${modelo}$`, "i") }, // Comparación insensible a mayúsculas/minúsculas
-							})),
-						},
-					],
+					isActive: true,
+					modelo: {
+						$nin: modelosEnExcel.map(modelo => 
+							new RegExp(`^${modelo}$`, "i")
+						)
+					}
 				},
 				{ $set: { isActive: false } }
 			);
