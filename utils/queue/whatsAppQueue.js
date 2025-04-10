@@ -39,56 +39,11 @@ export class WhatsAppMessageQueue {
 			try {
 				// Determine the message depending the TYPE: text, audio, image or document
 				if (newMessage.type === "audio") {
-					// --- WhatsApp Audio --- //
-					if (newMessage.channel === "whatsapp") {
-						// Get the Audio URL from WhatsApp
-						const audio = await getMediaWhatsappUrl(newMessage.audioId);
-						const audioUrl = audio.data.url;
-						//console.log("Audio URL:", audioUrl);
+					newMessage.message = "El usuario envió un audio";
 
-						// Download audio from WhatsApp
-						const audioDownload = await downloadWhatsAppMedia(audioUrl);
-						//console.log("Audio download:", audioDownload.data);
-
-						// Create a buffer
-						const buffer = Buffer.from(audioDownload.data);
-
-						// Call whisper GPT to transcribe audio to text
-						const audioTranscription = await audioToText(
-							buffer,
-							newMessage.channel
-						);
-
-						console.log("Audio transcription:", audioTranscription);
-
-						// Replace message with transcription
-						newMessage.message = audioTranscription;
-					}
 					// ---------- IMAGE -------------------------------------------------//
 				} else if (newMessage.type === "image") {
-					// --- WhatsApp Image --- //
-					if (newMessage.channel === "whatsapp") {
-						// Get the Image URL from WhatsApp
-						const image = await getMediaWhatsappUrl(newMessage.imageId);
-						const imageUrl = image.data.url;
-						//console.log("Image URL:", imageUrl);
-
-						// Download image from WhatsApp
-						const imageBuffer = await downloadWhatsAppMedia(imageUrl);
-						const imageBufferData = imageBuffer.data;
-						//console.log("Image download:", imageBufferData);
-
-						// Convert buffer received from WhatsApp to a public URL
-						imageURL = await convertBufferImageToUrl(
-							imageBufferData,
-							"https://three-2-12-messenger-api.onrender.com"
-						);
-						//console.log("Public image URL:", imageURL);
-
-						// --- Messenger Image --- //
-					} else if (newMessage.channel === "messenger") {
-						imageURL = newMessage.url;
-					}
+					newMessage.message = "El usuario envió una imagen";
 
 					// ----------- DOCUMENTS ----------------------------------------------------- //
 				} else if (newMessage.type === "document") {
@@ -116,14 +71,13 @@ export class WhatsAppMessageQueue {
 				// Process whatsApp with API
 				const log = await processWhatsAppWithApi(newMessage);
 				console.log(log);
-				
 			} catch (error) {
 				console.error(`Error en whatsAppMessageQueue.js: ${error.message}`);
 
 				const errorMessage = error?.response?.data
 					? JSON.stringify(error.response.data)
 					: error.message;
-					
+
 				// Change flag to allow next message processing
 				queue.processing = false;
 

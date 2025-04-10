@@ -92,12 +92,12 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 		res.status(200).send("EVENT_RECEIVED");
 
-		const notification = `*🔔 Notificación MEGAMOTO:*\n\n❗ Estimado /a ${name}, esta es una línea de WhatsApp que *solo procesa mensajes de texto* y sirve para que los vendedores puedan atenderte más rápido.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+		const notification = `*🔔 Notificación MEGAMOTO:*\n\n❗ Estimado /a ${name}, esta es una línea de WhatsApp que *solo procesa mensajes de texto*.\nPor favor enviá \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 		await handleWhatsappMessage(userPhone, notification);
 
 		console.log(
-			`El lead ${name} envió un mensaje en otro formato y recibió una notificción de error.`
+			`El lead ${name} envió un mensaje en otro formato y recibió una notificación de error.`
 		);
 	} else if (
 		typeOfWhatsappMessage !== "text" &&
@@ -107,7 +107,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	) {
 		res.status(200).send("EVENT_RECEIVED");
 
-		const notification = `*🔔 Notificación MEGAMOTO:*\n\n❌ ${vendorName}, los vendedores solo pueden:\n1. Enviar palabra "lead" para recibir un Lead.\n2. Enviar palabra "leads" para recibir un excel con sus leads.\n3. Adjuntar el mismo excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
+		const notification = `*🔔 Notificación MEGAMOTO:*\n\n📣 ${vendorName}, los vendedores solo pueden:\n1. Enviar un número de celular para dar de alta o verificar de que vendedor es el lead.\n2. Enviar la palabra "lead" para recibir un Lead.\n3. Enviar la palabra "leads" para recibir un excel con sus leads.\n4. Adjuntar el mismo excel recibido para modificar información de los leads (estado, etc).\n5. Responder al Formulario recibido para tomar un lead.\n\n*Megamoto*`;
 
 		await handleWhatsappMessage(userPhone, notification);
 
