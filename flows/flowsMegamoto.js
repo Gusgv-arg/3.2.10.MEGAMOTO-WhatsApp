@@ -25,7 +25,7 @@ const flow1 = {   "version": "6.0",
                   },
                   {
                       "id": "BLITZ 110 V8 BASE ONE - B1 Automatica - NEW",
-                      "title": "BLITZ 110 V8 BASE ONE - B1 Automatica - NEW"
+                      "title": "BLITZ 110 V8 BASE ONE - B1 Automática - NEW"
                   },
                   {
                       "id": "BLITZ 110 V8 PLUS",
@@ -49,7 +49,7 @@ const flow1 = {   "version": "6.0",
                   },
                   {
                       "id": "CG 150 S2 FULL (aleac / disco)",
-                      "title": "CG 150"
+                      "title": "CG 150 S2 FULL (aleac / disco)"
                   },
                   {
                       "id": "DLX 110 DELUXE",
@@ -102,6 +102,10 @@ const flow1 = {   "version": "6.0",
                   {
                       "id": "XMM 250 NUEVA",
                       "title": "XMM 250 NUEVA"
+                  },
+                  {
+                      "id": "MOTOCARGO 200 CC NEW",
+                      "title": "MOTOCARGO 200 CC NEW"
                   }
                 ]
               },
@@ -212,8 +216,12 @@ const flow1 = {   "version": "6.0",
                 "name": "TVS",
                 "data-source": [
                   {
-                      "id": "NEO XR 110",
-                      "title": "NEO XR 110"
+                      "id": "NEO X 110",
+                      "title": "NEO X 110"
+                  },
+                  {
+                      "id": "NEO X 110 FULL",
+                      "title": "NEO X 110 FULL"
                   },
                   {
                       "id": "NTORQ 125",
@@ -270,6 +278,22 @@ const flow1 = {   "version": "6.0",
                   {
                     "id": "ORBIT II 125",
                     "title": "ORBIT II 125"
+                  },
+                  {
+                    "id": "ORBIT III 125",
+                    "title": "ORBIT III 125"
+                  },
+                  {
+                    "id": "JOYRIDE 16 300",
+                    "title": "JOYRIDE 16 300"
+                  },
+                  {
+                    "id": "JET 14",
+                    "title": "JET 14"
+                  },
+                  {
+                    "id": "MAXSYM TL 508",
+                    "title": "MAXSYM TL 508"
                   }
                 ]
               },
@@ -286,6 +310,26 @@ const flow1 = {   "version": "6.0",
                   {
                     "id": "TK-RERACE",
                     "title": "TK-RERACE"
+                  }
+                ]
+              },
+              {
+                "type": "Dropdown",
+                "label": "IKA",
+                "required": false,
+                "name": "IKA",
+                "data-source": [
+                  {
+                    "id": "SLALOM BASE",
+                    "title": "SLALOM BASE"
+                  },
+                  {
+                    "id": "SLALOM FULL",
+                    "title": "SLALOM FULL"
+                  },
+                  {
+                    "id": "DURBAN 150",
+                    "title": "DURBAN 150"
                   }
                 ]
               },
@@ -316,7 +360,8 @@ const flow1 = {   "version": "6.0",
                     "Keeway": "${form.Keeway}",
                     "SYM": "${form.SYM}",
                     "No sé":"${form.No sé}",
-                    "Teknial eléctricas":"${form.Teknial eléctricas}"
+                    "Teknial eléctricas":"${form.Teknial eléctricas}",
+                    "IKA":"${form.IKA}"
                   }
                 }
               }
@@ -358,6 +403,10 @@ const flow1 = {   "version": "6.0",
           "__example__": "Example"
         },
         "Teknial eléctricas": {
+          "type": "string",
+          "__example__": "Example"
+        },
+        "IKA": {
           "type": "string",
           "__example__": "Example"
         }
@@ -411,7 +460,8 @@ const flow1 = {   "version": "6.0",
                     "SYM": "${data.SYM}",
                     "TVS": "${data.TVS}",
                     "No sé": "${data.No sé}",
-                    "Teknial eléctricas": "${data.Teknial eléctricas}"
+                    "Teknial eléctricas": "${data.Teknial eléctricas}",
+                    "IKA": "${data.IKA}"
                   }
                 }
               }
@@ -462,6 +512,10 @@ const flow1 = {   "version": "6.0",
         "Teknial eléctricas": {
           "type": "string",
           "__example__": "Example"
+        },
+        "IKA": {
+          "type": "string",
+          "__example__": "Example"
         }
       },
       "layout": {
@@ -502,7 +556,8 @@ const flow1 = {   "version": "6.0",
                     "SYM": "${data.SYM}",
                     "TVS": "${data.TVS}",
                     "No sé": "${data.No sé}",
-                    "Teknial eléctricas": "${data.Teknial eléctricas}"
+                    "Teknial eléctricas": "${data.Teknial eléctricas}",
+                    "IKA": "${data.IKA}"
                   }
                 }
               }
@@ -557,6 +612,10 @@ const flow1 = {   "version": "6.0",
         "Teknial eléctricas": {
           "type": "string",
           "__example__": "Example"
+        },
+        "IKA": {
+          "type": "string",
+          "__example__": "Example"
         }
       },
       "terminal": true,
@@ -590,7 +649,8 @@ const flow1 = {   "version": "6.0",
                     "SYM": "${data.SYM}",
                     "TVS": "${data.TVS}",
                     "No sé":"${data.No sé}",
-                    "Teknial": "${data.Teknial eléctricas}"
+                    "Teknial": "${data.Teknial eléctricas}",
+                    "IKA": "${data.IKA}"
                   }
                 }
               }

@@ -32,6 +32,7 @@ export const extractFlowToken_1Responses = async (flowMessage) => {
 		"Teknial eléctricas",
 		"Teknial",
 		"TVS",
+		"IKA",
 		"No sé",
 	];
 	let marcasEncontradas = [];

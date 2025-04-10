@@ -1,5 +1,4 @@
 import axios from "axios";
-import Leads from "../../models/leads.js";
 import { handleWhatsappMessage } from "../whatsapp/handleWhatsappMessage.js";
 import { sendFlow_1ToLead } from "../../flows/sendFlow_1ToLead.js";
 import { saveNotificationInDb } from "../dataBase/saveNotificationInDb.js";
