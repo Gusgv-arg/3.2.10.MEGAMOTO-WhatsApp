@@ -51,7 +51,18 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			let botSwitch = await BotSwitch.findOne();
 
 			if (botSwitch?.alarmSwitch === "ON") {
-				const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}\n\nMegamoto`;
+				// Cuenta leads abiertos totales
+				const pendingLeads = await Leads.find({
+					flows: {
+						$elemMatch: {
+							client_status: { $nin: ["compró", "no compró"] },
+						},
+					},
+				});
+				const pendingLeadsCount = pendingLeads.length;
+
+				const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}\n\n📊 Leads pendientes: ${pendingLeadsCount}\n\nMegamoto`;
+
 				await adminWhatsAppNotification(myPhone, message);
 			}
 
@@ -141,7 +152,18 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				let botSwitch = await BotSwitch.findOne();
 
 				if (botSwitch?.alarmSwitch === "ON") {
-					const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}\n\nMegamoto`;
+					// Count pending leads
+					const pendingLeads = await Leads.find({
+						flows: {
+							$elemMatch: {
+								client_status: { $nin: ["compró", "no compró"] },
+							},
+						},
+					});
+					const pendingLeadsCount = pendingLeads.length;
+
+					const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}\n\n📊 Leads pendientes: ${pendingLeadsCount}\n\nMegamoto`;
+
 					await adminWhatsAppNotification(myPhone, message);
 				}
 
