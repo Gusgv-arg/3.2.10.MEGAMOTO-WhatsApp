@@ -13,7 +13,9 @@ import { verifyLead } from "../utils/dataBase/verifyLead.js";
 
 export const vendorsFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
-	const name = body.entry[0].changes[0].value.contacts[0].profile.name;
+	const name = body?.entry[0]?.changes[0]?.value?.contacts?.[0]?.profile?.name
+		? body.entry[0].changes[0].value.contacts[0].profile.name
+		: "usuario";
 	let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages?.[0]
 		?.type
 		? body.entry[0].changes[0].value.messages[0].type
@@ -239,7 +241,6 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					`El vendedor ${vendorName} recibió un mensaje de que no hay leads pendientes de nadie.`
 				);
 			}
-
 		} else if (message === "lead" && typeOfWhatsappMessage === "text") {
 			// Función que envía un lead para atender
 			res.status(200).send("EVENT_RECEIVED");
@@ -296,7 +297,6 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					`El vendedor ${vendorName} recibió un mensaje de que no hay leads para atender.`
 				);
 			}
-
 		} else if (
 			(message === "leads" && typeOfWhatsappMessage === "document") ||
 			(message === "lead" && typeOfWhatsappMessage === "document") ||

@@ -39,7 +39,7 @@ export class WhatsAppFlowMessageQueue {
 				// Manejo de errores centralizado
 				let errorMessage 
 				
-				if (error.includes("Error llamando a la APi de Credicuotas:")){
+				if (error.message.includes("Error llamando a la APi de Credicuotas:")){
 					errorMessage = error
 				} else {
 					errorMessage = error?.response?.data
