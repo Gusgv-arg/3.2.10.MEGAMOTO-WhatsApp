@@ -35,10 +35,10 @@ export const leadsStatusAnalysis = async (userMessage) => {
     // Create vendor breakdown message
     let vendorBreakdown = '';
     for (const [vendor, count] of Object.entries(vendorStats)) {
-        vendorBreakdown += `\nAsignados ${vendor}: ${count}`;
+        vendorBreakdown += `\nAsignados a ${vendor}: ${count}`;
     }
 
-    const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\nSin vendedor: ${unassignedCount}\n\nMegamoto`;
+    const message = `*🔔 Notificación NUEVO LEAD:*\n\n🎉 Acaba de entrar un nuevo lead.\nNombre: *${userMessage.name}*\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\nSin vendedor: ${unassignedCount}\n\nMegamoto`;
 
     return message;
 
