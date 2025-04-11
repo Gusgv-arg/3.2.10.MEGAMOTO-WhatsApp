@@ -5,6 +5,7 @@ import { createLeadInDb } from "../dataBase/createLeadInDb.js";
 import { saveNotificationInDb } from "../dataBase/saveNotificationInDb.js";
 import { adminWhatsAppNotification } from "../notifications/adminWhatsAppNotification.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
+import { leadsStatusAnalysis } from "../dataBase/leadsStatusAnalysis.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -51,19 +52,11 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			let botSwitch = await BotSwitch.findOne();
 
 			if (botSwitch?.alarmSwitch === "ON") {
-				// Cuenta leads abiertos totales
-				const pendingLeads = await Leads.find({
-					flows: {
-						$elemMatch: {
-							client_status: { $nin: ["compró", "no compró"] },
-						},
-					},
-				});
-				const pendingLeadsCount = pendingLeads.length;
+				// Llama a la función de análisis de leads
+				const analysis = await leadsStatusAnalysis(userMessage);
 
-				const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}\n\n📊 Leads pendientes: ${pendingLeadsCount}\n\nMegamoto`;
-
-				await adminWhatsAppNotification(myPhone, message);
+				// Envía la notificación al Admin
+				await adminWhatsAppNotification(myPhone, analysis);
 			}
 
 			// Actualiza el log
@@ -152,23 +145,14 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				let botSwitch = await BotSwitch.findOne();
 
 				if (botSwitch?.alarmSwitch === "ON") {
-					// Count pending leads
-					const pendingLeads = await Leads.find({
-						flows: {
-							$elemMatch: {
-								client_status: { $nin: ["compró", "no compró"] },
-							},
-						},
-					});
-					const pendingLeadsCount = pendingLeads.length;
+					// Llama a la función de análisis de leads
+					const analysis = await leadsStatusAnalysis(userMessage);
 
-					const message = `*🔔 Notificación NUEVO LEAD:*\n\nAcaba de entrar un nuevo lead.\nNombre: ${userMessage.name}\n\n📊 Leads pendientes: ${pendingLeadsCount}\n\nMegamoto`;
-
-					await adminWhatsAppNotification(myPhone, message);
+					await adminWhatsAppNotification(myPhone, analysis);
 				}
 
 				// Actualiza el log
-				log = `1-Se volvió a saludar al lead ${userMessage.name} ya que estaba en BD y no tenía un Flow abierto. 2-Se le envió Flow 1. 3-Se grabó en BD. 4-Si la alarma esta en "ON" se notificó al admin.`;
+				log = `1-Se volvió a saludar al lead ${userMessage.name} ya que estaba en BD y no tenía un Flow abierto. 2-Se le envió Flow 1. 3-Se grabó en BD. ${botSwitch.alarmSwitch === "ON" ? "4-Se envió análisis de Leads al Admin." :"" }`;
 
 				return log;
 			}
