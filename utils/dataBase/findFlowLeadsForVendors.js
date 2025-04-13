@@ -2,24 +2,17 @@ import Leads from "../../models/leads.js";
 
 // Función que trae todo los Leads disponibles para atender
 export const findFlowLeadsForVendors = async () => {
-    // Crear fechas en UTC y ajustarlas a Argentina (UTC-3)
+
+	// Crear fechas en UTC y ajustarlas a Argentina (UTC-3)
     const currentDateUTC = new Date();
     const currentDate = new Date(currentDateUTC.getTime() - (3 * 60 * 60 * 1000));
     const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
 
-    // Convertir las fechas al formato "DD/MM/YYYY, HH:mm:ss a. m./p. m."
-    const formatDate = (date) => {
-        const hours = date.getHours();
-        const ampm = hours >= 12 ? 'p. m.' : 'a. m.';
-        const hour12 = hours % 12 || 12;
-        
-        return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}, ${hour12.toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')} ${ampm}`;
-    };
+    // Para debug de fechas
+    console.log('Current date:', currentDate);
+    console.log('24h ago:', twentyFourHoursAgo);
 
-    const twentyFourHoursAgoFormatted = formatDate(twentyFourHoursAgo);
-    const currentDateFormatted = formatDate(currentDate);
-
-	const leads = await Leads.find({
+    const leads = await Leads.find({
         $and: [
             // Excluir los estados que nunca deben estar disponibles
             {
@@ -48,17 +41,28 @@ export const findFlowLeadsForVendors = async () => {
                             { "flows.toContact": { $lte: currentDate } }
                         ]
                     },
-                    // CAMBIO: Cualquier estado (excepto compró/no compró) donde pasaron más de 24h
-                    { "flows.flowDate": { $lt: twentyFourHoursAgoFormatted } }
+                    // CAMBIO: Casos donde el flowDate es menor o igual a la fecha actual
+                    {
+                        $and: [
+                            { "flows.client_status": { $nin: ["compró", "no compró"] } },
+                            { "flows.flowDate": { $lte: currentDate.toISOString() } }
+                        ]
+                    }
                 ]
             }
         ]
-    }).lean();    
+    }).lean();
 
     // Para debug
-    console.log('Current date:', currentDateFormatted);
-    console.log('24h ago:', twentyFourHoursAgoFormatted);
-    console.log('Found leads:', leads);
+    console.log('Found leads:', leads.length);
+    leads.forEach(lead => {
+        const lastFlow = lead.flows[lead.flows.length - 1];
+        console.log(`Lead ${lead.name}:`, {
+            status: lastFlow.client_status,
+            flowDate: lastFlow.flowDate,
+            currentDate: currentDate.toISOString()
+        });
+    });
 
     return leads
         .filter((lead) => lead.botSwitch !== "OFF")
