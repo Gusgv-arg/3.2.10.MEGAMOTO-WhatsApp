@@ -24,6 +24,7 @@ import { handleWhatsappMessage } from "../utils/whatsapp/handleWhatsappMessage.j
 import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTemplate.js";
 import { statusLeads } from "../utils/dataBase/statusLeads.js";
 import { changeAlarmSwitch } from "../functions/changeAlarmSwitch.js";
+import { leadsStatusAnalysis } from "../utils/dataBase/leadsStatusAnalysis.js";
 
 const myPhone = process.env.MY_PHONE;
 const myPhone2 = process.env.MY_PHONE2;
@@ -94,6 +95,17 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 			console.log(
 				`${userPhone} envío la palabra Megamoto y recibió las funciones disponibles.`
+			);
+		} else if (message === "status") {
+			res.status(200).send("EVENT_RECEIVED");
+
+			const status = await leadsStatusAnalysis();
+
+			// WhatsApp Admin notification
+			await adminWhatsAppNotification(userPhone, status);
+
+			console.log(
+				`${userPhone} envío la palabra status y recibió el estado de los leads.`
 			);
 		} else if (message.startsWith("campaña")) {
 			// Campaigns format: "campaña" "template name" "campaign name"

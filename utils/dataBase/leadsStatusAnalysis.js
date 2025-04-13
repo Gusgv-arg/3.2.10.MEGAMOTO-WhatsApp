@@ -38,7 +38,12 @@ export const leadsStatusAnalysis = async (userMessage) => {
         vendorBreakdown += `\nAsignados a ${vendor}: ${count}`;
     }
 
-    const message = `*🔔 Notificación NUEVO LEAD:*\n\n🎉 Acaba de entrar un nuevo lead.\nNombre: *${userMessage.name}*\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\nSin vendedor: ${unassignedCount}\n\nMegamoto`;
+    if (userMessage) {
+        const message = `*🔔 Notificación NUEVO LEAD:*\n\n🎉 Acaba de entrar un nuevo lead.\nNombre: *${userMessage.name}*\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\nSin vendedor: ${unassignedCount}\n\nMegamoto`;
+
+    } else {
+        const message = `*🔔 Notificación Status Leads:*\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\nSin vendedor: ${unassignedCount}\n\nMegamoto`;
+    }
 
     return message;
 
