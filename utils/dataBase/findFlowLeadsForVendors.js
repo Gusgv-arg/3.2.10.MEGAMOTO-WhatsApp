@@ -8,10 +8,6 @@ export const findFlowLeadsForVendors = async () => {
     const currentDate = new Date(currentDateUTC.getTime() - (3 * 60 * 60 * 1000));
     const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
 
-    // Para debug de fechas
-    console.log('Current date:', currentDate);
-    console.log('24h ago:', twentyFourHoursAgo);
-
     const leads = await Leads.find({
         $and: [
             // Excluir los estados que nunca deben estar disponibles
@@ -52,17 +48,6 @@ export const findFlowLeadsForVendors = async () => {
             }
         ]
     }).lean();
-
-    // Para debug
-    console.log('Found leads:', leads.length);
-    leads.forEach(lead => {
-        const lastFlow = lead.flows[lead.flows.length - 1];
-        console.log(`Lead ${lead.name}:`, {
-            status: lastFlow.client_status,
-            flowDate: lastFlow.flowDate,
-            currentDate: currentDate.toISOString()
-        });
-    });
 
     return leads
         .filter((lead) => lead.botSwitch !== "OFF")
