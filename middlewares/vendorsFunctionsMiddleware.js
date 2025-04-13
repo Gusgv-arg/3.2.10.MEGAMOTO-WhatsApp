@@ -254,7 +254,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 				const availableLeads = allLeads.filter((lead) => {
 					return !lead.lastFlow.vendor_phone;
 				});
-				//console.log("available leads:", availableLeads)
+				console.log("available leads:", availableLeads)
 
 				if (availableLeads.length > 0) {
 					// Llama función q toma el lead más viejo entre creación y toContact

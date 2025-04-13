@@ -36,7 +36,7 @@ export const findOneLeadForVendor = (availableLeads) => {
 		lastFlow.client_status
 	}. Marca: ${lastFlow.brand ? lastFlow.brand : "No sabe"}. Modelo: ${
 		lastFlow.model ? lastFlow.model : "No sabe"
-	}. Precio Informado: ${lastFlow.price ? lastFlow.price : "No informado"}. ${
+	}. Precio Informado: $ ${lastFlow.price ? lastFlow.price : "No informado"}. ${
 		lastFlow.otherProducts ? lastFlow.otherProducts : ""
 	} Método de Pago: ${
 		lastFlow.payment ? lastFlow.payment : "No informado"
