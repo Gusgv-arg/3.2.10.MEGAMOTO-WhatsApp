@@ -19,7 +19,7 @@ export const findFlowLeadsForVendors = async () => {
     const twentyFourHoursAgoFormatted = formatDate(twentyFourHoursAgo);
     const currentDateFormatted = formatDate(currentDate);
 
-    const leads = await Leads.find({
+	const leads = await Leads.find({
         $and: [
             // Excluir los estados que nunca deben estar disponibles
             {
@@ -48,31 +48,12 @@ export const findFlowLeadsForVendors = async () => {
                             { "flows.toContact": { $lte: currentDate } }
                         ]
                     },
-                    // Casos donde pasaron más de 24h desde su creación
-                    {
-                        $and: [
-                            {
-                                "flows.client_status": {
-                                    $in: [
-                                        "primer contacto",
-                                        "flow enviado",
-                                        "flow leído", 
-                                        "flow recibido",
-                                        "falló envío",
-                                        "falta DNI",
-                                        "falta modelo",
-                                        "faltan modelo y DNI",
-                                        "error"
-                                    ]
-                                }
-                            },
-                            { "flows.flowDate": { $lt: twentyFourHoursAgoFormatted } }
-                        ]
-                    }
+                    // CAMBIO: Cualquier estado (excepto compró/no compró) donde pasaron más de 24h
+                    { "flows.flowDate": { $lt: twentyFourHoursAgoFormatted } }
                 ]
             }
         ]
-    }).lean();
+    }).lean();    
 
     // Para debug
     console.log('Current date:', currentDateFormatted);
