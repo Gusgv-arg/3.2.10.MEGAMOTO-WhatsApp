@@ -58,7 +58,7 @@ export const findFlowLeadsForVendors = async () => {
     // Para debug
     console.log('Current date:', currentDateFormatted);
     console.log('24h ago:', twentyFourHoursAgoFormatted);
-    console.log('Found leads:', leads.length);
+    console.log('Found leads:', leads);
 
     return leads
         .filter((lead) => lead.botSwitch !== "OFF")
