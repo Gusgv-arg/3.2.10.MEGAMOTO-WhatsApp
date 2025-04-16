@@ -18,7 +18,14 @@ export const sendMenuToAdmin = async (userPhone) => {
 		template: {
 			name: process.env.FLOW_ADMIN,
 			language: { code: "es" },
-			
+			components: [
+				{
+					type: "BUTTON",
+					sub_type: "flow",
+					index: "0",
+					parameters: [{ type: "action", action: { flow_token: 0 } }],
+				},
+			]
 		},
 	};
 
