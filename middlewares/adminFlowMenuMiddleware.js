@@ -68,7 +68,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 
 				console.log(`${userPhone} apagó la API.`);
 			
-            } else if (message.includes('"2_3-Prender_"')) {
+            } else if (message.includes('"2_3-Prender_')) {
 				res.status(200).send("EVENT_RECEIVED");
 
 				// Función para que me llegue una notificación cuando entra un nuevo lead
@@ -156,9 +156,8 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 
 				console.log(`${userPhone} corrió la actualización de precios.`);
 			}
-		} else {
-			// No es el Admin y no es un Flow del Admin hace next
-			next();
 		}
-	}
+	} else {
+        next()
+    }
 };
