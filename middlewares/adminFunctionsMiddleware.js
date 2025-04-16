@@ -183,6 +183,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			console.log(
 				`${userPhone} recibió el excel con los avisos de Facebook de la competencia.`
 			);
+			
 		} else if (message.startsWith("plantilla")) {
 			res.status(200).send("EVENT_RECEIVED");
 
