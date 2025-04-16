@@ -68,7 +68,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 
 				console.log(`${userPhone} apagó la API.`);
 			
-            } else if (message.includes('"2_3-Prender_/_Apagar_Alarma"')) {
+            } else if (message.includes('"2_3-Prender_\/_Apagar_Alarma"')) {
 				res.status(200).send("EVENT_RECEIVED");
 
 				// Función para que me llegue una notificación cuando entra un nuevo lead
