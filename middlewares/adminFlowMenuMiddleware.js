@@ -37,9 +37,9 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 					.response_json;
 
 			console.log("entró acá:", message);
-            
+
 			// ----- DISTINTAS FUNCIONES DEL ADMIN ------------------------------------------
-			if (message.screen_0_Opciones_0 === "0_1-Prender_API_WhatsApp") {
+			if (message.includes('"0_1-Prender_API_WhatsApp"')) {
 				//Change general switch to ON
 				await changeMegaBotSwitch("ON");
 
