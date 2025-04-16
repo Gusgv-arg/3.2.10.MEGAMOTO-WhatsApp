@@ -17,21 +17,26 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 		? body.entry[0].changes[0].value.messages[0].type
 		: body.entry[0].changes[0];
 
-        if (
-            (userPhone === adminPhone && typeOfWhatsappMessage !== "interactive") ||
-            (userPhone === admin2Phone && typeOfWhatsappMessage !== "interactive")
-        ) {
-        // Si detecta al Admin y No es un Flow envía el Flow con el Menú
-        const notification = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ Entrá a tu celular para ver el Menú de Opciones del Administrador.\n\n*Megamoto*`;
+	if (userPhone === adminPhone || userPhone === admin2Phone) {
+		if (typeOfWhatsappMessage !== "interactive") {
+			// Si detecta al Admin y No es un Flow envía el Flow con el Menú
+			const notification = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ Entrá a tu celular para ver el Menú de Opciones del Administrador.\n\n*Megamoto*`;
 
-        await handleWhatsappMessage(userPhone, notification);
+			await handleWhatsappMessage(userPhone, notification);
 
-        await sendMenuToAdmin(userPhone);
+			await sendMenuToAdmin(userPhone);
 
-        return res.status(200).send("EVENT_RECEIVED");
-	
-    } else {
-        // No es el Admin y no es un Flow del Admin hace next
-        next()
-    }
+			return res.status(200).send("EVENT_RECEIVED");
+            
+		} else  if (typeOfWhatsappMessage === "interactive") {
+            const message  = body.entry[0].changes[0].value.messages[0].interactive.nfm_reply
+            .response_json
+            console.log("entró acá:", message)
+            
+			return res.status(200).send("EVENT_RECEIVED");
+		}
+	} else {
+		// No es el Admin y no es un Flow del Admin hace next
+		next();
+	}
 };
