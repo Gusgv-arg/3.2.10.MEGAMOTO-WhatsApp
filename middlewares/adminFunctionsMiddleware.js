@@ -22,7 +22,6 @@ import { findFlowLeadsForVendors } from "../utils/dataBase/findFlowLeadsForVendo
 import { sendExcelByWhatsApp } from "../utils/excel/sendExcelByWhatsApp.js";
 import { handleWhatsappMessage } from "../utils/whatsapp/handleWhatsappMessage.js";
 import { exportFlowLeadsToTemplate } from "../utils/excel/exportFlowLeadsToTemplate.js";
-import { statusLeads } from "../utils/dataBase/statusLeads.js";
 import { changeAlarmSwitch } from "../functions/changeAlarmSwitch.js";
 import { leadsStatusAnalysis } from "../utils/dataBase/leadsStatusAnalysis.js";
 
@@ -247,13 +246,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 					`Admin ${userPhone} recibió un mensaje de que no hay leads x lo que no recibió el excel.`
 				);
 			}
-		} else if (message === "status") {
-			// Función que envía estadíticas de los leads.
-			res.status(200).send("EVENT_RECEIVED");
-
-			const status = await statusLeads();
-
-			await handleWhatsappMessage(userPhone, status);
 		} else {
 			// Does next if its an admin message but is not an instruction
 			next();

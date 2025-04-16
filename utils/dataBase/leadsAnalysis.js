@@ -1,6 +1,7 @@
 import Leads from "../../models/leads.js";
 
-export const statusLeads = async () => {
+// Función para análisis mas profundo de leads
+export const leadsAnalysis = async () => {
 	
 	const currentDate = new Date(new Date().toLocaleString("es-AR", {
         timeZone: "America/Argentina/Buenos_Aires"
