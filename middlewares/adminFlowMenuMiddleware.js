@@ -61,14 +61,14 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				//Change general switch to OFF
 				await changeMegaBotSwitch("OFF");
 
-				const notification = `*🔔 Notificación MEGAMOTO:*\n\n❌ La API de WhatsApp fue apagada.\n\n*Megamoto*`;
+				const notification = `*🔔 Notificación MEGAMOTO:*\n\n✅ La API de WhatsApp fue apagada.\n\n*Megamoto*`;
 
 				// WhatsApp Admin notification
 				await handleWhatsappMessage(userPhone, notification);
 
 				console.log(`${userPhone} apagó la API.`);
 			
-            } else if (message.includes('"2_3-Prender_\/_Apagar_Alarma"')) {
+            } else if (message.includes('"2_3-Prender_"')) {
 				res.status(200).send("EVENT_RECEIVED");
 
 				// Función para que me llegue una notificación cuando entra un nuevo lead
