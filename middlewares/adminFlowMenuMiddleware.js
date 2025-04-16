@@ -70,7 +70,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				console.log(`${userPhone} apagó la API.`);
 			
             } else if (message.includes('"2_3-Prender_')) {
-				res.status(200).send("EVENT_RECEIVED");
+				
                 console.log("Entró en el switch de la alarma de nuevos leads.");
 
 				// Función para que me llegue una notificación cuando entra un nuevo lead
@@ -84,8 +84,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				);
 			
             } else if (message.includes('"3_4-Status_Leads"')) {
-				res.status(200).send("EVENT_RECEIVED");
-
+				
 				const status = await leadsStatusAnalysis();
 
 				// WhatsApp Admin notification
@@ -96,8 +95,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				);
 			
             } else if (message.includes('"4_5-Excel_con_Leads"')) {
-				res.status(200).send("EVENT_RECEIVED");
-
+				
 				// Filtra de la BD los Leads disponibles para atender dentro del Flow
 				const queue = await findFlowLeadsForVendors();
 				//console.log("Queue", queue);
@@ -124,7 +122,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				}
 			
             } else if (message.includes('"5_6-Campaña_WhatsApp"')) {
-				res.status(200).send("EVENT_RECEIVED");
+				
 			
             } else if (message.includes('"6_7-Análisis_Precios_M._Libre"')) {
 				if (isScrapperCalled === false) {
@@ -137,12 +135,11 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 					);
 				} else {
 					//console.log("isScrapperCelles esta en:", isScrapperCalled);
-					res.status(200).send("EVENT_RECEIVED");
+					
 				}
 
 			} else if (message.includes('"7_8-Análisis_Avisos_Facebook"')) {
-				res.status(200).send("EVENT_RECEIVED");
-
+				
 				await scrapeFacebook(userPhone);
 
 				console.log(
@@ -150,8 +147,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				);
 
 			} else if (message.includes('"8_9-Actualizar_Precios"')) {
-				res.status(200).send("EVENT_RECEIVED");
-
+				
 				const notification = await updateDbPricesFromExcel();
 
 				await handleWhatsappMessage(userPhone, notification);
