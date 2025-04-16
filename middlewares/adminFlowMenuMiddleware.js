@@ -29,14 +29,15 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 	if (userPhone === adminPhone || userPhone === admin2Phone) {
 		if (typeOfWhatsappMessage !== "interactive") {
 			// Si detecta al Admin y No es un Flow envía el Flow con el Menú
-			const notification = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ Entrá a tu celular para ver el Menú de Opciones del Administrador.\n\n*Megamoto*`;
+			const notification = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ Entrá a tu celular para ver el *Menú del Administrador*.\n\n*Megamoto*`;
 
 			await handleWhatsappMessage(userPhone, notification);
 
 			await sendMenuToAdmin(userPhone);
 
 			return res.status(200).send("EVENT_RECEIVED");
-		} else if (typeOfWhatsappMessage === "interactive") {
+
+        } else if (typeOfWhatsappMessage === "interactive") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			const message =
@@ -70,6 +71,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 			
             } else if (message.includes('"2_3-Prender_')) {
 				res.status(200).send("EVENT_RECEIVED");
+                console.log("Entró en el switch de la alarma de nuevos leads.");
 
 				// Función para que me llegue una notificación cuando entra un nuevo lead
 				const alarm = await changeAlarmSwitch();
