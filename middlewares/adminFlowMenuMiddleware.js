@@ -76,7 +76,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				// Función para que me llegue una notificación cuando entra un nuevo lead
 				const alarm = await changeAlarmSwitch();
 
-				const message = `*🔔 Notificación:*\n\n✅ La alarma de nuevos leads fue puesta en *${alarm}*.\n\nMegamoto`;
+				const message = `*🔔 Notificación:*\n\n✅ La alarma de nuevos leads fue puesta en *${alarm}*.\n\n*Megamoto*`;
 
 				await handleWhatsappMessage(userPhone, message);
 				console.log(

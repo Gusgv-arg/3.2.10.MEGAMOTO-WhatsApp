@@ -40,10 +40,10 @@ export const leadsStatusAnalysis = async (userMessage) => {
 
     let message 
     if (userMessage) {
-        message = `*🔔 Notificación MEGAMOTO:*\n\n🎉 Acaba de entrar un nuevo lead.\nNombre: *${userMessage.name}*\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\nSin vendedor: ${unassignedCount}\n\nMegamoto`;
+        message = `*🔔 Notificación MEGAMOTO:*\n\n🎉 Acaba de entrar un nuevo lead.\nNombre: *${userMessage.name}*\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\nSin vendedor: ${unassignedCount}\n\n*Megamoto*`;
 
     } else {
-        message = `*🔔 Notificación MEGAMOTO:*\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\nSin vendedor: ${unassignedCount}\n\nMegamoto`;
+        message = `*🔔 Notificación MEGAMOTO:*\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\nSin vendedor: ${unassignedCount}\n\n*Megamoto*`;
     }
 
     return message;
