@@ -34,7 +34,9 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 	if (userPhone === adminPhone || userPhone === admin2Phone) {
 
 		// Admin recibe Menú salvo que quiera tomar un lead (manda "lead")
-		if (typeOfWhatsappMessage !== "interactive" && message !== "lead") {
+		if (message === "lead") {
+			next()
+		} else if (typeOfWhatsappMessage !== "interactive" && message !== "lead") {
 			
 			// Si detecta al Admin y No es un Flow envía el Flow con el Menú
 			const notification = `*🔔 Notificación MEGAMOTO:*\n\n☰ Entrá a tu celular para ver el *Menú de Administrador*.\n\n*Megamoto*`;
