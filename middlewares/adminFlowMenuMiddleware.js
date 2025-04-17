@@ -37,7 +37,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 		if (typeOfWhatsappMessage !== "interactive" && message !== "lead") {
 			
 			// Si detecta al Admin y No es un Flow envía el Flow con el Menú
-			const notification = `*🔔 Notificación MEGAMOTO:*\n\n📝 Entrá a tu celular para ver el *Menú de Administrador*.\n\n*Megamoto*`;
+			const notification = `*🔔 Notificación MEGAMOTO:*\n\n☰ Entrá a tu celular para ver el *Menú de Administrador*.\n\n*Megamoto*`;
 
 			await handleWhatsappMessage(userPhone, notification);
 
