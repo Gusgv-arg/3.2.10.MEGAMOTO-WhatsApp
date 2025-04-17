@@ -8,6 +8,7 @@ import { statusMiddleware } from "../middlewares/statusMiddleware.js";
 import { statusFlowsMiddleware } from "../middlewares/statusFlowsMiddleware.js";
 import { vendorsFunctionsMiddleware } from "../middlewares/vendorsFunctionsMiddleware.js";
 import { adminFlowMenuMiddleware } from "../middlewares/adminFlowMenuMiddleware.js";
+import { vendorsFlowMenuMiddleware } from "../middlewares/vendorFlowMenuMiddleware.js";
 
 const whatsappRouter = express.Router();
 
@@ -18,7 +19,8 @@ whatsappRouter.post(
 	statusFlowsMiddleware,
 	adminFlowMenuMiddleware,
 	//adminFunctionsMiddleware,
-	vendorsFunctionsMiddleware,
+	vendorsFlowMenuMiddleware,
+	//vendorsFunctionsMiddleware,
 	whatsAppGeneralBotSwitchMiddleware,
 	postWhatsappWebhookController
 );

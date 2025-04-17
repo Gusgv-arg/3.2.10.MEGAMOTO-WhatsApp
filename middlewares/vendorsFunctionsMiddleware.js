@@ -92,7 +92,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 		res.status(200).send("EVENT_RECEIVED");
 
-		const notification = `*🔔 Notificación MEGAMOTO:*\n\n❗ Estimado /a ${name}, esta es una línea de WhatsApp que *solo procesa mensajes de texto*.\nPor favor enviá \n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+		const notification = `*🔔 Notificación MEGAMOTO:*\n\n❗ Estimado /a ${name}, esta es una línea de WhatsApp que *solo procesa mensajes de texto*.\nPor favor enviá tu mensaje en texto.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 		await handleWhatsappMessage(userPhone, notification);
 
