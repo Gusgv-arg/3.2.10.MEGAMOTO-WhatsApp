@@ -133,13 +133,11 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			if (
 				message !== "lead" &&
 				message !== "leads" &&
-				userPhone !== vendor1 &&
-				userPhone !== vendor2 &&
 				verifyMessage === false
 			) {
 				// Caso que el vendedor manda un texto con algo que la API no procesa
 
-				const notification = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n5. Enviar un número de celular + nombre para dar de alta o verificar de quien es el lead.\n\n*Megamoto*`;
+				const notification = `*🔔 Notificación MEGAMOTO:*\n\n📣 ${vendorName}, los vendedores solo pueden:\n1-Enviar la palabra "lead" para recibir un Lead.\n2-Enviar la palabra "leads" para recibir un excel con sus leads.\n3-Adjuntar el excel recibido para modificar información (estado, etc).\n4. Responder al Formulario recibido para tomar un lead.\n5. Enviar un número de celular + nombre para dar de alta o verificar de quien es el lead.\n\n*Megamoto*`;
 
 				await handleWhatsappMessage(userPhone, notification);
 
@@ -149,6 +147,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (verifyMessage === true) {
+				// Se verificó correctamente el celular entonces solo retorna
 				return res.status(200).send("EVENT_RECEIVED");
 			}
 		} else if (typeOfWhatsappMessage === "document") {
@@ -161,7 +160,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 			next();
 		}
 
-		// ---- Funciones disponibles para los vendedores -------------------------------
+		// ---- Funciones disponibles para los vendedores -------------------------
 		if (message === "leads" && typeOfWhatsappMessage === "text") {
 			// Función que envía excel con los leads en la fila del vendedor
 			res.status(200).send("EVENT_RECEIVED");
@@ -183,18 +182,14 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 
 				//console.log("Leads sin vendedor asignado:", availableLeads);
 
-				let vendorLeads;
+				// Filtra leads del vendor_phone
+				const vendorLeads = allLeads.filter((lead) => {
+					return lead.lastFlow.vendor_phone === parseInt(userPhone);
+				});
 
-				if (vendorName !== "Gustavo_Glunz") {
-					// Filtra leads del vendor_phone salvo Gustavo_Glunz que ve todos los Leads
-					vendorLeads = allLeads.filter((lead) => {
-						return lead.lastFlow.vendor_phone === parseInt(userPhone);
-					});
-				} else {
-					vendorLeads = allLeads;
-				}
 				//console.log(`Leads en la Fila de ${userPhone}:`, vendorLeads.length);
-				console.log("vendorLeads:", vendorLeads);
+				//console.log("vendorLeads:", vendorLeads);
+
 				// Procesa solo los leads del vendedor
 				if (vendorLeads.length > 0) {
 					// Notificar al vendedor del proceso
@@ -225,7 +220,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 						message = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ No tenés Leads que estés atendiendo y por el momento no hay leads disponibles para atender.\n\n*Megamoto*`;
 
 						console.log(
-							`El vendedor ${vendorName} recibió un mensaje de que no tiene y de que no hay leads para atender.`
+							`El vendedor ${vendorName} recibió un mensaje de que NO tiene y de que NO hay leads para atender.`
 						);
 					}
 
@@ -241,6 +236,7 @@ export const vendorsFunctionsMiddleware = async (req, res, next) => {
 					`El vendedor ${vendorName} recibió un mensaje de que no hay leads pendientes de nadie.`
 				);
 			}
+			
 		} else if (message === "lead" && typeOfWhatsappMessage === "text") {
 			// Función que envía un lead para atender
 			res.status(200).send("EVENT_RECEIVED");
