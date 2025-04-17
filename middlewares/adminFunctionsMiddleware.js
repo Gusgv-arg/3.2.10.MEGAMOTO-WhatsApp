@@ -82,7 +82,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 		} else if (message === "alarma") {
 			res.status(200).send("EVENT_RECEIVED");
 			// Función para que me llegue una notificación cuando entra un nuevo lead
-			const alarm = await changeAlarmSwitch();
+			const alarm = await changeAlarmSwitch(userPhone);
 
 			const message = `*🔔 Notificación:*\n\nLa alarma de nuevos leads fue puesta en *${alarm}*.\n\nMegamoto`;
 

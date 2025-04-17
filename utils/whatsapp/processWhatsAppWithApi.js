@@ -8,6 +8,7 @@ import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { leadsStatusAnalysis } from "../dataBase/leadsStatusAnalysis.js";
 
 const myPhone = process.env.MY_PHONE;
+const myPhone2 = process.env.MY_PHONE2;
 
 export const processWhatsAppWithApi = async (userMessage) => {
 	// Obtain current date and hour
@@ -51,16 +52,23 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			// Si la alarma está prendida notifica al Admin de un nuevo lead
 			let botSwitch = await BotSwitch.findOne();
 
-			if (botSwitch?.alarmSwitch === "ON") {
+			if (botSwitch?.alarmSwitch1 === "ON" || botSwitch?.alarmSwitch2 === "ON") {
 				// Llama a la función de análisis de leads
 				const analysis = await leadsStatusAnalysis(userMessage);
 
-				// Envía la notificación al Admin
-				await adminWhatsAppNotification(myPhone, analysis);
-			}
+				if (botSwitch?.alarmSwitch1 === "ON") {
+					// Envía la notificación al Admin1
+					await adminWhatsAppNotification(myPhone, analysis);
+				
+				} else if (botSwitch?.alarmSwitch2 === "ON") {
+					// Envía la notificación al Admin2
+					await adminWhatsAppNotification(myPhone2, analysis);
+
+				}
+			} 
 
 			// Actualiza el log
-			log = `1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD. 5-Si la alarma esta en "ON" se notificó al admin.`;
+			log = `1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD. 5-Alarma al Admin1: ${botSwitch?.alarmSwitch1 === "ON" ? "SI" : "NO"}. 6-Alarma al Admin2: ${botSwitch?.alarmSwitch2 === "ON" ? "SI" : "NO"}.`;
 			return log;
 		} else {
 			// -------- Lead YA EXISTE ------------------------------------------------------
