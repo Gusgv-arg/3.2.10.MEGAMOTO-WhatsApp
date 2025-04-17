@@ -26,18 +26,25 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 		? body.entry[0].changes[0].value.messages[0].type
 		: body.entry[0].changes[0];
 
+	const message =
+		typeOfWhatsappMessage === "text"
+			? body.entry[0].changes[0].value.messages[0].text.body
+			: "";
+
 	if (userPhone === adminPhone || userPhone === admin2Phone) {
-		if (typeOfWhatsappMessage !== "interactive") {
+
+		// Admin recibe Menú salvo que quiera tomar un lead (manda "lead")
+		if (typeOfWhatsappMessage !== "interactive" && message !== "lead") {
+			
 			// Si detecta al Admin y No es un Flow envía el Flow con el Menú
-			const notification = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ Entrá a tu celular para ver el *Menú del Administrador*.\n\n*Megamoto*`;
+			const notification = `*🔔 Notificación MEGAMOTO:*\n\n📋☰ Entrá a tu celular para ver el *Menú de Administrador*.\n\n*Megamoto*`;
 
 			await handleWhatsappMessage(userPhone, notification);
 
 			await sendMenuToAdmin(userPhone);
 
 			return res.status(200).send("EVENT_RECEIVED");
-
-        } else if (typeOfWhatsappMessage === "interactive") {
+		} else if (typeOfWhatsappMessage === "interactive") {
 			res.status(200).send("EVENT_RECEIVED");
 
 			const message =
@@ -57,8 +64,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				await handleWhatsappMessage(userPhone, notification);
 
 				console.log(`${userPhone} prendió la API.`);
-			
-            } else if (message.includes('"1_2-Apagar_API_WhatsApp"')) {
+			} else if (message.includes('"1_2-Apagar_API_WhatsApp"')) {
 				//Change general switch to OFF
 				await changeMegaBotSwitch("OFF");
 
@@ -68,10 +74,8 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				await handleWhatsappMessage(userPhone, notification);
 
 				console.log(`${userPhone} apagó la API.`);
-			
-            } else if (message.includes('"2_3-Prender_')) {
-				
-                console.log("Entró en el switch de la alarma de nuevos leads.");
+			} else if (message.includes('"2_3-Prender_')) {
+				console.log("Entró en el switch de la alarma de nuevos leads.");
 
 				// Función para que me llegue una notificación cuando entra un nuevo lead
 				const alarm = await changeAlarmSwitch(userPhone);
@@ -82,9 +86,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				console.log(
 					`${userPhone} cambió la alarma de nuevos leads a ${alarm}.`
 				);
-			
-            } else if (message.includes('"3_4-Status_Leads"')) {
-				
+			} else if (message.includes('"3_4-Status_Leads"')) {
 				const status = await leadsStatusAnalysis();
 
 				// WhatsApp Admin notification
@@ -93,15 +95,18 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				console.log(
 					`${userPhone} envío la palabra status y recibió el estado de los leads.`
 				);
-			
-            } else if (message.includes('"4_5-Excel_con_Leads"')) {
-				
+			} else if (message.includes('"4_5-Excel_con_Leads"')) {
 				// Filtra de la BD los Leads disponibles para atender dentro del Flow
 				const queue = await findFlowLeadsForVendors();
 				//console.log("Queue", queue);
 
 				// Chequea que haya leads en la fila
 				if (queue.length > 0) {
+					// Notificar del proceso
+					const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Vas a recibir todos los Leads en un Excel. Al abrir el archivo NO le des importancia a los mensajes de error. Si no llega en menos de 1 minuto, volvé a entrar al Menú.\n\n*Megamoto*`;
+
+					await handleWhatsappMessage(userPhone, message);
+
 					// Genera un Excel con los datos
 					const excelFile = await exportFlowLeadsToTemplate(queue);
 					//console.log("excel:", excelFile);
@@ -120,11 +125,8 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 						`Admin ${userPhone} recibió un mensaje de que no hay leads x lo que no recibió el excel.`
 					);
 				}
-			
-            } else if (message.includes('"5_6-Campaña_WhatsApp"')) {
-				
-			
-            } else if (message.includes('"6_7-Análisis_Precios_M._Libre"')) {
+			} else if (message.includes('"5_6-Campaña_WhatsApp"')) {
+			} else if (message.includes('"6_7-Análisis_Precios_M._Libre"')) {
 				if (isScrapperCalled === false) {
 					isScrapperCalled = true;
 					res.status(200).send("EVENT_RECEIVED");
@@ -135,19 +137,14 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 					);
 				} else {
 					//console.log("isScrapperCelles esta en:", isScrapperCalled);
-					
 				}
-
 			} else if (message.includes('"7_8-Análisis_Avisos_Facebook"')) {
-				
 				await scrapeFacebook(userPhone);
 
 				console.log(
 					`${userPhone} recibió el excel con los avisos de Facebook de la competencia.`
 				);
-
 			} else if (message.includes('"8_9-Actualizar_Precios"')) {
-				
 				const notification = await updateDbPricesFromExcel();
 
 				await handleWhatsappMessage(userPhone, notification);
@@ -156,6 +153,6 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 			}
 		}
 	} else {
-        next()
-    }
+		next();
+	}
 };
