@@ -16,10 +16,9 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 		const crediCuotas = await axios.get(
 			"https://three-2-13-web-scrapping.onrender.com"
 		);
-		console.log("Credicuotas", crediCuotas?.status ? crediCuotas.status : "No hay credicuotas.status");
+		console.log("Status Servidor Scrapin:", crediCuotas?.status ? crediCuotas.status : "No hay credicuotas.status");
 		if (crediCuotas?.status === 200) {
-			req.crediCuotas = true;
-			console.log("req:", req.crediCuotas);
+			req.crediCuotas = true;	
 		}
 	
 	} catch (error) {
