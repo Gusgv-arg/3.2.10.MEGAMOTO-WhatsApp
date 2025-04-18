@@ -65,7 +65,8 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				// WhatsApp Admin notification
 				await handleWhatsappMessage(userPhone, notification);
 
-				console.log(`${userPhone} prendió la API.`);
+				console.log(`Admin ${userPhone} prendió la API.`);
+			
 			} else if (message.includes('"1_2-Apagar_API_WhatsApp"')) {
 				//Change general switch to OFF
 				await changeMegaBotSwitch("OFF");
@@ -75,10 +76,10 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				// WhatsApp Admin notification
 				await handleWhatsappMessage(userPhone, notification);
 
-				console.log(`${userPhone} apagó la API.`);
-			} else if (message.includes('"2_3-Prender_')) {
-				console.log("Entró en el switch de la alarma de nuevos leads.");
+				console.log(`Admin ${userPhone} apagó la API.`);
 
+			} else if (message.includes('"2_3-Prender_')) {
+				
 				// Función para que me llegue una notificación cuando entra un nuevo lead
 				const alarm = await changeAlarmSwitch(userPhone);
 
@@ -86,7 +87,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 
 				await handleWhatsappMessage(userPhone, message);
 				console.log(
-					`${userPhone} cambió la alarma de nuevos leads a ${alarm}.`
+					`Admin ${userPhone} cambió la alarma de nuevos leads a ${alarm}.`
 				);
 			} else if (message.includes('"3_4-Status_Leads"')) {
 				const status = await leadsStatusAnalysis();
@@ -95,7 +96,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				await handleWhatsappMessage(userPhone, status);
 
 				console.log(
-					`${userPhone} envío la palabra status y recibió el estado de los leads.`
+					`Admin ${userPhone} envío la palabra status y recibió el estado de los leads.`
 				);
 			} else if (message.includes('"4_5-Excel_con_Leads"')) {
 				// Filtra de la BD los Leads disponibles para atender dentro del Flow
@@ -135,7 +136,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 					const precios = await scrapeMercadoLibre(userPhone);
 
 					console.log(
-						`${userPhone} recibió el excel con los precios de Mercado Libre.`
+						`Admin ${userPhone} recibió el excel con los precios de Mercado Libre.`
 					);
 				} else {
 					//console.log("isScrapperCelles esta en:", isScrapperCalled);
@@ -144,14 +145,14 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				await scrapeFacebook(userPhone);
 
 				console.log(
-					`${userPhone} recibió el excel con los avisos de Facebook de la competencia.`
+					`Admin ${userPhone} recibió el excel con los avisos de Facebook de la competencia.`
 				);
 			} else if (message.includes('"8_9-Actualizar_Precios"')) {
 				const notification = await updateDbPricesFromExcel();
 
 				await handleWhatsappMessage(userPhone, notification);
 
-				console.log(`${userPhone} corrió la actualización de precios.`);
+				console.log(`Admin ${userPhone} corrió la actualización de precios.`);
 			}
 		}
 	} else {
