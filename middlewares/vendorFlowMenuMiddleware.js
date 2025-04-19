@@ -121,7 +121,9 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 
 			await sendMenuToVendor(userPhone);
 		} else if (typeOfWhatsappMessage === "interactive") {
+			console.log("detecto interactive")
 			if (message.includes('"0_1-Tomar_Lead"')) {
+				console.log("Entró a tomar lead")
 				// Se buscan los leads a atender
 				const allLeads = await findFlowLeadsForVendors();
 
