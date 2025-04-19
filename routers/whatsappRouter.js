@@ -19,8 +19,8 @@ whatsappRouter.post(
 	statusFlowsMiddleware,
 	adminFlowMenuMiddleware,
 	//adminFunctionsMiddleware,
-	//vendorsFlowMenuMiddleware,
-	vendorsFunctionsMiddleware,
+	vendorsFlowMenuMiddleware,
+	//vendorsFunctionsMiddleware,
 	whatsAppGeneralBotSwitchMiddleware,
 	postWhatsappWebhookController
 );
