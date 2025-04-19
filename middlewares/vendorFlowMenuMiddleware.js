@@ -33,6 +33,9 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 			? body.entry[0].changes[0].value.messages[0].text.body
 			: typeOfWhatsappMessage === "document"
 			? body.entry[0].changes[0].value.messages[0].document.caption
+			: typeOfWhatsappMessage === "interactive"
+			? body.entry[0].changes[0].value.messages[0].interactive.nfm_reply
+					.response_json
 			: "no se pudo extraer el mensaje";
 
 	let vendor = false;
@@ -121,9 +124,9 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 
 			await sendMenuToVendor(userPhone);
 		} else if (typeOfWhatsappMessage === "interactive") {
-			console.log("detecto interactive")
+			console.log("detecto interactive");
 			if (message.includes('"0_1-Tomar_Lead"')) {
-				console.log("Entró a tomar lead")
+				console.log("Entró a tomar lead");
 				// Se buscan los leads a atender
 				const allLeads = await findFlowLeadsForVendors();
 
@@ -249,7 +252,6 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 					);
 				}
 			}
-			
 		} else if (typeOfWhatsappMessage === "document") {
 			// Función para que el vendedor envíe un Excel para cambiar datos (estados, etc)
 			let documentId = body.entry[0].changes[0].value.messages[0].document.id;
