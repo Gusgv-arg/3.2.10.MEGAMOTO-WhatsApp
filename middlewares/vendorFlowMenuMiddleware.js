@@ -91,6 +91,7 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 				? "Reina"
 				: "";
 	}
+	console.log("Vendedor:", vendorName);
 
 	// Check del tipo de msje
 	if (typeOfWhatsappMessage !== "text" && vendor === false) {

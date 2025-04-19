@@ -166,7 +166,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				console.log(
 					`Admin ${userPhone} recibió el excel con los avisos de Facebook de la competencia.`
 				);
-				
+
 			} else if (message.includes('"8_9-Actualizar_Precios"')) {
 				res.status(200).send("EVENT_RECEIVED");
 
@@ -178,6 +178,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 			
 			} else if (message.includes('"0_1-Tomar_Lead"') || message.includes('"1_2-Excel_con_mis_Leads"')) {
 				// Casos en que el Admin quiere hacer funciones de vendedor hace next() 
+				console.log("El Admin quiere tomar un lead o ver sus leads entonces se hae next().");
 				next()
 			}
 		}
