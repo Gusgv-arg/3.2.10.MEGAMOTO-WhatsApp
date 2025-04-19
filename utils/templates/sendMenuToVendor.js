@@ -36,7 +36,7 @@ export const sendMenuToVendor = async (userPhone) => {
         });
 
         if (response.data) {
-            console.log(`Se envió el menú al Vendedor: ${userPhone}`);
+            console.log(`Se envió el Menú al Vendedor: ${userPhone}`);
         }		
     } catch (error) {
         console.error(
