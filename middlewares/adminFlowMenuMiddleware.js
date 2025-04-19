@@ -153,6 +153,10 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				await handleWhatsappMessage(userPhone, notification);
 
 				console.log(`Admin ${userPhone} corrió la actualización de precios.`);
+			
+			} else if (message.includes('"0_1-Tomar_Lead"') || message.includes('"1_2-Excel_con_mis_Leads"')) {
+				// Casos en que el Admin quiere hacer funciones de vendedor hace next() 
+				next()
 			}
 		}
 	} else {
