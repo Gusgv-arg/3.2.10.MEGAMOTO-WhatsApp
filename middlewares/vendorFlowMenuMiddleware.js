@@ -124,9 +124,9 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 
 			await sendMenuToVendor(userPhone);
 		} else if (typeOfWhatsappMessage === "interactive") {
-			console.log("detecto interactive");
+		
 			if (message.includes('"0_1-Tomar_Lead"')) {
-				console.log("Entró a tomar lead");
+		
 				// Se buscan los leads a atender
 				const allLeads = await findFlowLeadsForVendors();
 
@@ -226,10 +226,10 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 						// Como no hay Leads en la fila del VENDEDOR se lo notifica
 						let message;
 						if (available === true) {
-							message = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ No tenés Leads que estés atendiendo. Hay *${availableLeads}* leads para atender asique enviá la palabra "lead" para que se te asigne uno. ¡A vender!\n\n*Megamoto*`;
+							message = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ No tenés Leads que estés atendiendo. Hay *${availableLeads}* leads para atender asique volvé al Menú para tomar un Lead. ¡A vender!\n\n*Megamoto*`;
 
 							console.log(
-								`El vendedor ${vendorName} recibió un mensaje de que envíe la palabra lead para atender a alguien.`
+								`El vendedor ${vendorName} recibió un mensaje de que entre al menú para tomar un Lead.`
 							);
 						} else {
 							message = `*🔔 Notificación MEGAMOTO:*\n\n⚠️ No tenés Leads que estés atendiendo y por el momento no hay leads disponibles para atender.\n\n*Megamoto*`;
