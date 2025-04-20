@@ -32,36 +32,37 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 			: "";
 
 	if (userPhone === adminPhone || userPhone === admin2Phone) {
-
 		const messageLower = message.toLowerCase();
-    
+
 		// Admin recibe Menú salvo que quiera tomar un lead (manda "lead")
 		if (messageLower === "lead") {
-			next()
-		} else if (typeOfWhatsappMessage !== "interactive" && typeOfWhatsappMessage !== "document" && messageLower !== "lead") {
+			next();
+		} else if (
+			typeOfWhatsappMessage !== "interactive" &&
+			typeOfWhatsappMessage !== "document" &&
+			messageLower !== "lead"
+		) {
 			console.log("Entró un Mensaje de Admin:", message);
-			
+
 			// Si detecta al Admin y No es un Flow envía el Flow con el Menú
 			const notification = `*🔔 Notificación MEGAMOTO:*\n\n☰ Entrá a tu celular para ver el *Menú de Administrador*.\n\n*Megamoto*`;
-			
+
 			await handleWhatsappMessage(userPhone, notification);
-			
+
 			await sendMenuToAdmin(userPhone);
 
 			return res.status(200).send("EVENT_RECEIVED");
-
 		} else if (typeOfWhatsappMessage === "interactive") {
-			
 			const message =
-			body.entry[0].changes[0].value.messages[0].interactive.nfm_reply
-			.response_json;
-			
+				body.entry[0].changes[0].value.messages[0].interactive.nfm_reply
+					.response_json;
+
 			console.log("Entró un Flow de Admin:", message);
-			
+
 			// ----- FUNCIONES DEL ADMIN ------------------------------------------
 			if (message.includes('"0_1-Prender_API_WhatsApp"')) {
 				res.status(200).send("EVENT_RECEIVED");
-				
+
 				//Change general switch to ON
 				await changeMegaBotSwitch("ON");
 
@@ -71,7 +72,6 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				await handleWhatsappMessage(userPhone, notification);
 
 				console.log(`Admin ${userPhone} prendió la API.`);
-			
 			} else if (message.includes('"1_2-Apagar_API_WhatsApp"')) {
 				res.status(200).send("EVENT_RECEIVED");
 
@@ -84,7 +84,6 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				await handleWhatsappMessage(userPhone, notification);
 
 				console.log(`Admin ${userPhone} apagó la API.`);
-
 			} else if (message.includes('"2_3-Prender_')) {
 				res.status(200).send("EVENT_RECEIVED");
 
@@ -108,7 +107,6 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				console.log(
 					`Admin ${userPhone} envío la palabra status y recibió el estado de los leads.`
 				);
-
 			} else if (message.includes('"4_5-Excel_con_Leads"')) {
 				res.status(200).send("EVENT_RECEIVED");
 
@@ -145,11 +143,9 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				res.status(200).send("EVENT_RECEIVED");
 
 				// Mandar instrucciones para la campaña de WhatsApp
-
-
 			} else if (message.includes('"6_7-Análisis_Precios_M._Libre"')) {
 				res.status(200).send("EVENT_RECEIVED");
-				
+
 				if (isScrapperCalled === false) {
 					isScrapperCalled = true;
 					res.status(200).send("EVENT_RECEIVED");
@@ -161,7 +157,6 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				} else {
 					//console.log("isScrapperCelles esta en:", isScrapperCalled);
 				}
-
 			} else if (message.includes('"7_8-Análisis_Avisos_Facebook"')) {
 				res.status(200).send("EVENT_RECEIVED");
 
@@ -170,7 +165,6 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				console.log(
 					`Admin ${userPhone} recibió el excel con los avisos de Facebook de la competencia.`
 				);
-
 			} else if (message.includes('"8_9-Actualizar_Precios"')) {
 				res.status(200).send("EVENT_RECEIVED");
 
@@ -179,12 +173,20 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 				await handleWhatsappMessage(userPhone, notification);
 
 				console.log(`Admin ${userPhone} corrió la actualización de precios.`);
-			
-			} else if (message.includes('"0_1-Tomar_Lead"') || message.includes('"1_2-Excel_con_mis_Leads"')|| message.includes('"flow_token":"2')) {
-				// Casos en que el Admin quiere hacer funciones de vendedor hace next() 
-				console.log("El Admin quiere hacer acciones de Vendedor entonces se hace next().");
-				next()
+			} else if (
+				message.includes('"0_1-Tomar_Lead"') ||
+				message.includes('"1_2-Excel_con_mis_Leads"') ||
+				message.includes('"flow_token":"2')
+			) {
+				// Casos en que el Admin quiere hacer funciones de vendedor hace next()
+				console.log(
+					"El Admin quiere hacer acciones de Vendedor entonces se hace next()."
+				);
+				next();
 			}
+		} else if (typeOfWhatsappMessage === "document") {
+			console.log("El Admin mandó un documento para actualizar Leads.");
+			next();
 		}
 	} else {
 		next();
