@@ -38,7 +38,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 		// Admin recibe Menú salvo que quiera tomar un lead (manda "lead")
 		if (messageLower === "lead") {
 			next()
-		} else if (typeOfWhatsappMessage !== "interactive" && messageLower !== "lead") {
+		} else if (typeOfWhatsappMessage !== "interactive" && typeOfWhatsappMessage === "document" && messageLower !== "lead") {
 			console.log("Entró un Mensaje de Admin:", message);
 			
 			// Si detecta al Admin y No es un Flow envía el Flow con el Menú
