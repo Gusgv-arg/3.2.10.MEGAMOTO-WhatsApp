@@ -178,9 +178,9 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 
 				console.log(`Admin ${userPhone} corrió la actualización de precios.`);
 			
-			} else if (message.includes('"0_1-Tomar_Lead"') || message.includes('"1_2-Excel_con_mis_Leads"')) {
+			} else if (message.includes('"0_1-Tomar_Lead"') || message.includes('"1_2-Excel_con_mis_Leads"')|| message.includes('"flow_token":"2')) {
 				// Casos en que el Admin quiere hacer funciones de vendedor hace next() 
-				console.log("El Admin quiere tomar un lead o ver sus leads entonces se hae next().");
+				console.log("El Admin quiere hacer acciones de Vendedor entonces se hace next().");
 				next()
 			}
 		}
