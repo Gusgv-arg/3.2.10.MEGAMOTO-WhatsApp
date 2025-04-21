@@ -22,18 +22,19 @@ const normalizeArgentinePhone = (phone) => {
     // Extraemos el área y el número
     const areaAndNumber = phone.substring(3); // Removemos '549'
     
-    // Si tiene 11 dígitos (ejemplo: 11614xxxxx)
-    if (areaAndNumber.length === 11) {
-        const area = areaAndNumber.substring(0, 2); // "11"
-        const number = areaAndNumber.substring(2);   // "614xxxxx"
-        return `549${area}${number}`;
+    // Primero eliminamos el "15" si existe después del código de área
+    let normalizedNumber = areaAndNumber;
+    if (areaAndNumber.length === 12) {
+        const area = areaAndNumber.substring(0, 2);
+        const restOfNumber = areaAndNumber.substring(2);
+        if (restOfNumber.startsWith('15')) {
+            normalizedNumber = area + restOfNumber.substring(2);
+        }
     }
     
-    // Si tiene 12 dígitos y tiene el "15" (ejemplo: 111561xxxxx)
-    if (areaAndNumber.length === 12 && areaAndNumber.includes('15')) {
-        const area = areaAndNumber.substring(0, 2);        // "11"
-        const numberWithout15 = areaAndNumber.substring(4); // "61xxxxx"
-        return `549${area}${numberWithout15}`;
+    // Verificamos que el número resultante tenga 11 dígitos
+    if (normalizedNumber.length === 11) {
+        return `549${normalizedNumber}`;
     }
     
     return phone;
