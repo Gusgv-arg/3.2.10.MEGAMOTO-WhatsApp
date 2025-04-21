@@ -16,27 +16,40 @@ const currentDateTime = new Date().toLocaleString("es-AR", {
 
 // Función para normalizar números de Argentina
 const normalizeArgentinePhone = (phone) => {
+    console.log('Normalizando número:', phone);
+    
     // Si el número no empieza con 549, lo consideramos inválido
     if (!phone.startsWith('549')) return phone;
     
-    // Extraemos el área y el número
-    const areaAndNumber = phone.substring(3); // Removemos '549'
+    // Extraemos el área y el número (después del 549)
+    const areaAndNumber = phone.substring(3);
     
-    // Primero eliminamos el "15" si existe después del código de área
-    let normalizedNumber = areaAndNumber;
+    // Si tiene 11 dígitos y no contiene '15', ya está normalizado
+    if (areaAndNumber.length === 11 && !areaAndNumber.includes('15')) {
+        console.log('Número ya normalizado:', phone);
+        return phone;
+    }
+    
+    // Si tiene 12 dígitos, buscamos dónde está el '15'
     if (areaAndNumber.length === 12) {
+        // Extraer código de área (2 dígitos)
         const area = areaAndNumber.substring(0, 2);
         const restOfNumber = areaAndNumber.substring(2);
+        
+        // Si encontramos '15' después del código de área
         if (restOfNumber.startsWith('15')) {
-            normalizedNumber = area + restOfNumber.substring(2);
+            const normalizedNumber = `549${area}${restOfNumber.substring(2)}`;
+            console.log('Número normalizado de 15:', {
+                original: phone,
+                area: area,
+                restOfNumber: restOfNumber,
+                normalized: normalizedNumber
+            });
+            return normalizedNumber;
         }
     }
     
-    // Verificamos que el número resultante tenga 11 dígitos
-    if (normalizedNumber.length === 11) {
-        return `549${normalizedNumber}`;
-    }
-    
+    console.log('No se pudo normalizar:', phone);
     return phone;
 };
 
@@ -74,7 +87,15 @@ export const verifyLead = async (vendorPhone, vendorName, message) => {
 
     try {
         // Buscar en la base de datos si el id_user existe (usando el número normalizado)
-        let user = await Leads.findOne({ id_user: customerPhone });
+		customerPhone = normalizeArgentinePhone(customerPhone);
+	    console.log('Buscando número normalizado:', customerPhone);
+
+        let user = await Leads.findOne({ 
+			$or: [
+				{ id_user: customerPhone },
+				{ id_user: normalizeArgentinePhone(customerPhone) }
+			]
+		});
 
         if (!user) {
             // Verificar el número normalizado
