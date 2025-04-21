@@ -284,6 +284,7 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 				userPhone,
 				vendorName
 			);
+			res.status(200).send("EVENT_RECEIVED");
 		}
 	} else {
 		next();
