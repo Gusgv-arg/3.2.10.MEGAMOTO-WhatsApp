@@ -34,9 +34,16 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 	if (userPhone === adminPhone || userPhone === admin2Phone) {
 		const messageLower = message.toLowerCase();
 
-		// Admin recibe Menú salvo que quiera tomar un lead (manda "lead")
-		if (messageLower === "lead") {
+		const regexContainsNumber = /\d{5,}/; // Para verificar si contiene un número con al menos 5 cifras
+
+		if (regexContainsNumber.test(message)) {
+			// Next si el Admin envía más de 5 cifras			
+			next(); 
+
+		} else if (messageLower === "lead") {
+			// Admin recibe Menú salvo que quiera tomar un lead (manda "lead")
 			next();
+		
 		} else if (
 			typeOfWhatsappMessage !== "interactive" &&
 			typeOfWhatsappMessage !== "document" &&

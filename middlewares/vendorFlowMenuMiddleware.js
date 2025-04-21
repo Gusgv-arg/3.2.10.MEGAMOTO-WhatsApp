@@ -111,24 +111,29 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 		);
 	} else if (vendor === true) {
 		// -----------------Es un VENDEDOR ----------------------------
-		
 		if (
 			typeOfWhatsappMessage !== "document" &&
 			typeOfWhatsappMessage !== "interactive"
 		) {
-			// Recibe el menú si manda texto o audio
-			const notification = `*🔔 Notificación MEGAMOTO:*\n\n☰ Entrá a tu celular para ver el *Menú de Vendedor*.\n\n*Megamoto*`;
-			
-			await handleWhatsappMessage(userPhone, notification);
-			
-			await sendMenuToVendor(userPhone);
-			
-			res.status(200).send("EVENT_RECEIVED");
+			// Chequear si el mensaje es un teléfono para verificar el lead
+			const verifyMessage = await verifyLead(userPhone, vendorName, message);
 
+			if (verifyMessage === true) {
+				// Se verificó correctamente el celular entonces solo retorna
+				return res.status(200).send("EVENT_RECEIVED");
+			} else {
+				// Recibe el menú si manda texto que no sea un celular o audio, etc
+				const notification = `*🔔 Notificación MEGAMOTO:*\n\n☰ Entrá a tu celular para ver el *Menú de Vendedor*.\n\n*Megamoto*`;
+
+				await handleWhatsappMessage(userPhone, notification);
+
+				await sendMenuToVendor(userPhone);
+
+				res.status(200).send("EVENT_RECEIVED");
+			}
 		} else if (typeOfWhatsappMessage === "interactive") {
 			// Aca van los Interactive que vienen del Menú de Vendedor
 			if (message.includes('"0_1-Tomar_Lead"')) {
-		
 				// Se buscan los leads a atender
 				const allLeads = await findFlowLeadsForVendors();
 
@@ -182,7 +187,6 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 					);
 				}
 				res.status(200).send("EVENT_RECEIVED");
-
 			} else if (message.includes('"1_2-Excel_con_mis_Leads"')) {
 				// Se buscan todos los leads a atender
 				const allLeads = await findFlowLeadsForVendors();
@@ -255,15 +259,13 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 						`El vendedor ${vendorName} recibió un mensaje de que NO hay leads pendientes de nadie.`
 					);
 				}
-				
-				res.status(200).send("EVENT_RECEIVED");
 
+				res.status(200).send("EVENT_RECEIVED");
 			} else {
 				// Acá van los Interctive que se procesan en la Queue
 				req.vendorName = vendorName;
 				next();
 			}
-
 		} else if (typeOfWhatsappMessage === "document") {
 			// Función para que el vendedor envíe un Excel para cambiar datos (estados, etc)
 			let documentId = body.entry[0].changes[0].value.messages[0].document.id;
