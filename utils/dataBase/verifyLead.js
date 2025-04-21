@@ -21,13 +21,21 @@ const normalizeArgentinePhone = (phone) => {
 	// Si el número no empieza con 549, lo consideramos inválido
 	if (!phone.startsWith("549")) return phone;
 
-	// Extraemos el área y el resto del número (después del 549)
-	let area = phone.substring(3, 5); // Tomamos siempre 2 dígitos de área
-	let rest = phone.substring(5); // El resto del número
+	// Primero verificamos si el número tiene el formato 549 + 15 + resto
+	if (phone.substring(3, 5) === "15") {
+		// Si empieza con 15, lo movemos después del código de área
+		const normalizedNumber = `54911${phone.substring(5)}`;
+		console.log("Normalizado (moviendo 15):", normalizedNumber);
+		return normalizedNumber;
+	}
+
+	// Extraemos el área y el resto del número
+	const area = phone.substring(3, 5);
+	const rest = phone.substring(5);
 
 	console.log("Procesando:", { area, rest });
 
-	// Si el resto empieza con 15, lo removemos
+	// Si después del área está el 15, lo removemos
 	if (rest.startsWith("15")) {
 		const normalized = `549${area}${rest.substring(2)}`;
 		console.log("Normalizado (removiendo 15):", normalized);
@@ -76,22 +84,9 @@ export const verifyLead = async (vendorPhone, vendorName, message) => {
 	try {
 		// Buscar en la base de datos si el id_user existe (usando el número normalizado)
 		const normalizedPhone = normalizeArgentinePhone(customerPhone);
-		console.log("Número a buscar:", normalizedPhone);
+		console.log("Número normalizado a buscar:", normalizedPhone);
 
-		// Crear variantes posibles del número
-		const phoneVariants = [
-			normalizedPhone,
-			normalizeArgentinePhone(
-				`549${normalizedPhone.substring(3, 5)}15${normalizedPhone.substring(5)}`
-			),
-		];
-
-		console.log("Variantes a buscar:", phoneVariants);
-
-		// Buscar cualquier variante del número
-		let user = await Leads.findOne({
-			id_user: { $in: phoneVariants },
-		});
+		let user = await Leads.findOne({ id_user: normalizedPhone });
 
 		if (!user) {
 			// Verificar el número normalizado
