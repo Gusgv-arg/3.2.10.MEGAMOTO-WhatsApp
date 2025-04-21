@@ -56,14 +56,19 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				// Llama a la función de análisis de leads
 				const analysis = await leadsStatusAnalysis(userMessage);
 
-				if (botSwitch?.alarmSwitch1 === "ON") {
+				if (botSwitch?.alarmSwitch1 === "ON" && botSwitch?.alarmSwitch2 === "ON") {
 					// Envía la notificación al Admin1
 					await adminWhatsAppNotification(myPhone, analysis);
-				
-				} else if (botSwitch?.alarmSwitch2 === "ON") {
 					// Envía la notificación al Admin2
 					await adminWhatsAppNotification(myPhone2, analysis);
+				
+				} else if (botSwitch?.alarmSwitch1 === "ON" && botSwitch?.alarmSwitch2 === "OFF") {
+					// Envía la notificación al Admin1
+					await adminWhatsAppNotification(myPhone, analysis);
 
+				} else if (botSwitch?.alarmSwitch1 === "OFF" && botSwitch?.alarmSwitch2 === "ON") {
+					// Envía la notificación al Admin2
+					await adminWhatsAppNotification(myPhone2, analysis);
 				}
 			} 
 
