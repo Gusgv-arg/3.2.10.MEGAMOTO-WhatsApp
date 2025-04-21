@@ -5,153 +5,156 @@ import { verifyWhatsAppNumber } from "../whatsapp/verifyWhatsAppNumber.js";
 
 // Obtain current date and hour
 const currentDateTime = new Date().toLocaleString("es-AR", {
-	timeZone: "America/Argentina/Buenos_Aires",
-	day: "2-digit",
-	month: "2-digit",
-	year: "numeric",
-	hour: "2-digit",
-	minute: "2-digit",
-	second: "2-digit",
+    timeZone: "America/Argentina/Buenos_Aires",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
 });
+
+// Función para normalizar números de Argentina
+const normalizeArgentinePhone = (phone) => {
+    // Si el número no empieza con 549, lo consideramos inválido
+    if (!phone.startsWith('549')) return phone;
+    
+    // Extraemos el área y el número
+    const areaAndNumber = phone.substring(3); // Removemos '549'
+    
+    // Si tiene 11 dígitos (ejemplo: 11614xxxxx)
+    if (areaAndNumber.length === 11) {
+        const area = areaAndNumber.substring(0, 2); // "11"
+        const number = areaAndNumber.substring(2);   // "614xxxxx"
+        return `549${area}${number}`;
+    }
+    
+    // Si tiene 12 dígitos y tiene el "15" (ejemplo: 111561xxxxx)
+    if (areaAndNumber.length === 12 && areaAndNumber.includes('15')) {
+        const area = areaAndNumber.substring(0, 2);        // "11"
+        const numberWithout15 = areaAndNumber.substring(4); // "61xxxxx"
+        return `549${area}${numberWithout15}`;
+    }
+    
+    return phone;
+};
 
 // Función que verifica si el vendedor envió un teléfono para verificar el lead
 export const verifyLead = async (vendorPhone, vendorName, message) => {
-	// Verificar si el mensaje contiene un número con al menos 5 cifras
-	const regexContainsNumber = /\d{5,}/; // Para verificar si contiene un número con al menos 5 cifras
-	const regexExtractNumber = /(\d{10,})\s*(.+)?/; // Expresión regular para extraer el número de teléfono de al menos 10 cifras y el resto del mensaje
+    // Verificar si el mensaje contiene un número con al menos 5 cifras
+    const regexContainsNumber = /\d{5,}/;
+    const regexExtractNumber = /(\d{10,})\s*(.+)?/;
 
-	if (!regexContainsNumber.test(message)) {
-		return false; // Si no contiene un número con al menos 8 cifras, retornar false
-	}
+    if (!regexContainsNumber.test(message)) {
+        return false;
+    }
 
-	const match = message.match(regexExtractNumber);
+    const match = message.match(regexExtractNumber);
 
-	if (!match) {
-		// Si contiene un número pero no llega a 10 cifras se notifica al usuario
-		const errorMessage = `*🔔 Notificación MEGAMOTO:*\n\n❌ Parece que estas queriendo verificar un celular. El número debe comenzar con código de área sin 0 + número sin el 15 adelante (10 cifras como mínimo). Por favor, verifica el formato e intenta nuevamente.\n\n*Megamoto*`;
+    if (!match) {
+        const errorMessage = `*🔔 Notificación MEGAMOTO:*\n\n❌ Parece que estas queriendo verificar un celular. El número debe comenzar con código de área sin 0 + número sin el 15 adelante (10 cifras como mínimo). Por favor, verificá el formato e intentá nuevamente.\n\n*Megamoto*`;
+        await handleWhatsappMessage(vendorPhone, errorMessage);
+        console.log(`El vendedor ${vendorName} recibió el siguiente mensaje: ${errorMessage}`);
+        return true;
+    }
 
-		await handleWhatsappMessage(vendorPhone, errorMessage);
+    // Extraer el id_user y el nombre del mensaje
+    let customerPhone = match[1].trim();
 
-		console.log(`El vendedor ${vendorName} recibió el siguiente mensaje: ${errorMessage}`);
-		return true;
-	}
+    // Agregar el prefijo "549" si no está presente
+    if (!customerPhone.startsWith("549")) {
+        customerPhone = `549${customerPhone}`;
+    }
 
-	// Extraer el id_user y el nombre del mensaje
-	let customerPhone = match[1].trim(); // Primer grupo: las 5 o más cifras
+    // Normalizar el número de teléfono
+    customerPhone = normalizeArgentinePhone(customerPhone);
 
-	// Agregar el prefijo "549" si no está presente
-	if (!customerPhone.startsWith("549")) {
-		customerPhone = `549${customerPhone}`;
-	}
+    const name = match[2] ? match[2].trim() : "estimado cliente";
 
-	const name = match[2] ? match[2].trim() : "estimado cliente"; // Segundo grupo: el resto del mensaje
+    try {
+        // Buscar en la base de datos si el id_user existe (usando el número normalizado)
+        let user = await Leads.findOne({ id_user: customerPhone });
 
-	try {
-		// Buscar en la base de datos si el id_user existe
-		let user = await Leads.findOne({ id_user: customerPhone });
+        if (!user) {
+            // Verificar el número normalizado
+            const correctNumber = await verifyWhatsAppNumber(customerPhone, name, vendorPhone, vendorName);
 
-		if (!user) {
-			// Si no existe, verificar el número enviando whatsapp al lead
-			
-			// Función que envía whatsApp al lead y devuelve true o false
-			const correctNumber = await verifyWhatsAppNumber(customerPhone, name, vendorPhone, vendorName);
+            if (correctNumber === true) {
+                const flow_2token = `2${uuidv4()}`;
 
-			if (correctNumber === true) {
-				// Si el mensaje es enviado correctamente crear un nuevo registro en la base de datos
+                user = new Leads({
+                    id_user: customerPhone,
+                    name,
+                    channel: "whatsapp",
+                    botSwitch: "ON",
+                    flows: [
+                        {
+                            flowName: "registro manual",
+                            flowDate: currentDateTime,
+                            client_status: "vendedor",
+                            statusDate: currentDateTime,
+                            vendor_phone: vendorPhone,
+                            vendor_name: vendorName,
+                            origin: "Salón",
+                            history: `${currentDateTime} Alta manual por ${vendorName}.`,
+                            flow_2token,
+                            flow_status: "activo",
+                        },
+                    ],
+                });
 
-				const flow_2token = `2${uuidv4()}`;
+                await user.save();
+                console.log(`Nuevo lead creado para id_user ${customerPhone} ${name ? name : "sin nombre"} por parte del vendedor ${vendorName}`);
 
-				user = new Leads({
-					id_user: customerPhone,
-					name,
-					channel: "whatsapp",
-					botSwitch: "ON",
-					flows: [
-						{
-							flowName: "registro manual",
-							flowDate: currentDateTime,
-							client_status: "vendedor",
-							statusDate: currentDateTime,
-							vendor_phone: vendorPhone,
-							vendor_name: vendorName,
-							origin: "Salón",
-							history: `${currentDateTime} Alta manual por ${vendorName}.`,
-							flow_2token,
-							flow_status: "activo",
-						},
-					],
-				});
+                const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Tu lead con el teléfono *${customerPhone}* y nombre *${name ? name : "Sin nombre"}* fue creado exitosamente. Para completar el resto de los datos podés enviar la palabra "leads", recibir el Excel y volver a enviarlo con toda la información de la operación.\n\n*Megamoto*`;
+                await handleWhatsappMessage(vendorPhone, message);
+                return true;
+            } else {
+                const errorMessage = `*🔔 Notificación MEGAMOTO:*\n\n❌ El teléfono ${customerPhone} no pudo ser enviado al cliente. Por favor verificá el formato e intentá nuevamente.\n\n*Megamoto*`;
+                await handleWhatsappMessage(vendorPhone, errorMessage);
+                console.log(`El vendedor ${vendorName} recibió el siguiente mensaje: ${errorMessage}`);
+                return true;
+            }
+        } else {
+            const lastFlow = user.flows[user.flows.length - 1];
 
-				await user.save();
-				console.log(`Nuevo lead creado para id_user ${customerPhone} ${name ? name : "sin nombre"} por parte del vendedor ${vendorName}`);
+            if (lastFlow && 
+                lastFlow.client_status !== "compró" && 
+                lastFlow.client_status !== "no compró"
+            ) {
+                const message = `*🔔 Notificación MEGAMOTO:*\n\n❌ El lead tiene una operación en curso.\nVendedor: ${lastFlow.vendor_name}\nTeléfono: ${lastFlow.vendor_phone}\n\n*Megamoto*`;
+                await handleWhatsappMessage(vendorPhone, message);
+                console.log(`El vendedor ${vendorName} recibió el siguiente mensaje: ${message}`);
+                return true;
+            } else {
+                const flow_2token = `2${uuidv4()}`;
+                const newFlow = {
+                    flowName: "registro manual",
+                    flowDate: currentDateTime,
+                    client_status: "vendedor",
+                    statusDate: currentDateTime,
+                    origin: "Salón",
+                    vendor_phone: vendorPhone,
+                    vendor_name: vendorName,
+                    history: `${currentDateTime} Alta manual por ${vendorName}.`,
+                    flow_2token,
+                    flow_status: "activo",
+                };
 
-				// Notificar al usuario que se ha creado un nuevo registro
-				const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Tu lead con el teléfono *${customerPhone}* y nombre *${name ? name : "Sin nombre"}* fue creado exitosamente. Para completar el resto de los datos podés enviar la palabra "leads", recibir el Excel y volver a enviarlo con toda la información de la operación.\n\n*Megamoto*`;
+                user.flows.push(newFlow);
+                await user.save();
+                console.log(`Nuevo flow agregado para id_user: ${customerPhone} por parte del vendedor ${vendorName}`);
 
-				await handleWhatsappMessage(vendorPhone, message);
-				return true;
-
-			} else {
-				// Si el mensaje no se envía correctamente, notificar al vendedor que el lead no existe
-				const errorMessage = `*🔔 Notificación MEGAMOTO:*\n\n❌ El teléfono ${customerPhone} no pudo ser enviado al cliente. Por favor verificá el formato e intentá nuevamente.\n\n*Megamoto*`;
-
-				await handleWhatsappMessage(vendorPhone, errorMessage);
-
-				console.log(`El vendedor ${vendorName} recibió el siguiente mensaje: ${errorMessage}`);
-				return true;
-			}
-		} else {
-			// Si el usuario ya existe, verificar el último flow_status
-			const lastFlow = user.flows[user.flows.length - 1];
-
-			if (
-				lastFlow &&
-				lastFlow.client_status !== "compró" &&
-				lastFlow.client_status !== "no compró"
-			) {
-				// Si el último flow_status es distinto de "compró" o "no compró"
-				const message = `*🔔 Notificación MEGAMOTO:*\n\n❌ El lead tiene una operación en curso.\nVendedor: ${lastFlow.vendor_name}\nTeléfono: ${lastFlow.vendor_phone}\n\n*Megamoto*`;
-
-				await handleWhatsappMessage(vendorPhone, message);
-				
-				console.log(`El vendedor ${vendorName} recibió el siguiente mensaje: ${message}`);
-				
-				return true;
-			} else {
-				// Si el último flow_status es "compró" o "no compró", agregar un nuevo registro en flows
-				const flow_2token = `2${uuidv4()}`;
-
-				const newFlow = {
-					flowName: "registro manual",
-					flowDate: currentDateTime,
-					client_status: "vendedor",
-					statusDate: currentDateTime,
-					origin: "Salón",
-					vendor_phone: vendorPhone,
-					vendor_name: vendorName,
-					history: `${currentDateTime} Alta manual por ${vendorName}.`,
-					flow_2token,
-					flow_status: "activo",
-				};
-
-				user.flows.push(newFlow);
-				await user.save();
-
-				console.log(`Nuevo flow agregado para id_user: ${customerPhone} por parte del vendedor ${vendorName}`);
-
-				const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Tu lead con el teléfono ${customerPhone} fue creado exitosamente y NO es la primera vez que nos consulta. Para completar el resto de los datos podés enviar la palabra "leads", recibir el Excel y volver a enviarlo con toda la información de la operación.\n\n*Megamoto*`;
-
-				await handleWhatsappMessage(vendorPhone, message);
-
-				return true;
-			}
-		}
-	} catch (error) {
-		console.error("Error en verifyLead.js:", error);
-		const errorMessage = error?.response?.data
-			? JSON.stringify(error.response.data)
-			: error.message;
-
-		throw new Error(errorMessage);
-	}
+                const message = `*🔔 Notificación MEGAMOTO:*\n\n✅ Tu lead con el teléfono ${customerPhone} fue creado exitosamente y NO es la primera vez que nos consulta. Para completar el resto de los datos podés enviar la palabra "leads", recibir el Excel y volver a enviarlo con toda la información de la operación.\n\n*Megamoto*`;
+                await handleWhatsappMessage(vendorPhone, message);
+                return true;
+            }
+        }
+    } catch (error) {
+        console.error("Error en verifyLead.js:", error);
+        const errorMessage = error?.response?.data
+            ? JSON.stringify(error.response.data)
+            : error.message;
+        throw new Error(errorMessage);
+    }
 };
