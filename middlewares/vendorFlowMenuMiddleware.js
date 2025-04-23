@@ -102,12 +102,12 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 
 		res.status(200).send("EVENT_RECEIVED");
 
-		const notification = `*🔔 Notificación MEGAMOTO:*\n\n❗ Estimado /a ${name}, esta es una línea de WhatsApp que *solo procesa mensajes de texto*.\nPor favor enviá tu mensaje en texto.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
+		const notification = `*🔔 Notificación MEGAMOTO:*\n\n❗ Estimado /a ${name}, esta línea de WhatsApp *solo procesa mensajes de texto*.\nPor favor enviá tu mensaje en texto y desde tu celular vas a ver un formulario para completar el resto de tu consulta y ser derivado con un vendedor.\n\n*¡Tu moto está más cerca en MEGAMOTO!*`;
 
 		await handleWhatsappMessage(userPhone, notification);
 
 		console.log(
-			`El lead ${name} envió un mensaje en otro formato y recibió una notificación de error.`
+			`El lead ${name} envió un mensaje en formato ${typeOfWhatsappMessage} y recibió ests notificación: ${notification}`
 		);
 	} else if (vendor === true) {
 		// -----------------Es un VENDEDOR ----------------------------
