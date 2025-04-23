@@ -25,12 +25,14 @@ export const leadsStatusAnalysis = async (userMessage) => {
             vendorStats[lastFlow.vendor_name]++;
         }
 
-        // Count by client_status instead of unassigned
+        // Count by client_status, excluding "vendedor" status
         const status = lastFlow.client_status || 'sin status';
-        if (!statusStats[status]) {
-            statusStats[status] = 0;
+        if (status !== 'vendedor') {  // Skip "vendedor" status
+            if (!statusStats[status]) {
+                statusStats[status] = 0;
+            }
+            statusStats[status]++;
         }
-        statusStats[status]++;
     });
 
     // Create vendor breakdown message
@@ -47,9 +49,9 @@ export const leadsStatusAnalysis = async (userMessage) => {
 
     let message 
     if (userMessage) {
-        message = `*🔔 Notificación MEGAMOTO:*\n\n🎉 Acaba de entrar un nuevo lead.\nNombre: *${userMessage.name}*\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\n${statusBreakdown}\n\n*Megamoto*`;
+        message = `*🔔 Notificación MEGAMOTO:*\n\n🎉 Acaba de entrar un nuevo lead.\nNombre: *${userMessage.name}*\n\n📊 *Resumen de leads:*\nTotal Leads: ${pendingLeadsCount}${vendorBreakdown}\nApertura Status:${statusBreakdown}\n\n*Megamoto*`;
     } else {
-        message = `*🔔 Notificación MEGAMOTO:*\n\n📊 *Resumen de leads:*\nLeads pendientes: ${pendingLeadsCount}${vendorBreakdown}\n${statusBreakdown}\n\n*Megamoto*`;
+        message = `*🔔 Notificación MEGAMOTO:*\n\n📊 *Resumen de leads:*\nTotal Leads: ${pendingLeadsCount}${vendorBreakdown}\nApertura Status:${statusBreakdown}\n\n*Megamoto*`;
     }
 
     return message;
