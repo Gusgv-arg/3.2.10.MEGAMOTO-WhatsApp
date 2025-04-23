@@ -4,6 +4,10 @@ import axios from "axios";
 
 const myPhone = process.env.MY_PHONE;
 
+// Para ejecutar la petición a CrediCuotas cada 5 minutos
+let lastRequestTimestamp = 0;
+const FIVE_MINUTES = 5 * 60 * 1000; // 5 minutos en milisegundos
+
 export const statusFlowsMiddleware = async (req, res, next) => {
 	const body = req.body;
 	let status = body?.entry?.[0].changes?.[0].value?.statuses?.[0]
@@ -12,14 +16,19 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 
 	// Se prende web de Credicuotas
 	try {
-		
-		const crediCuotas = await axios.get(
-			"https://three-2-13-web-scrapping.onrender.com"
-		);
-		console.log("Status Servidor Scrapin:", crediCuotas?.status ? crediCuotas.status : "No hay credicuotas.status");
-		if (crediCuotas?.status === 200) {
-			req.crediCuotas = true;	
-		}
+		const currentTime = Date.now();
+        if (currentTime - lastRequestTimestamp >= FIVE_MINUTES) {
+            const crediCuotas = await axios.get(
+                "https://three-2-13-web-scrapping.onrender.com"
+            );
+            console.log("Status Servidor Scrapin:", crediCuotas?.status ? crediCuotas.status : "No hay credicuotas.status");
+            if (crediCuotas?.status === 200) {
+                req.crediCuotas = true;	
+            }
+            lastRequestTimestamp = currentTime;
+        } else {
+            console.log("Saltando petición a Credicuotas - Menos de 5 minutos desde la última petición");
+        }
 	
 	} catch (error) {
 		console.log("Error prendiendo Credicuotas:", error?.response?.data
