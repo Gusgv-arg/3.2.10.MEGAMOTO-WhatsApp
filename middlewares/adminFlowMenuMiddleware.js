@@ -59,6 +59,7 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 			await sendMenuToAdmin(userPhone);
 
 			return res.status(200).send("EVENT_RECEIVED");
+			
 		} else if (typeOfWhatsappMessage === "interactive") {
 			const message =
 				body.entry[0].changes[0].value.messages[0].interactive.nfm_reply
