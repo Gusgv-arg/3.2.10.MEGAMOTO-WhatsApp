@@ -39,16 +39,29 @@ export const findFlowLeadsForVendors = async () => {
                     },
                     // CAMBIO: Casos donde el flowDate es menor o igual a la fecha actual
                     {
-                        flows: {
-                            $elemMatch: {
-                                client_status: { $nin: ["compró", "no compró"] },
-                                $expr: {
-                                    $lte: [
-                                        { $dateFromString: { dateString: "$flowDate" } },
-                                        currentDate
-                                    ]
-                                }
-                            }
+                        $expr: {
+                            $gt: [
+                                {
+                                    $size: {
+                                        $filter: {
+                                            input: "$flows",
+                                            as: "flow",
+                                            cond: {
+                                                $and: [
+                                                    { $nin: ["$$flow.client_status", ["compró", "no compró"]] },
+                                                    {
+                                                        $lte: [
+                                                            { $dateFromString: { dateString: "$$flow.flowDate" } },
+                                                            currentDate
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                0
+                            ]
                         }
                     }
                 ]
