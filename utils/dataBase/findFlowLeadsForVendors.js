@@ -41,7 +41,14 @@ export const findFlowLeadsForVendors = async () => {
                     {
                         $and: [
                             { "flows.client_status": { $nin: ["compró", "no compró"] } },
-                            { "flows.flowDate": { $lte: currentDate.toISOString() } }
+                            {
+                                $expr: {
+                                    $lte: [
+                                        { $dateFromString: { dateString: "$flows.flowDate" } },
+                                        currentDate
+                                    ]
+                                }
+                            }
                         ]
                     }
                 ]
