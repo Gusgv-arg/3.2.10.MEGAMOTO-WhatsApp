@@ -18,6 +18,7 @@ export const statusFlowsMiddleware = async (req, res, next) => {
 	try {
 		const currentTime = Date.now();
         if (currentTime - lastRequestTimestamp >= FIVE_MINUTES) {
+			console.log("Get a Credicuotas para prender el servidor.");
             const crediCuotas = await axios.get(
                 "https://three-2-13-web-scrapping.onrender.com"
             );

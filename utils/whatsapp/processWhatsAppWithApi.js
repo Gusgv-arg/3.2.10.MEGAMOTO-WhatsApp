@@ -52,28 +52,44 @@ export const processWhatsAppWithApi = async (userMessage) => {
 			// Si la alarma está prendida notifica al Admin de un nuevo lead
 			let botSwitch = await BotSwitch.findOne();
 
-			if (botSwitch?.alarmSwitch1 === "ON" || botSwitch?.alarmSwitch2 === "ON") {
+			if (
+				botSwitch?.alarmSwitch1 === "ON" ||
+				botSwitch?.alarmSwitch2 === "ON"
+			) {
 				// Llama a la función de análisis de leads
 				const analysis = await leadsStatusAnalysis(userMessage);
 
-				if (botSwitch?.alarmSwitch1 === "ON" && botSwitch?.alarmSwitch2 === "ON") {
+				if (
+					botSwitch?.alarmSwitch1 === "ON" &&
+					botSwitch?.alarmSwitch2 === "ON"
+				) {
 					// Envía la notificación al Admin1
 					await adminWhatsAppNotification(myPhone, analysis);
 					// Envía la notificación al Admin2
 					await adminWhatsAppNotification(myPhone2, analysis);
-				
-				} else if (botSwitch?.alarmSwitch1 === "ON" && botSwitch?.alarmSwitch2 === "OFF") {
+				} else if (
+					botSwitch?.alarmSwitch1 === "ON" &&
+					botSwitch?.alarmSwitch2 === "OFF"
+				) {
 					// Envía la notificación al Admin1
 					await adminWhatsAppNotification(myPhone, analysis);
-
-				} else if (botSwitch?.alarmSwitch1 === "OFF" && botSwitch?.alarmSwitch2 === "ON") {
+				} else if (
+					botSwitch?.alarmSwitch1 === "OFF" &&
+					botSwitch?.alarmSwitch2 === "ON"
+				) {
 					// Envía la notificación al Admin2
 					await adminWhatsAppNotification(myPhone2, analysis);
 				}
-			} 
+			}
 
 			// Actualiza el log
-			log = `1-Se creo el lead ${userMessage.name} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD. 5-Alarma al Admin1: ${botSwitch?.alarmSwitch1 === "ON" ? "SI" : "NO"}. 6-Alarma al Admin2: ${botSwitch?.alarmSwitch2 === "ON" ? "SI" : "NO"}.`;
+			log = `1-Se creo el lead ${
+				userMessage.name
+			} en BD. 2-Se mandó saludo inicial. 3-Se mandó Flow 1. 4-Se grabó todo en BD. 5-Alarma al Admin1: ${
+				botSwitch?.alarmSwitch1 === "ON" ? "SI" : "NO"
+			}. 6-Alarma al Admin2: ${
+				botSwitch?.alarmSwitch2 === "ON" ? "SI" : "NO"
+			}.`;
 			return log;
 		} else {
 			// -------- Lead YA EXISTE ------------------------------------------------------
@@ -157,15 +173,39 @@ export const processWhatsAppWithApi = async (userMessage) => {
 				// Si la alarma está prendida notifica al Admin de un nuevo lead
 				let botSwitch = await BotSwitch.findOne();
 
-				if (botSwitch?.alarmSwitch === "ON") {
-					// Llama a la función de análisis de leads
-					const analysis = await leadsStatusAnalysis(userMessage);
+				// Llama a la función de análisis de leads
+				const analysis = await leadsStatusAnalysis(userMessage);
 
+				if (
+					botSwitch?.alarmSwitch1 === "ON" &&
+					botSwitch?.alarmSwitch2 === "ON"
+				) {
+					// Envía la notificación al Admin1
 					await adminWhatsAppNotification(myPhone, analysis);
+					// Envía la notificación al Admin2
+					await adminWhatsAppNotification(myPhone2, analysis);
+				} else if (
+					botSwitch?.alarmSwitch1 === "ON" &&
+					botSwitch?.alarmSwitch2 === "OFF"
+				) {
+					// Envía la notificación al Admin1
+					await adminWhatsAppNotification(myPhone, analysis);
+				} else if (
+					botSwitch?.alarmSwitch1 === "OFF" &&
+					botSwitch?.alarmSwitch2 === "ON"
+				) {
+					// Envía la notificación al Admin2
+					await adminWhatsAppNotification(myPhone2, analysis);
 				}
 
 				// Actualiza el log
-				log = `1-Se volvió a saludar al lead ${userMessage.name} ya que estaba en BD y no tenía un Flow abierto. 2-Se le envió Flow 1. 3-Se grabó en BD. ${botSwitch.alarmSwitch === "ON" ? "4-Se envió análisis de Leads al Admin." :"" }`;
+				log = `1-Se volvió a saludar al lead ${
+					userMessage.name
+				} ya que estaba en BD y no tenía un Flow abierto. 2-Se le envió Flow 1. 3-Se grabó en BD. 4-Alarma al Admin1: ${
+					botSwitch?.alarmSwitch1 === "ON" ? "SI" : "NO"
+				}. 5-Alarma al Admin2: ${
+					botSwitch?.alarmSwitch2 === "ON" ? "SI" : "NO"
+				}.`;
 
 				return log;
 			}
