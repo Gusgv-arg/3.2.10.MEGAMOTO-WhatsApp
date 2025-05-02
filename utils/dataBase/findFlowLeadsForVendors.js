@@ -3,7 +3,7 @@ import Leads from "../../models/leads.js";
 // Función que trae todo los Leads disponibles para atender
 export const findFlowLeadsForVendors = async () => {
 
-	// Crear fechas en UTC y ajustarlas a Argentina (UTC-3)
+	// Crear fechas en UTC y ajustarlas a Argentina (UTC-3).
     const currentDateUTC = new Date();
     const currentDate = new Date(currentDateUTC.getTime() - (3 * 60 * 60 * 1000));
     const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
