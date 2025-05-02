@@ -39,34 +39,32 @@ export const findFlowLeadsForVendors = async () => {
                     },
                     // CAMBIO: Casos donde el flowDate es menor o igual a la fecha actual
                     {
-                        $expr: {
-                            $gt: [
-                                {
-                                    $size: {
-                                        $filter: {
-                                            input: "$flows",
-                                            as: "flow",
-                                            cond: {
-                                                $and: [
-                                                    {
-                                                        $not: {
-                                                            $in: ["$$flow.client_status", ["compró", "no compró"]]
-                                                        }
-                                                    },
-                                                    {
-                                                        $lte: [
-                                                            { $dateFromString: { dateString: "$$flow.flowDate" } },
-                                                            currentDate
-                                                        ]
-                                                    }
-                                                ]
+                        $and: [
+                            {
+                                "flows.client_status": {
+                                    $in: [
+                                        "primer contacto",
+                                        "flow enviado",
+                                        "flow recibido",
+                                        "flow leído",
+                                        "falló envío"
+                                    ]
+                                }
+                            },
+                            {
+                                $expr: {
+                                    $lt: [
+                                        {
+                                            $dateFromString: {
+                                                dateString: "$flows.flowDate",
+                                                onError: new Date(0)
                                             }
-                                        }
-                                    }
-                                },
-                                0
-                            ]
-                        }
+                                        },
+                                        twentyFourHoursAgo
+                                    ]
+                                }
+                            }
+                        ]
                     }
                 ]
             }
