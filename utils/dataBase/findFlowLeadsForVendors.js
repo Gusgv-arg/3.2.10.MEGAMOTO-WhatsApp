@@ -48,7 +48,11 @@ export const findFlowLeadsForVendors = async () => {
                                             as: "flow",
                                             cond: {
                                                 $and: [
-                                                    { $nin: ["$$flow.client_status", ["compró", "no compró"]] },
+                                                    {
+                                                        $not: {
+                                                            $in: ["$$flow.client_status", ["compró", "no compró"]]
+                                                        }
+                                                    },
                                                     {
                                                         $lte: [
                                                             { $dateFromString: { dateString: "$$flow.flowDate" } },
