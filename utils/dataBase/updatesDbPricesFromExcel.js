@@ -173,9 +173,9 @@ export const updateDbPricesFromExcel = async () => {
 			dataExcel.length - 1
 		} registros en el Excel y se actualizaron ${updates} modelos.\nFaltaron actualizar: ${noPrice} modelos.\nHay ${qNewModels} modelos nuevos: ${newModels.join(
 			", "
-		)}.\nSe desactivó: ${registrosDesactivados.map(
+		)}.\nModelos inactivos: ${registrosDesactivados.map(
 			(modelo) => modelo.modelo
-		)}.\n\n*Megamoto*`;
+		).join(", ")}.\n\n*Megamoto*`;
 
 		return notification;
 	} catch (error) {
