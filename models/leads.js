@@ -42,6 +42,7 @@ const flowDetailSchema = new mongoose.Schema({
 			"Teknial",
 			"TVS",
 			"IKA",
+			"Morbidelli",
 			"No sé",
 		],
 	},
