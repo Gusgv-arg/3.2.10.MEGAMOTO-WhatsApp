@@ -121,6 +121,8 @@ export const vendorsFlowMenuMiddleware = async (req, res, next) => {
 			if (verifyMessage === true) {
 				// Se verificó correctamente el celular entonces solo retorna
 				return res.status(200).send("EVENT_RECEIVED");
+			} else if (message === "comprar") {
+				next();
 			} else {
 				// Recibe el menú si manda texto que no sea un celular o audio, etc
 				const notification = `*🔔 Notificación MEGAMOTO:*\n\n☰ Entrá a tu celular para ver el *Menú de Vendedor*.\n\n*Megamoto*`;

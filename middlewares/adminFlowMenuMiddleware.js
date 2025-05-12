@@ -40,8 +40,8 @@ export const adminFlowMenuMiddleware = async (req, res, next) => {
 			// Next si el Admin envía más de 5 cifras			
 			next(); 
 
-		} else if (messageLower === "lead") {
-			// Admin recibe Menú salvo que quiera tomar un lead (manda "lead")
+		} else if (messageLower === "lead" || messageLower === "comprar") {
+			// Admin recibe Menú salvo que quiera tomar un lead (manda "lead") o simular un comprador.
 			next();
 		
 		} else if (
