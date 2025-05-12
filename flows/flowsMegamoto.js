@@ -120,10 +120,6 @@ const flow1 = {   "version": "6.0",
                       "title": "AX100"
                   },
                   {
-                      "id": "GN125",
-                      "title": "GN125"
-                  },
-                  {
                       "id": "GSX125",
                       "title": "GSX125"
                   },
@@ -208,6 +204,30 @@ const flow1 = {   "version": "6.0",
                       "title": "TRK 702 X"
                   }
                 ]
+              },
+              {
+                "type": "Dropdown",
+                "label": "Morbidelli",
+                "required": false,
+                "name": "Morbidelli",
+                "data-source": [
+                  {
+                    "id": "MBP SC150RE",
+                    "title": "MBP SC150RE"
+                  },
+                  {
+                    "id": "MBP N300",
+                    "title": "MBP N300"
+                  },
+                  {
+                    "id": "MBP M 502N",
+                    "title": "MBP M 502N"
+                  },
+                  {
+                    "id": "MBP T1002VX",
+                    "title": "MBP T1002VX"
+                  }
+                ]
               },                
               {
                 "type": "Dropdown",
@@ -236,8 +256,16 @@ const flow1 = {   "version": "6.0",
                       "title": "RTR 160"
                   },
                   {
+                      "id": "RTR 160 ABS ",
+                      "title": "RTR 160 ABS"
+                  },
+                  {
                       "id": "RTR 200",
                       "title": "RTR 200"
+                  },
+                  {
+                      "id": "RTR 200 ABS",
+                      "title": "RTR 200 ABS"
                   },
                   {
                       "id": "RTR 200 EFI 4V",
@@ -320,12 +348,24 @@ const flow1 = {   "version": "6.0",
                 "name": "IKA",
                 "data-source": [
                   {
+                    "id": "RR 310",
+                    "title": "RR 310"
+                  },
+                  {
                     "id": "SLALOM BASE",
                     "title": "SLALOM BASE"
                   },
                   {
                     "id": "SLALOM FULL",
                     "title": "SLALOM FULL"
+                  },
+                  {
+                    "id": "SPOT 150",
+                    "title": "SPOT 150"
+                  },
+                  {
+                    "id": "SPOT 150 FULL",
+                    "title": "SPOT 150 FULL"
                   },
                   {
                     "id": "DURBAN 150",
@@ -361,7 +401,8 @@ const flow1 = {   "version": "6.0",
                     "SYM": "${form.SYM}",
                     "No sé":"${form.No sé}",
                     "Teknial eléctricas":"${form.Teknial eléctricas}",
-                    "IKA":"${form.IKA}"
+                    "IKA":"${form.IKA}",
+                    "Morbidelli":"${form.Morbidelli}"
                   }
                 }
               }
@@ -407,6 +448,10 @@ const flow1 = {   "version": "6.0",
           "__example__": "Example"
         },
         "IKA": {
+          "type": "string",
+          "__example__": "Example"
+        },
+        "Morbidelli": {
           "type": "string",
           "__example__": "Example"
         }
@@ -461,7 +506,8 @@ const flow1 = {   "version": "6.0",
                     "TVS": "${data.TVS}",
                     "No sé": "${data.No sé}",
                     "Teknial eléctricas": "${data.Teknial eléctricas}",
-                    "IKA": "${data.IKA}"
+                    "IKA": "${data.IKA}",
+                    "Morbidelli":"${data.Morbidelli}"
                   }
                 }
               }
@@ -516,6 +562,10 @@ const flow1 = {   "version": "6.0",
         "IKA": {
           "type": "string",
           "__example__": "Example"
+        },
+        "Morbidelli": {
+          "type": "string",
+          "__example__": "Example"
         }
       },
       "layout": {
@@ -557,7 +607,8 @@ const flow1 = {   "version": "6.0",
                     "TVS": "${data.TVS}",
                     "No sé": "${data.No sé}",
                     "Teknial eléctricas": "${data.Teknial eléctricas}",
-                    "IKA": "${data.IKA}"
+                    "IKA": "${data.IKA}",
+                    "Morbidelli": "${data.Morbidelli}"
                   }
                 }
               }
@@ -616,6 +667,10 @@ const flow1 = {   "version": "6.0",
         "IKA": {
           "type": "string",
           "__example__": "Example"
+        },
+        "Morbidelli": {
+          "type": "string",
+          "__example__": "Example"
         }
       },
       "terminal": true,
@@ -650,7 +705,8 @@ const flow1 = {   "version": "6.0",
                     "TVS": "${data.TVS}",
                     "No sé":"${data.No sé}",
                     "Teknial": "${data.Teknial eléctricas}",
-                    "IKA": "${data.IKA}"
+                    "IKA": "${data.IKA}",
+                    "Morbidelli": "${data.Morbidelli}"
                   }
                 }
               }
