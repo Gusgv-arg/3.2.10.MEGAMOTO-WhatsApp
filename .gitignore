@@ -9,5 +9,3 @@ node_modules
 # misc
 .env
 
-credentials.json
-assets/credentials.json
